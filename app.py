@@ -397,14 +397,14 @@ def seccion_formulario(ds):
                     '<th>Zona de duda</th></tr></thead><tbody>' + filas + "</tbody></table>", unsafe_allow_html=True)
 
     nn = res.get("nn") if res else None
-    st.markdown('<div class="disp" style="font-size:24px;margin:26px 0 4px">Mapa de clases (t-SNE)</div>', unsafe_allow_html=True)
-    st.markdown('<div class="mut" style="font-size:13px;margin-bottom:8px">Cada color es una clase real. Los puntos son casos de '
-                'validación en su clase real. El fondo es un clasificador auxiliar entrenado sobre esta proyección: es una '
-                'aproximación, no la red. Si clasificó un dato, aparece como estrella en una ubicación aproximada.</div>',
-                unsafe_allow_html=True)
+    st.markdown('<div class="disp" style="font-size:24px;margin:26px 0 4px">Frontera de decisión (plano PCA)</div>', unsafe_allow_html=True)
+    st.markdown('<div class="mut" style="font-size:13px;margin-bottom:8px">Cada color es una clase. Los puntos son casos de '
+                'validación en su clase real. Las líneas oscuras son el borde entre zonas de un modelo de dos entradas '
+                '(las dos primeras componentes PCA), una aproximación a la red. Si clasificó un dato, aparece como estrella '
+                'en su posición exacta en ese plano.</div>', unsafe_allow_html=True)
     st.image(frontera.figura(ds, nn=nn, pred=res.get("clase") if nn else None))
-    st.markdown('<div class="mut" style="font-size:12px;margin-top:6px">En t-SNE solo importa la agrupación: las distancias entre '
-                'grupos y las escalas no tienen significado fiable.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="mut" style="font-size:12px;margin-top:6px">Dos componentes explican solo una parte de la varianza: una zona '
+                'que parece cruzar una frontera puede no cruzarla en todas las variables.</div>', unsafe_allow_html=True)
 
 
 def encabezado():
