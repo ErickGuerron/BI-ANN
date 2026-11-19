@@ -1,7 +1,8 @@
 import sys, json
 from pathlib import Path
 import pandas as pd
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "nucleo"))
+APP = str(Path(__file__).resolve().parents[1] / "app.py")
 import inferencia as I
 from streamlit.testing.v1 import AppTest
 TOP4 = ["ds7_historico_garantias", "ds1_ingreso_solicitudes", "ds6_gasto_provisiones", "ds5_pagos_multimes"]
@@ -12,7 +13,7 @@ for ds in TOP4:
     raw = pd.read_csv(Path(cfg["dir"]) / cfg["archivo"], float_precision="round_trip", low_memory=False, dtype={cfg["id"]: str})
     fila = raw.iloc[[5]]
     # ---- caso válido: valores de una fila real
-    at = AppTest.from_file("app.py", default_timeout=170).run()
+    at = AppTest.from_file(APP, default_timeout=170).run()
     tab_ds = [t for t in at.tabs]
     idx = TOP4.index(ds)
     for c in campos:
@@ -25,7 +26,7 @@ for ds in TOP4:
     texto = " ".join(m.value for m in at.markdown)
     print(ds, "| válido -> excepciones:", exc, "| 'Clase predicha' visible:", "Clase predicha" in texto)
     # ---- caso inválido: campo vacío y texto en numérico
-    at2 = AppTest.from_file("app.py", default_timeout=170).run()
+    at2 = AppTest.from_file(APP, default_timeout=170).run()
     for c in campos:
         at2.text_input(key=f"{ds}_{c['nombre']}").set_value("")
     if campos[0]["tipo"] == "num":

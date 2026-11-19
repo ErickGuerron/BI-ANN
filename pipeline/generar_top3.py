@@ -8,7 +8,7 @@ import json
 import sys
 from pathlib import Path
 
-CARPETA = Path(__file__).parent / "resultados_convergencia"
+CARPETA = Path(__file__).resolve().parents[1] / "resultados_convergencia"
 
 
 def construir(ajuste_path: Path) -> dict:

@@ -1,7 +1,8 @@
 import sys, json
 from pathlib import Path
 import pandas as pd
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "nucleo"))
+APP = str(Path(__file__).resolve().parents[1] / "app.py")
 import inferencia as I
 from streamlit.testing.v1 import AppTest
 ds = "ds1_ingreso_solicitudes"
@@ -10,7 +11,7 @@ campos = json.loads((I.AUX / f"campos_{ds}.json").read_text(encoding="utf-8"))
 cfg = M.CONFIGS[ds]
 raw = pd.read_csv(Path(cfg["dir"]) / cfg["archivo"], float_precision="round_trip", low_memory=False, dtype={cfg["id"]: str})
 fila = raw.iloc[[5]]
-at = AppTest.from_file("app.py", default_timeout=170).run()
+at = AppTest.from_file(APP, default_timeout=170).run()
 for c in campos:
     v = fila[c["nombre"]].iloc[0]
     at.text_input(key=f"{ds}_{c['nombre']}").set_value("" if pd.isna(v) else str(v))

@@ -4,7 +4,7 @@ import json
 import sys
 from pathlib import Path
 import numpy as np, pandas as pd
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "nucleo"))
 import inferencia as I
 
 TOP4 = ["ds7_historico_garantias", "ds1_ingreso_solicitudes", "ds6_gasto_provisiones", "ds5_pagos_multimes"]

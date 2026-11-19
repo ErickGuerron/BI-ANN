@@ -18,8 +18,8 @@ import pandas as pd
 from sklearn.metrics import balanced_accuracy_score, roc_auc_score
 from sklearn.neural_network import MLPClassifier
 
-CARPETA_DATOS = Path(__file__).resolve().parent.parent
-CARPETA_RESULTADOS = Path(__file__).resolve().parent / "resultados"
+CARPETA_DATOS = Path(__file__).resolve().parents[2]
+CARPETA_RESULTADOS = Path(__file__).resolve().parents[1] / "resultados"
 
 DATASETS = [
     "ds1_ingreso_solicitudes",

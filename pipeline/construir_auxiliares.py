@@ -15,7 +15,7 @@ from sklearn.neighbors import NeighborhoodComponentsAnalysis
 from sklearn.preprocessing import StandardScaler
 
 warnings.filterwarnings("ignore")
-PROGRAMA = Path(__file__).resolve().parent
+PROGRAMA = Path(__file__).resolve().parents[1]
 BI = PROGRAMA.parents[1]
 V2 = BI / "datasets_multiclase_v2" / "salida"
 V3 = BI / "datasets_multiclase_v3"

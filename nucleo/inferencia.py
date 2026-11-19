@@ -21,7 +21,7 @@ import numpy as np
 import pandas as pd
 
 warnings.filterwarnings("ignore")
-PROGRAMA = Path(__file__).resolve().parent
+PROGRAMA = Path(__file__).resolve().parents[1]
 BI = PROGRAMA.parents[1]
 PREP = BI / "para_companero_cadena_datasets"
 V2_SALIDA = BI / "datasets_multiclase_v2" / "salida"

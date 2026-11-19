@@ -12,13 +12,17 @@ Si se corta por tiempo (presupuesto de la ejecución), vuelve a ejecutar: retoma
 import argparse
 import itertools
 import json
+import sys
 import time
+from pathlib import Path
 
 import numpy as np
 from sklearn.metrics import balanced_accuracy_score
 from sklearn.model_selection import StratifiedKFold
 
-from ann_core import (
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "nucleo"))
+
+from ann_core import (  # noqa: E402
     CARPETA_RESULTADOS,
     ConfigRed,
     cargar_dataset,

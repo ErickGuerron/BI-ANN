@@ -5,15 +5,19 @@ Solo la tasa de aprendizaje se edita. Las épocas se detienen por parada tempran
 Ejecutar:  streamlit run app.py
 """
 import json
+import sys
 import time
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import streamlit as st
 from sklearn.metrics import balanced_accuracy_score, classification_report
 
-import ann_core
-from ann_core import (
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "nucleo"))
+
+import ann_core  # noqa: E402
+from ann_core import (  # noqa: E402
     DATASETS,
     PACIENCIA,
     TOL_VALIDACION,

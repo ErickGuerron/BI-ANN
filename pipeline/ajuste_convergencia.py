@@ -7,22 +7,26 @@ Fase 1: rejilla de arquitectura, alpha (L2) y sobremuestreo, con 5 folds estrati
 Fase 2: las TOP_K mejores se repiten con SEMILLAS_REPLICA; se promedian sus curvas.
 La prueba no participa en ninguna decisión; solo se reporta.
 
-Uso:  python ajuste_convergencia.py ds2_ciclo_solicitud
+Uso:  python pipeline/ajuste_convergencia.py ds2_ciclo_solicitud
 Si se corta por presupuesto de tiempo, vuelve a ejecutar: retoma desde el caché (jsonl).
 Salida: resultados_convergencia/
 """
 import argparse
 import itertools
 import json
+import sys
 import time
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
 from sklearn.metrics import balanced_accuracy_score
 from sklearn.model_selection import StratifiedKFold
 
-import ann_core
-from ann_core import (
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "nucleo"))
+
+import ann_core  # noqa: E402
+from ann_core import (  # noqa: E402
     MAX_EPOCAS,
     ConfigRed,
     cargar_dataset,

@@ -8,13 +8,17 @@ Ejecutar:  streamlit run app.py
 import json
 import math
 import re
+import sys
 from datetime import datetime
+from pathlib import Path
 
 import pandas as pd
 import streamlit as st
 
-import frontera
-import inferencia as I
+sys.path.insert(0, str(Path(__file__).resolve().parent / "nucleo"))
+
+import frontera  # noqa: E402
+import inferencia as I  # noqa: E402
 
 CARPETA = I.PROGRAMA / "resultados_convergencia"
 TOP4 = [
