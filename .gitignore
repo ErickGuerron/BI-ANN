@@ -14,6 +14,7 @@ venv/
 resultados/
 resultados_convergencia/
 resultados_keras/t5_miembros/
+resultados_keras/t8_miembros/
 graficos/
 auxiliares/
 

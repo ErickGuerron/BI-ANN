@@ -27,8 +27,18 @@ FUERA_DE_RANGO = "FUERA_DE_RANGO"
 AMBIGUEDAD = "AMBIGUEDAD"
 
 
+def _clave(ds):
+    """Files with the _garantia suffix (network with Valor_Garantiza as input) take precedence over the base ones."""
+    return f"{ds}_garantia" if (AUX / f"cascada_{ds}_garantia.json").exists() else ds
+
+
 def disponible(ds):
-    return (AUX / f"cascada_{ds}.npz").exists() and (AUX / f"cascada_{ds}.json").exists()
+    k = _clave(ds)
+    return (AUX / f"cascada_{k}.npz").exists() and (AUX / f"cascada_{k}.json").exists()
+
+
+def usa_garantia(ds):
+    return disponible(ds) and bool(cargar(ds)["cfg"].get("usa_garantia", False))
 
 
 def propagar(X, capas):
@@ -45,10 +55,14 @@ def entropia_normalizada(P):
 
 @lru_cache(maxsize=None)
 def cargar(ds):
-    cfg = json.loads((AUX / f"cascada_{ds}.json").read_text(encoding="utf-8"))
-    arr = np.load(AUX / f"cascada_{ds}.npz")
+    k = _clave(ds)
+    cfg = json.loads((AUX / f"cascada_{k}.json").read_text(encoding="utf-8"))
+    arr = np.load(AUX / f"cascada_{k}.npz")
     miembros = [tuple(arr[f"{n}_{i}"] for n in ("W0", "b0", "W1", "b1")) for i in range(cfg["miembros"])]
-    train = pd.read_csv(V4 / ds / "X_train_nn.csv").to_numpy(np.float32)
+    if cfg.get("train_npy"):
+        train = np.load(AUX / cfg["train_npy"]).astype(np.float32)
+    else:
+        train = pd.read_csv(V4 / ds / "X_train_nn.csv").to_numpy(np.float32)
     nn = NearestNeighbors(n_neighbors=cfg["k_vecinos"]).fit(train)
     return {"cfg": cfg, "miembros": miembros, "nn": nn}
 

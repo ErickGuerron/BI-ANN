@@ -20,6 +20,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent / "nucleo"))
 import frontera  # noqa: E402
 import inferencia as I  # noqa: E402
 import cascada  # noqa: E402
+import garantia  # noqa: E402
 
 CARPETA = I.PROGRAMA / "resultados_convergencia"
 TOP4 = [
@@ -117,7 +118,7 @@ def requisitos(c):
     if c["tipo"] == "num":
         minimo, tope = limites_numero(c)
         partes = ["Número"] + (["entero"] if c["entero"] else ["con decimales"]) + \
-            (["no negativo"] if minimo == 0 else [])
+            (["no negativo"] if minimo == 0 else []) + (["opcional (vac\u00edo = 0)"] if c.get("opcional") else [])
         return " · ".join(partes) + f" · hasta {len(str(tope))} dígitos (máximo {tope})"
     n = c["n_valores"]
     base = f"{n} {'valor conocido' if n == 1 else 'valores conocidos'}"
@@ -200,6 +201,8 @@ def _revisar_booleano(c, et, bruto):
 
 def _revisar_numero(c, et, bruto):
     if bruto is None or bruto == "":
+        if c.get("opcional"):
+            return None, None, 0.0
         return f"{et}: falta el dato. Escriba un valor.", None, None
     if isinstance(bruto, str):
         return f"{et}: solo admite números.", None, None
@@ -358,10 +361,19 @@ def _clasificar(ds, campos, grupos):
     zona = I.zona_duda(ds, fila)
     res = {"clase": clases[0], "probs": pr[0].tolist(), "clases": I.cargar(ds)["aux"]["clases"], "zona": zona,
            "nn": I.entrada_red(ds, fila).to_numpy(float)[0].tolist(), "avisos": list(avs.values())}
-    res["cascada"] = cascada.evaluar(ds, [res["nn"]])[0] if cascada.disponible(ds) else None
+    res["cascada"] = None
+    if cascada.disponible(ds):
+        x = res["nn"]
+        if cascada.usa_garantia(ds):
+            x = garantia.agregar(ds, [x], [limpio.get(garantia.CAMPO) or 0.0])[0]
+        res["cascada"] = cascada.evaluar(ds, [x])[0]
+        if cascada.usa_garantia(ds):
+            # The ensemble sees Valor_Garantiza, so its class and probabilities replace the single network's.
+            res["clase"] = res["clases"][res["cascada"]["clase_idx"]]
+            res["probs"] = res["cascada"]["probs"]
     st.session_state[f"res_{ds}"] = res
     hist = st.session_state.setdefault(f"hist_{ds}", [])
-    hist.insert(0, {"hora": datetime.now().strftime("%H:%M:%S"), "clase": clases[0],
+    hist.insert(0, {"hora": datetime.now().strftime("%H:%M:%S"), "clase": res["clase"],
                     "confianza": f"{max(res['probs']) * 100:.1f} %".replace(".", ","),
                     "zona_duda": "sí" if zona else "no" if zona is not None else "—"})
     if res["cascada"]:

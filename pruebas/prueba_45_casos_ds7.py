@@ -26,6 +26,7 @@ warnings.filterwarnings("ignore")
 PROGRAMA = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROGRAMA / "nucleo"))
 import cascada as C  # noqa: E402
+import garantia as G  # noqa: E402
 import inferencia as I  # noqa: E402
 
 DS = "ds7_historico_garantias"
@@ -70,7 +71,8 @@ def metricas(y, pred, K):
 def main():
     ruta = Path(sys.argv[1]) if len(sys.argv) > 1 else RUTA_DEFECTO
     casos = pd.read_csv(ruta, dtype=str, encoding="utf-8")
-    campos = [c["nombre"] for c in json.loads((PROGRAMA / "auxiliares" / f"campos_{DS}.json").read_text(encoding="utf-8"))]
+    campos = [c["nombre"] for c in json.loads((PROGRAMA / "auxiliares" / f"campos_{DS}.json").read_text(encoding="utf-8"))
+              if c["nombre"] != G.CAMPO]
     clases = list(I.cargar(DS)["aux"]["clases"])
     K = len(clases)
     y = casos["Y_Esperada_Condicional"].astype(int).to_numpy()
@@ -84,10 +86,21 @@ def main():
     print("campos en OTROS sin normalizar:", otros_sin)
     print("campos en OTROS tras normalizar:", otros_con, flush=True)
 
-    entrada = I.entrada_red(DS, norm).to_numpy(float)
+    monto_garantia = pd.to_numeric(casos["Valor_Garantiza_Supuesto"]).to_numpy()
+    entrada96 = I.entrada_red(DS, norm).to_numpy(float)
+    # The extra column must not change the 96 standardized inputs (the app passes it with the other fields).
+    con_columna = I.entrada_red(DS, norm.assign(**{G.CAMPO: monto_garantia})).to_numpy(float)
+    paridad_columna_extra = float(np.abs(con_columna - entrada96).max())
+    usa_garantia = C.usa_garantia(DS)
+    entrada = G.agregar(DS, entrada96, monto_garantia) if usa_garantia else entrada96
     P_red = I.probabilidades(DS, norm)
     pred_red = P_red.argmax(1)
     casc = C.evaluar(DS, entrada)
+    en_blanco = None
+    if usa_garantia:
+        c0 = C.evaluar(DS, G.agregar(DS, entrada96, np.zeros(len(entrada96))))
+        en_blanco = {"prediccion": np.bincount([r["clase_idx"] for r in c0], minlength=K).tolist(),
+                     "automatico": round(float(np.mean([r["estado"] == C.AUTOMATICO for r in c0])), 4)}
     pred_ens = np.array([r["clase_idx"] for r in casc])
     auto = np.array([r["estado"] == C.AUTOMATICO for r in casc])
     fuera = np.array([r["motivo"] == C.FUERA_DE_RANGO for r in casc])
@@ -99,6 +112,8 @@ def main():
         "advertencia": "La etiqueta esperada es condicional a una garantia supuesta que no es entrada del modelo.",
         "campos_en_otros_sin_normalizar": otros_sin, "campos_en_otros_tras_normalizar": otros_con,
         "casos_con_anio_posterior_a_2022": int(nueva_epoca.sum()),
+        "usa_valor_garantiza": usa_garantia, "paridad_columna_extra_max_abs": paridad_columna_extra,
+        "garantia_en_blanco_todos_los_casos": en_blanco,
         "red_de_la_app": {"prediccion": np.bincount(pred_red, minlength=K).tolist(),
                           "confianza_media": round(float(P_red.max(1).mean()), 4), **metricas(y, pred_red, K)},
         "ensamble": {"prediccion": np.bincount(pred_ens, minlength=K).tolist(), **metricas(y, pred_ens, K)},
@@ -125,8 +140,9 @@ def main():
     detalle["Entropia"] = [round(r["entropia"], 3) for r in casc]
     detalle["Distancia"] = [round(r["distancia"], 2) for r in casc]
     SALIDA.mkdir(parents=True, exist_ok=True)
-    detalle.to_csv(SALIDA / "prueba_45_casos_ds7_detalle.csv", index=False, encoding="utf-8")
-    (SALIDA / "prueba_45_casos_ds7.json").write_text(json.dumps(res, indent=2, ensure_ascii=False), encoding="utf-8")
+    sufijo = "_garantia" if usa_garantia else ""
+    detalle.to_csv(SALIDA / f"prueba_45_casos_ds7{sufijo}_detalle.csv", index=False, encoding="utf-8")
+    (SALIDA / f"prueba_45_casos_ds7{sufijo}.json").write_text(json.dumps(res, indent=2, ensure_ascii=False), encoding="utf-8")
     print(json.dumps(res, indent=1, ensure_ascii=False))
     return 0
 

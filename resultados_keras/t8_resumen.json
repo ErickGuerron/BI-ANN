@@ -1,0 +1,64 @@
+{
+  "entradas": 97,
+  "d_max": 9.331025609970098,
+  "umbral_H": 0.25,
+  "ensamble_val": {
+    "bal": 0.8849,
+    "macro_f1": 0.8624,
+    "f1_clase": [
+      0.9939,
+      0.7064,
+      0.887
+    ],
+    "recall": [
+      0.9887,
+      0.7217,
+      0.9444
+    ]
+  },
+  "ensamble_prueba": {
+    "bal": 0.8979,
+    "macro_f1": 0.8715,
+    "f1_clase": [
+      0.9925,
+      0.716,
+      0.9059
+    ],
+    "recall": [
+      0.9866,
+      0.7565,
+      0.9506
+    ]
+  },
+  "ece_prueba": 0.0038,
+  "cascada_val": {
+    "cobertura": 0.9096,
+    "cobertura_por_clase": [
+      0.9526,
+      0.5304,
+      0.5247
+    ],
+    "macro_f1_aceptados": 0.9575,
+    "exactitud_aceptados": 0.9944,
+    "macro_f1_abstenciones_como_error": 0.7604
+  },
+  "cascada_prueba": {
+    "cobertura": 0.9136,
+    "cobertura_por_clase": [
+      0.9514,
+      0.6261,
+      0.5432
+    ],
+    "macro_f1_aceptados": 0.9521,
+    "exactitud_aceptados": 0.9928,
+    "macro_f1_abstenciones_como_error": 0.7841
+  },
+  "referencia_sin_garantia": {
+    "macro_f1_prueba": 0.6461,
+    "macro_f1_val": 0.6625
+  },
+  "paridad": {
+    "max_abs_prob": 2.3831875850532924e-07,
+    "decisiones_iguales": 1.0
+  }
+}

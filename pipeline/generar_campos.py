@@ -26,5 +26,10 @@ for ds in sys.argv[1:] or TOP4:
             tmp = P.limpiar_texto(raw[[cfg["id"], c]].copy(), excluir=[cfg["id"]])
             vals = sorted(tmp[c].dropna().astype(str).unique().tolist())
             campos.append({"nombre": c, "tipo": "cat", "valores": vals[:400], "n_valores": len(vals)})
+    if ds == "ds7_historico_garantias" and "Valor_Garantiza" in raw.columns:
+        # Optional network input (nucleo/garantia.py); a blank amount means 0, as in the training matrix.
+        s = pd.to_numeric(raw["Valor_Garantiza"], errors="coerce").dropna()
+        campos.append({"nombre": "Valor_Garantiza", "tipo": "num", "min": 0.0, "max": float(s.max()),
+                       "entero": bool(np.all(np.isclose(s, np.round(s)))), "no_negativo": True, "opcional": True})
     (AUX / f"campos_{ds}.json").write_text(json.dumps(campos, ensure_ascii=False, indent=1), encoding="utf-8")
     print(ds, len(campos), "campos;", "num:", sum(c["tipo"] == "num" for c in campos), "cat:", sum(c["tipo"] == "cat" for c in campos))
