@@ -23,3 +23,11 @@ L2 Resultados de la simulación (resultados_keras/simulacion_app_ds7.json, 600 r
 - Sin efecto o contrario: Anio_Desembolso = 9999 sube el automático a 92.5 %; Tasa_Interes = 99 87.5 %; Numero_Cuotas x5 88.0 %; Canton nuevo 88.0 %. El preprocesamiento neutraliza esos valores antes de la red, así que el filtro no los ve.
 - Ejemplos extremos de pruebas/: "alto" y "bajo" -> REVISION_MANUAL por FUERA_DE_RANGO.
 Hallazgo: un único campo extremo puede aumentar la aceptación automática; el filtro solo reacciona cuando varios campos se combinan o cambian categorías conocidas.
+L3 (2026-11-20): El usuario pidió probar la red de ds7 con Descargas/45_casos_con_etiqueta_esperada_condicional.csv (casos fuera del dataset pero con sentido). Script: pruebas/prueba_45_casos_ds7.py; salidas: resultados_keras/prueba_45_casos_ds7.json y prueba_45_casos_ds7_detalle.csv.
+- El archivo advierte que la etiqueta es condicional a una garantía supuesta que no es entrada del modelo y que no se calcule exactitud contra ella; las cifras de acuerdo son indicativas.
+- Normalización de formato (supuesto: SI=1, NO=0): sin ella, 5 campos (Para_Vivienda, Es_Agricola_Gan, Es_Persona_Juridica, Es_Dependiente, Cargas_Familiares) caían en OTROS en los 45 casos. Tras normalizar quedan en OTROS: Nivel_Educacion 1, Nombre_Producto 3, Sucursal 1 casos.
+- Fuera del dataset: 23 de 45 casos tienen Anio_Desembolso 2023-2025 (entrenamiento 1998-2022). Valores numéricos y categorías dentro de lo conocido.
+- Red de la app: acuerdo indicativo 73.3 %, macro F1 0.711, confianza media 0.751. Recall por clase: SIN_GARANTIA 0.93, COBERTURA_BAJA 0.33, COBERTURA_ALTA 0.93. 10 de 15 casos con BAJA esperada se predicen ALTA.
+- Ensamble de 5 redes: acuerdo 68.9 %, macro F1 0.636.
+- Cascada: 77.8 % automático, 2.2 % fuera de rango (1 caso), 20.0 % ambigüedad; acuerdo en automáticos 77.1 % (35 casos). Los casos BAJA mal clasificados como ALTA pasan como automáticos con entropía 0.26-0.62.
+- Por año: hasta 2022 (n=22) acuerdo 81.8 %; posterior a 2022 (n=23) 65.2 %. Muestras pequeñas; no se hizo prueba estadística.
