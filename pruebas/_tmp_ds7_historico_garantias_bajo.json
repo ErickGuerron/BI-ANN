@@ -1,0 +1,23 @@
+{
+ "Anio_Desembolso": 0,
+ "Valor_Entregado": 0,
+ "Numero_Cuotas": 0,
+ "Tasa_Interes": 0,
+ "Para_Vivienda": "0",
+ "Es_Agricola_Gan": "0",
+ "Es_Persona_Juridica": "0",
+ "Edad_Tramo": "18-25",
+ "Sexo": "FEMENINO",
+ "Estado_Civil": "CASADO/A",
+ "Nivel_Educacion": "BASICA",
+ "Tipo_Vivienda": "ARRENDADA",
+ "Cargas_Familiares": "0.0",
+ "Ingreso_Mensual_Tramo": "ALTO (>1500)",
+ "Total_Ingresos_Tramo": "ALTO (>3000)",
+ "Patrimonio_Tramo": "ALTO (>20000)",
+ "Es_Dependiente": "0.0",
+ "Categoria_Credito": "CONSUMO",
+ "Nombre_Producto": "CONSUMO",
+ "Sucursal": "AGENCIA CANGAHUA",
+ "Canton": "CALDERON"
+}

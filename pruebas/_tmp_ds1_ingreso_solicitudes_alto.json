@@ -1,0 +1,22 @@
+{
+ "Anio": 9999,
+ "Total_Ingresos": 999999,
+ "Total_Gastos": 999999,
+ "Monto_Solicitado": 999999,
+ "Mes": "9",
+ "Es_Persona_Juridica": "1",
+ "Edad_Tramo": "NO APLICA",
+ "Sexo": "NO APLICA",
+ "Estado_Civil": "VIUDO/A",
+ "Nivel_Educacion": "UNIVERSITARIA",
+ "Tipo_Vivienda": "SECUNDARIA",
+ "Cargas_Familiares": "8.0",
+ "Ingreso_Mensual_Tramo": "NO APLICA",
+ "Total_Ingresos_Tramo": "NO APLICA",
+ "Patrimonio_Tramo": "ORG MEDIO",
+ "Es_Dependiente": "1.0",
+ "Categoria_Credito": "VIVIENDA",
+ "Nombre_Producto": "QUIROGRAFARIO VIVIENDA",
+ "Sucursal": "OFICINA TABACUNDO",
+ "Canton": "PEDRO MONCAYO"
+}

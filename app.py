@@ -111,10 +111,13 @@ def marcador(c):
 
 def requisitos(c):
     """Línea bajo el campo con lo que el dataset espera."""
+    if es_booleano(c):
+        return "Seleccione SI o NO"
     if c["tipo"] == "num":
-        d = 0 if c["entero"] else 2
-        partes = ["Número"] + (["entero"] if c["entero"] else []) + (["no negativo"] if c["no_negativo"] else [])
-        return " · ".join(partes) + f" · rango observado {fmt(c['min'], d)} a {fmt(c['max'], d)}"
+        minimo, tope = limites_numero(c)
+        partes = ["Número"] + (["entero"] if c["entero"] else ["con decimales"]) + \
+            (["no negativo"] if minimo == 0 else [])
+        return " · ".join(partes) + f" · hasta {len(str(tope))} dígitos (máximo {tope})"
     n = c["n_valores"]
     base = f"{n} {'valor conocido' if n == 1 else 'valores conocidos'}"
     if categoria_numerica(c):
@@ -169,10 +172,56 @@ def texto_admitido(c):
     return texto + (f" y los símbolos {' '.join(simb)}" if simb else "")
 
 
+VALORES_BOOLEANOS = {"0", "1", "0.0", "1.0"}
+
+
+def es_booleano(c):
+    """Campo de dos valores 0/1 (sí/no): se ingresa con SI o NO, sin teclear números."""
+    vals = c.get("valores") or []
+    return c["tipo"] == "cat" and bool(vals) and set(vals) <= VALORES_BOOLEANOS
+
+
+def limites_numero(c):
+    """Rango que acepta el campo: tantos dígitos como el máximo observado y signo según la regla del campo."""
+    tope = 10 ** len(str(int(abs(c["max"])))) - 1
+    minimo = -tope if (not c["no_negativo"] or nombre_campo(c) in NEGATIVOS_CON_SENTIDO) else 0
+    return minimo, tope
+
+
+def _revisar_booleano(c, et, bruto):
+    if bruto in (None, ""):
+        return f"{et}: falta el dato. Seleccione SI o NO.", None, None
+    if bruto not in ("SI", "NO"):
+        return f"{et}: solo admite SI o NO.", None, None
+    objetivo = 1.0 if bruto == "SI" else 0.0
+    return None, None, next((v for v in c["valores"] if float(v) == objetivo), "1" if objetivo else "0")
+
+
+def _revisar_numero(c, et, bruto):
+    if bruto is None or bruto == "":
+        return f"{et}: falta el dato. Escriba un valor.", None, None
+    if isinstance(bruto, str):
+        return f"{et}: solo admite números.", None, None
+    x = float(bruto)
+    minimo, tope = limites_numero(c)
+    if c["entero"] and x != int(x):
+        return f"{et}: solo admite un número entero.", None, None
+    if x < minimo:
+        return (f"{et}: no puede ser negativo. Un valor negativo no tiene sentido en este campo.", None, None) \
+            if minimo == 0 else (f"{et}: el mínimo es {minimo}.", None, None)
+    if x > tope:
+        return f"{et}: el máximo es {tope}.", None, None
+    return None, None, x
+
+
 def revisar(c, bruto):
     """Devuelve (error, None, valor limpio) de un campo. Solo los errores de formato bloquean la clasificación;
     los valores fuera de lo habitual se aceptan sin mensaje, para probar la red con casos atípicos."""
     et = etiqueta(c["nombre"])
+    if es_booleano(c):
+        return _revisar_booleano(c, et, bruto)
+    if c["tipo"] == "num":
+        return _revisar_numero(c, et, bruto)
     bruto = bruto or ""
     t = bruto.strip()
     if t == "":
@@ -181,19 +230,6 @@ def revisar(c, bruto):
         return f"{et}: no puede empezar ni terminar con espacios.", None, None
     if "  " in t:
         return f"{et}: no puede tener dos espacios seguidos.", None, None
-
-    if c["tipo"] == "num":
-        patron = RE_ENTERO if c["entero"] else RE_DECIMAL
-        if not patron.match(t):
-            if c["entero"]:
-                return f"{et}: solo admite un número entero (dígitos, y «-» al inicio si aplica).", None, None
-            return f"{et}: solo admite números (dígitos, «-» al inicio y un punto o coma decimal).", None, None
-        if len(re.sub(r"\D", "", t)) > MAX_DIGITOS:
-            return f"{et}: máximo {MAX_DIGITOS} dígitos.", None, None
-        x = float(t.replace(",", "."))
-        if x < 0 and c["no_negativo"] and nombre_campo(c) not in NEGATIVOS_CON_SENTIDO:
-            return f"{et}: no puede ser negativo. Un valor negativo no tiene sentido en este campo.", None, None
-        return None, None, x
 
     # Categorías
     conocidos = {v.upper(): v for v in c["valores"]}
@@ -317,6 +353,26 @@ def _clasificar(ds, campos, grupos):
     st.rerun()
 
 
+def campo_widget(ds, c, datos):
+    """Control del campo. SI/NO para booleanos, campo numérico con límite de dígitos y signo, texto para categorías."""
+    k, et, previo = clave(ds, c["nombre"]), etiqueta(c["nombre"]), datos.get(c["nombre"])
+    cb = dict(on_change=_al_cambiar, args=(ds, c))
+    if es_booleano(c):
+        opciones = ["SI", "NO"]
+        return st.selectbox(et, options=opciones, index=opciones.index(previo) if previo in opciones else None,
+                            placeholder="Seleccione SI o NO", key=k, **cb)
+    if c["tipo"] == "num":
+        minimo, tope = limites_numero(c)
+        valor = previo if isinstance(previo, (int, float)) else None
+        if c["entero"]:
+            return st.number_input(et, min_value=int(minimo), max_value=int(tope), value=valor, step=1,
+                                   format="%d", placeholder=f"Hasta {tope}", key=k, **cb)
+        return st.number_input(et, min_value=float(minimo), max_value=float(tope), value=valor, step=0.01,
+                               format="%.2f", placeholder=f"Hasta {tope}", key=k, **cb)
+    return st.text_input(et, value=previo if isinstance(previo, str) else "", key=k,
+                         placeholder=marcador(c), **cb)
+
+
 @st.dialog("Nueva clasificación", width="large")
 def asistente(ds):
     _, centro, _ = st.columns([1, 5, 1])
@@ -338,8 +394,7 @@ def asistente(ds):
         cols = st.columns(2)
         for k, c in enumerate(grupo):
             with cols[k % 2]:
-                st.text_input(etiqueta(c["nombre"]), value=datos.get(c["nombre"], ""), key=clave(ds, c["nombre"]),
-                              placeholder=marcador(c), on_change=_al_cambiar, args=(ds, c))
+                campo_widget(ds, c, datos)
                 st.markdown(f'<div class="mut" style="font-size:12px;margin:-6px 0 4px">{requisitos(c)}</div>', unsafe_allow_html=True)
                 if c["nombre"] in errs:
                     st.markdown(f'<div class="error">{errs[c["nombre"]]}</div>', unsafe_allow_html=True)
