@@ -40,7 +40,7 @@ Verificación por campo: Total_Ingresos: no aparece, Total_Gastos: no aparece, M
 | Sucursal | MATRIZ TABACUNDO |
 | Canton | PEDRO MONCAYO |
 
-Resultado de referencia de la cadena de inferencia: **SUPERA** (86.2 %), coincide con la etiqueta esperada.
+Resultado de referencia de la cadena de inferencia: **SUPERA** (93.7 %), coincide con la etiqueta esperada.
 
 ### ds1-B · etiqueta esperada **HOLGADA** (regla)
 
@@ -73,7 +73,7 @@ Verificación por campo: Total_Ingresos: no aparece, Total_Gastos: aparece, Mont
 | Sucursal | MATRIZ TABACUNDO |
 | Canton | PEDRO MONCAYO |
 
-Resultado de referencia de la cadena de inferencia: **HOLGADA** (99.0 %), coincide con la etiqueta esperada.
+Resultado de referencia de la cadena de inferencia: **HOLGADA** (99.9 %), coincide con la etiqueta esperada.
 
 ## ds5_pagos_multimes
 
@@ -120,7 +120,7 @@ Verificación por campo: Sin_Pagos: aparece, N_Movimientos: aparece, N_Cuotas_Co
 | Sucursal | MATRIZ TABACUNDO |
 | Canton | PEDRO MONCAYO |
 
-Resultado de referencia de la cadena de inferencia: **AL_DIA** (59.6 %), coincide con la etiqueta esperada.
+Resultado de referencia de la cadena de inferencia: **AL_DIA** (62.4 %), coincide con la etiqueta esperada.
 
 ### ds5-B · etiqueta esperada **MORA_MAYOR_90** (datos)
 
@@ -165,7 +165,7 @@ Verificación por campo: Sin_Pagos: aparece, Pct_Cuotas_Pagadas: aparece, Dias_D
 | Sucursal | MATRIZ TABACUNDO |
 | Canton | PEDRO MONCAYO |
 
-Resultado de referencia de la cadena de inferencia: **MORA_31_90** (70.1 %), no coincide con la etiqueta esperada.
+Resultado de referencia de la cadena de inferencia: **MORA_31_90** (76.6 %), no coincide con la etiqueta esperada.
 
 ## ds6_gasto_provisiones
 
@@ -206,7 +206,7 @@ Verificación por campo: Estado_Actual: aparece, Dias_Morosidad: no aparece, Cal
 | Sucursal | MATRIZ TABACUNDO |
 | Canton | PEDRO MONCAYO |
 
-Resultado de referencia de la cadena de inferencia: **DETERIORA** (41.1 %), no coincide con la etiqueta esperada.
+Resultado de referencia de la cadena de inferencia: **DETERIORA** (40.5 %), no coincide con la etiqueta esperada.
 
 ### ds6-B · etiqueta esperada **IGUAL** (datos)
 
@@ -245,7 +245,7 @@ Verificación por campo: Estado_Actual: aparece, Dias_Morosidad: aparece, Califi
 | Sucursal | MATRIZ TABACUNDO |
 | Canton | PEDRO MONCAYO |
 
-Resultado de referencia de la cadena de inferencia: **IGUAL** (84.5 %), coincide con la etiqueta esperada.
+Resultado de referencia de la cadena de inferencia: **IGUAL** (81.3 %), coincide con la etiqueta esperada.
 
 ## ds7_historico_garantias
 
@@ -281,7 +281,7 @@ Verificación por campo: Categoria_Credito: aparece, Para_Vivienda: aparece, Val
 | Sucursal | MATRIZ TABACUNDO |
 | Canton | PEDRO MONCAYO |
 
-Resultado de referencia de la cadena de inferencia: **SIN_GARANTIA** (82.8 %), coincide con la etiqueta esperada.
+Resultado de referencia de la cadena de inferencia: **SIN_GARANTIA** (95.8 %), coincide con la etiqueta esperada.
 
 ### ds7-B · etiqueta esperada **SIN_GARANTIA** (datos)
 
@@ -315,4 +315,4 @@ Verificación por campo: Categoria_Credito: aparece, Para_Vivienda: aparece, Val
 | Sucursal | MATRIZ TABACUNDO |
 | Canton | PEDRO MONCAYO |
 
-Resultado de referencia de la cadena de inferencia: **COBERTURA_BAJA** (67.2 %), no coincide con la etiqueta esperada.
+Resultado de referencia de la cadena de inferencia: **COBERTURA_BAJA** (82.5 %), no coincide con la etiqueta esperada.

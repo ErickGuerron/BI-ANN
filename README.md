@@ -17,6 +17,7 @@ programa_ann/
 │   ├── ajuste_convergencia.py   1. búsqueda de hiperparámetros con parada temprana
 │   ├── generar_top3.py          2. resume las 3 mejores configuraciones por dataset
 │   ├── construir_auxiliares.py  3. arrays y parámetros que usa la inferencia
+│   ├── calibrar.py              3b. temperatura para calibrar la confianza
 │   └── generar_campos.py        4. campos del formulario (tipo, rango, valores conocidos)
 ├── pruebas/                ← verificaciones opcionales; no hacen falta para usar la app
 │   ├── verificar_inferencia.py  compara la cadena de inferencia con las salidas guardadas
@@ -25,6 +26,7 @@ programa_ann/
 ├── archivo/                ← versiones anteriores; no las usa el front actual
 │   ├── app_anterior.py     front previo (8 datasets, entrenamiento en vivo)
 │   └── ajuste.py           búsqueda sin parada temprana (escribe en resultados/)
+├── docs/                   ← documentación técnica (calibración de probabilidades)
 ├── .streamlit/config.toml  ← tema de la app
 │
 │  Salidas generadas (ignoradas por git, se crean al ejecutar el pipeline):
@@ -84,6 +86,14 @@ python pipeline/generar_top3.py ds7_historico_garantias ds1_ingreso_solicitudes 
 ```bash
 python pipeline/construir_auxiliares.py ds7_historico_garantias ds1_ingreso_solicitudes ds6_gasto_provisiones ds5_pagos_multimes
 ```
+
+**Paso 3b. Calibración de la confianza** (usa validación; prueba solo se mide)
+
+```bash
+python pipeline/calibrar.py ds7_historico_garantias ds1_ingreso_solicitudes ds6_gasto_provisiones ds5_pagos_multimes
+```
+
+Guarda `auxiliares/calibracion_<dataset>.json` con la temperatura. Sin ese archivo la app usa T = 1. Proceso y resultados en `docs/calibracion.md`.
 
 **Paso 4. Campos del formulario**
 

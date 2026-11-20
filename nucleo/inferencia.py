@@ -61,6 +61,8 @@ def cargar(ds):
     aux["media"], aux["escala"] = arr["media"], arr["escala"]
     aux["tau"] = arr["tau"] if "tau" in arr.files else None
     aux["nca"] = arr["nca"] if "nca" in arr.files else None
+    ruta_cal = AUX / f"calibracion_{ds}.json"
+    aux["temperatura"] = json.loads(ruta_cal.read_text(encoding="utf-8"))["temperatura"] if ruta_cal.exists() else 1.0
     aux["gb"] = _ajustar_gb(ds, meta) if meta["usa_gb"] else None
     pesos = json.loads((PESOS / f"pesos_{ds}.json").read_text(encoding="utf-8"))
     return {"pre": pre, "aux": aux, "pesos": pesos, "cfg": M.CONFIGS[ds], "P": P}
@@ -117,12 +119,14 @@ def entrada_red(ds, filas):
 
 def probabilidades(ds, filas):
     """Forward pass de la red: ReLU en ocultas, softmax en salida. Devuelve (n, K)."""
-    p = cargar(ds)["pesos"]
+    d = cargar(ds)
+    p, T = d["pesos"], d["aux"]["temperatura"]
     a = entrada_red(ds, filas).to_numpy(float)
     capas = len(p["coefs"])
     for i in range(capas):
         z = a @ np.array(p["coefs"][i]) + np.array(p["intercepts"][i])
         a = np.maximum(z, 0) if i < capas - 1 else z
+    a = a / T  # calibración por temperatura (T = 1 si no hay archivo de calibración)
     e = np.exp(a - a.max(axis=1, keepdims=True))
     return e / e.sum(axis=1, keepdims=True)
 
