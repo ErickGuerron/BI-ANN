@@ -111,6 +111,14 @@ streamlit run app.py
 
 Si el puerto 8501 está ocupado: `streamlit run app.py --server.port 8502`.
 
+## Ramas y experimentos
+
+| Rama | Contenido |
+|---|---|
+| `modelo-base` | Versión actual del front: ds7 con `Valor_Entregado` como proxy de cobertura. Temperatura solo en ds7 y ds1. |
+| `ds7-garantia-capturada` | ds7 con garantía capturada. Modelo puro (sin variables derivadas de la regla), detección de soporte y rechazo. Documentado en `docs/ds7_ml_puro.md`. Limitación: confianza alta incluso en errores fuera de la distribución de entrenamiento. |
+| `ds7-ensamble-incertidumbre` | Medición de incertidumbre con un conjunto de redes y rechazo por desacuerdo. Ver su documentación en la misma rama. |
+
 ## Pruebas (opcional)
 
 Solo hacen falta después de tener los pasos 1 a 5.
