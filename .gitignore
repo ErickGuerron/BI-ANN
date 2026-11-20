@@ -13,6 +13,7 @@ venv/
 # ---------------------------------------------------------------
 resultados/
 resultados_convergencia/
+resultados_keras/t5_miembros/
 graficos/
 auxiliares/
 

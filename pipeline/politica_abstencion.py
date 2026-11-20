@@ -18,8 +18,12 @@ def entropia_normalizada(P):
     return -(P * np.log(np.clip(P, 1e-12, None))).sum(1) / np.log(K)
 
 
-def abstencion(P, umbral_h, umbral_p=UMBRAL_P):
-    return (entropia_normalizada(P) > umbral_h) | (P.max(1) < umbral_p)
+def abstencion(P, umbral_h, umbral_p=UMBRAL_P, rechazo_previo=None):
+    """rechazo_previo: optional boolean mask of cases already rejected by an earlier filter (out of range)."""
+    abst = (entropia_normalizada(P) > umbral_h) | (P.max(1) < umbral_p)
+    if rechazo_previo is not None:
+        abst = abst | np.asarray(rechazo_previo, dtype=bool)
+    return abst
 
 
 def cobertura_por_clase(y, abst, K):
@@ -45,12 +49,12 @@ def metricas(y, P, abst, K):
     return res
 
 
-def elegir_umbral(Pv, yv, K, cobertura_min_clase, grilla):
+def elegir_umbral(Pv, yv, K, cobertura_min_clase, grilla, rechazo_previo=None):
     """Return (umbral_h, metricas_val) with the best accepted macro F1 under the per-class coverage floor.
     Returns (None, None) when no threshold in the grid satisfies the floor."""
     mejor = None
     for u in grilla:
-        m = metricas(yv, Pv, abstencion(Pv, u), K)
+        m = metricas(yv, Pv, abstencion(Pv, u, rechazo_previo=rechazo_previo), K)
         cob = np.array(m["cobertura_por_clase"], dtype=float)
         if np.isnan(cob).any() or cob.min() < cobertura_min_clase or m["macro_f1_aceptados"] is None:
             continue
