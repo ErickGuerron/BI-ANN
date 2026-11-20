@@ -1,0 +1,578 @@
+{
+  "sin_garantia": {
+    "entradas": 96,
+    "umbral_H": 0.62,
+    "d_max": 9.223081204414374,
+    "calidad_prueba": {
+      "bal": 0.7097,
+      "macro_f1": 0.6461,
+      "f1_clase": [
+        0.9646,
+        0.4809,
+        0.4929
+      ],
+      "recall": [
+        0.9392,
+        0.5478,
+        0.642
+      ],
+      "ece": 0.0132
+    },
+    "cascada_prueba": {
+      "cobertura": 0.8539,
+      "cobertura_por_clase": [
+        0.8906,
+        0.4957,
+        0.5494
+      ],
+      "macro_f1_aceptados": 0.7211,
+      "exactitud_aceptados": 0.9603,
+      "macro_f1_abstenciones_como_error": 0.5853
+    },
+    "por_caso_bajo_drift": {
+      "ruido_continuas_0.5sd": {
+        "cobertura": 0.8524,
+        "cobertura_por_clase": [
+          0.8865,
+          0.5478,
+          0.5494
+        ],
+        "macro_f1_aceptados": 0.7318,
+        "exactitud_aceptados": 0.9594,
+        "macro_f1_abstenciones_como_error": 0.6011
+      },
+      "ruido_continuas_1.0sd": {
+        "cobertura": 0.8433,
+        "cobertura_por_clase": [
+          0.8804,
+          0.5217,
+          0.5062
+        ],
+        "macro_f1_aceptados": 0.7089,
+        "exactitud_aceptados": 0.9581,
+        "macro_f1_abstenciones_como_error": 0.5722
+      },
+      "desplazamiento_continuas_1.0sd": {
+        "cobertura": 0.7646,
+        "cobertura_por_clase": [
+          0.7835,
+          0.5391,
+          0.6358
+        ],
+        "macro_f1_aceptados": 0.6509,
+        "exactitud_aceptados": 0.9333,
+        "macro_f1_abstenciones_como_error": 0.5334
+      },
+      "desplazamiento_continuas_2.0sd": {
+        "cobertura": 0.4264,
+        "cobertura_por_clase": [
+          0.4086,
+          0.5565,
+          0.6049
+        ],
+        "macro_f1_aceptados": 0.5457,
+        "exactitud_aceptados": 0.8342,
+        "macro_f1_abstenciones_como_error": 0.3582
+      },
+      "desplazamiento_continuas_3.0sd": {
+        "cobertura": 0.0011,
+        "cobertura_por_clase": [
+          0.0012,
+          0.0,
+          0.0
+        ],
+        "macro_f1_aceptados": 0.0,
+        "exactitud_aceptados": 0.0,
+        "macro_f1_abstenciones_como_error": 0.0
+      },
+      "volteo_binarias_10pct": {
+        "cobertura": 0.0517,
+        "cobertura_por_clase": [
+          0.0547,
+          0.0261,
+          0.0247
+        ],
+        "macro_f1_aceptados": 0.763,
+        "exactitud_aceptados": 0.9718,
+        "macro_f1_abstenciones_como_error": 0.0537
+      },
+      "escala_continuas_x2": {
+        "cobertura": 0.8455,
+        "cobertura_por_clase": [
+          0.8853,
+          0.513,
+          0.4753
+        ],
+        "macro_f1_aceptados": 0.5868,
+        "exactitud_aceptados": 0.944,
+        "macro_f1_abstenciones_como_error": 0.495
+      },
+      "sintetico_uniforme_-4_4": {
+        "cobertura": 0.0,
+        "prediccion": [
+          2516,
+          58,
+          170
+        ]
+      },
+      "sintetico_normal_x5": {
+        "cobertura": 0.0,
+        "prediccion": [
+          2452,
+          117,
+          175
+        ]
+      },
+      "sintetico_ceros": {
+        "cobertura": 0.0,
+        "prediccion": [
+          2744,
+          0,
+          0
+        ]
+      },
+      "cambio_prior_minorias_x0.5": {
+        "cobertura": 0.8637,
+        "cobertura_por_clase": [
+          0.8829,
+          0.5714,
+          0.4937
+        ],
+        "macro_f1_aceptados": 0.6649,
+        "exactitud_aceptados": 0.9667,
+        "macro_f1_abstenciones_como_error": 0.5585
+      },
+      "cambio_prior_minorias_x2.0": {
+        "cobertura": 0.8203,
+        "cobertura_por_clase": [
+          0.8948,
+          0.4927,
+          0.4685
+        ],
+        "macro_f1_aceptados": 0.7412,
+        "exactitud_aceptados": 0.9414,
+        "macro_f1_abstenciones_como_error": 0.5823
+      }
+    },
+    "monitor": {
+      "300": {
+        "falsa_alarma": 0.03,
+        "deteccion": {
+          "ruido_continuas_0.5sd": {
+            "completo": 1.0,
+            "contaminado_30": 0.562
+          },
+          "ruido_continuas_1.0sd": {
+            "completo": 1.0,
+            "contaminado_30": 0.805
+          },
+          "desplazamiento_continuas_1.0sd": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "desplazamiento_continuas_2.0sd": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "desplazamiento_continuas_3.0sd": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "volteo_binarias_10pct": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "escala_continuas_x2": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "sintetico_uniforme_-4_4": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "sintetico_normal_x5": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "sintetico_ceros": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "cambio_prior_minorias_x0.5": {
+            "completo": 0.135,
+            "contaminado_30": 0.022
+          },
+          "cambio_prior_minorias_x2.0": {
+            "completo": 0.635,
+            "contaminado_30": 0.06
+          }
+        }
+      },
+      "1000": {
+        "falsa_alarma": 0.0325,
+        "deteccion": {
+          "ruido_continuas_0.5sd": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "ruido_continuas_1.0sd": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "desplazamiento_continuas_1.0sd": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "desplazamiento_continuas_2.0sd": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "desplazamiento_continuas_3.0sd": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "volteo_binarias_10pct": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "escala_continuas_x2": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "sintetico_uniforme_-4_4": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "sintetico_normal_x5": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "sintetico_ceros": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "cambio_prior_minorias_x0.5": {
+            "completo": 0.54,
+            "contaminado_30": 0.06
+          },
+          "cambio_prior_minorias_x2.0": {
+            "completo": 1.0,
+            "contaminado_30": 0.352
+          }
+        }
+      }
+    }
+  },
+  "con_garantia": {
+    "entradas": 97,
+    "umbral_H": 0.25,
+    "d_max": 9.331025609970098,
+    "calidad_prueba": {
+      "bal": 0.8979,
+      "macro_f1": 0.8715,
+      "f1_clase": [
+        0.9925,
+        0.716,
+        0.9059
+      ],
+      "recall": [
+        0.9866,
+        0.7565,
+        0.9506
+      ],
+      "ece": 0.0038
+    },
+    "cascada_prueba": {
+      "cobertura": 0.9136,
+      "cobertura_por_clase": [
+        0.9514,
+        0.6261,
+        0.5432
+      ],
+      "macro_f1_aceptados": 0.9521,
+      "exactitud_aceptados": 0.9928,
+      "macro_f1_abstenciones_como_error": 0.7841
+    },
+    "por_caso_bajo_drift": {
+      "ruido_continuas_0.5sd": {
+        "cobertura": 0.9049,
+        "cobertura_por_clase": [
+          0.9473,
+          0.5739,
+          0.4938
+        ],
+        "macro_f1_aceptados": 0.9486,
+        "exactitud_aceptados": 0.9928,
+        "macro_f1_abstenciones_como_error": 0.7565
+      },
+      "ruido_continuas_1.0sd": {
+        "cobertura": 0.8812,
+        "cobertura_por_clase": [
+          0.923,
+          0.5913,
+          0.4506
+        ],
+        "macro_f1_aceptados": 0.9375,
+        "exactitud_aceptados": 0.993,
+        "macro_f1_abstenciones_como_error": 0.7337
+      },
+      "desplazamiento_continuas_1.0sd": {
+        "cobertura": 0.8622,
+        "cobertura_por_clase": [
+          0.9149,
+          0.713,
+          0.1667
+        ],
+        "macro_f1_aceptados": 0.8881,
+        "exactitud_aceptados": 0.9894,
+        "macro_f1_abstenciones_como_error": 0.6302
+      },
+      "desplazamiento_continuas_2.0sd": {
+        "cobertura": 0.7208,
+        "cobertura_por_clase": [
+          0.7483,
+          0.6087,
+          0.3827
+        ],
+        "macro_f1_aceptados": 0.5926,
+        "exactitud_aceptados": 0.9636,
+        "macro_f1_abstenciones_como_error": 0.4817
+      },
+      "desplazamiento_continuas_3.0sd": {
+        "cobertura": 0.0015,
+        "cobertura_por_clase": [
+          0.0016,
+          0.0,
+          0.0
+        ],
+        "macro_f1_aceptados": 0.3333,
+        "exactitud_aceptados": 1.0,
+        "macro_f1_abstenciones_como_error": 0.0011
+      },
+      "volteo_binarias_10pct": {
+        "cobertura": 0.0547,
+        "cobertura_por_clase": [
+          0.0588,
+          0.0174,
+          0.0185
+        ],
+        "macro_f1_aceptados": 1.0,
+        "exactitud_aceptados": 1.0,
+        "macro_f1_abstenciones_como_error": 0.0605
+      },
+      "escala_continuas_x2": {
+        "cobertura": 0.8896,
+        "cobertura_por_clase": [
+          0.9206,
+          0.6,
+          0.6235
+        ],
+        "macro_f1_aceptados": 0.5828,
+        "exactitud_aceptados": 0.9549,
+        "macro_f1_abstenciones_como_error": 0.5169
+      },
+      "sintetico_uniforme_-4_4": {
+        "cobertura": 0.0,
+        "prediccion": [
+          2548,
+          93,
+          103
+        ]
+      },
+      "sintetico_normal_x5": {
+        "cobertura": 0.0,
+        "prediccion": [
+          2582,
+          109,
+          53
+        ]
+      },
+      "sintetico_ceros": {
+        "cobertura": 1.0,
+        "prediccion": [
+          2533,
+          0,
+          211
+        ]
+      },
+      "cambio_prior_minorias_x0.5": {
+        "cobertura": 0.9216,
+        "cobertura_por_clase": [
+          0.9422,
+          0.5857,
+          0.5443
+        ],
+        "macro_f1_aceptados": 0.916,
+        "exactitud_aceptados": 0.9929,
+        "macro_f1_abstenciones_como_error": 0.7494
+      },
+      "cambio_prior_minorias_x2.0": {
+        "cobertura": 0.8816,
+        "cobertura_por_clase": [
+          0.9498,
+          0.6488,
+          0.5105
+        ],
+        "macro_f1_aceptados": 0.9495,
+        "exactitud_aceptados": 0.9872,
+        "macro_f1_abstenciones_como_error": 0.7772
+      },
+      "garantia_x10": {
+        "cobertura": 0.9435,
+        "prediccion": [
+          2438,
+          104,
+          202
+        ]
+      },
+      "garantia_x0.1": {
+        "cobertura": 0.8983,
+        "prediccion": [
+          2440,
+          241,
+          63
+        ]
+      },
+      "garantia_en_blanco": {
+        "cobertura": 0.9249,
+        "prediccion": [
+          2537,
+          207,
+          0
+        ]
+      }
+    },
+    "monitor": {
+      "300": {
+        "falsa_alarma": 0.0125,
+        "deteccion": {
+          "ruido_continuas_0.5sd": {
+            "completo": 1.0,
+            "contaminado_30": 0.557
+          },
+          "ruido_continuas_1.0sd": {
+            "completo": 1.0,
+            "contaminado_30": 0.805
+          },
+          "desplazamiento_continuas_1.0sd": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "desplazamiento_continuas_2.0sd": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "desplazamiento_continuas_3.0sd": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "volteo_binarias_10pct": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "escala_continuas_x2": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "sintetico_uniforme_-4_4": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "sintetico_normal_x5": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "sintetico_ceros": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "cambio_prior_minorias_x0.5": {
+            "completo": 0.385,
+            "contaminado_30": 0.018
+          },
+          "cambio_prior_minorias_x2.0": {
+            "completo": 0.725,
+            "contaminado_30": 0.048
+          },
+          "garantia_x10": {
+            "completo": 0.122,
+            "contaminado_30": 0.015
+          },
+          "garantia_x0.1": {
+            "completo": 0.938,
+            "contaminado_30": 0.07
+          },
+          "garantia_en_blanco": {
+            "completo": 1.0,
+            "contaminado_30": 0.11
+          }
+        }
+      },
+      "1000": {
+        "falsa_alarma": 0.025,
+        "deteccion": {
+          "ruido_continuas_0.5sd": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "ruido_continuas_1.0sd": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "desplazamiento_continuas_1.0sd": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "desplazamiento_continuas_2.0sd": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "desplazamiento_continuas_3.0sd": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "volteo_binarias_10pct": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "escala_continuas_x2": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "sintetico_uniforme_-4_4": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "sintetico_normal_x5": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "sintetico_ceros": {
+            "completo": 1.0,
+            "contaminado_30": 1.0
+          },
+          "cambio_prior_minorias_x0.5": {
+            "completo": 0.983,
+            "contaminado_30": 0.075
+          },
+          "cambio_prior_minorias_x2.0": {
+            "completo": 1.0,
+            "contaminado_30": 0.275
+          },
+          "garantia_x10": {
+            "completo": 0.94,
+            "contaminado_30": 0.1
+          },
+          "garantia_x0.1": {
+            "completo": 1.0,
+            "contaminado_30": 0.412
+          },
+          "garantia_en_blanco": {
+            "completo": 1.0,
+            "contaminado_30": 0.603
+          }
+        }
+      }
+    }
+  }
+}
