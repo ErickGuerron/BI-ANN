@@ -19,6 +19,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent / "nucleo"))
 
 import frontera  # noqa: E402
 import inferencia as I  # noqa: E402
+import cascada  # noqa: E402
 
 CARPETA = I.PROGRAMA / "resultados_convergencia"
 TOP4 = [
@@ -283,13 +284,26 @@ def barras(clases, probs):
     return "".join(filas)
 
 
+def estado_cascada(res):
+    """Banner of the two-step cascade (out-of-range filter, then ensemble ambiguity). Empty when not available."""
+    c = res.get("cascada")
+    if not c:
+        return ""
+    if c["estado"] == cascada.AUTOMATICO:
+        clase = frontera.nombre(res["clases"][c["clase_idx"]])
+        return f'<div class="chip">Cascada: autom&aacute;tico, clase del ensamble {clase}</div>'
+    motivo = "fuera de rango" if c["motivo"] == cascada.FUERA_DE_RANGO else "ambig&uuml;edad del ensamble"
+    return (f'<div class="aviso"><b>REVISI&Oacute;N MANUAL</b>: {motivo}. Entrop&iacute;a {fmt(c["entropia"], 2)}, '
+            f'distancia al entrenamiento {fmt(c["distancia"], 2)}.</div>')
+
+
 def render_resultado(res):
     clase = frontera.nombre(res["clase"])
     duda = ('<span class="chip">En zona de duda</span>' if res.get("zona") else '<span class="chip">Fuera de zona de duda</span>') \
         if res.get("zona") is not None else ""
     return (f'<div class="tarjeta"><div class="mut" style="font-size:13px">Clase predicha</div>'
             f'<div class="disp" style="font-size:36px;line-height:1.1">{clase}</div>'
-            f'<div style="margin:8px 0">{duda}</div>{barras(res["clases"], res["probs"])}</div>')
+            f'<div style="margin:8px 0">{duda}</div>{estado_cascada(res)}{barras(res["clases"], res["probs"])}</div>')
 
 
 def seccion_dashboard(ds):
@@ -344,11 +358,14 @@ def _clasificar(ds, campos, grupos):
     zona = I.zona_duda(ds, fila)
     res = {"clase": clases[0], "probs": pr[0].tolist(), "clases": I.cargar(ds)["aux"]["clases"], "zona": zona,
            "nn": I.entrada_red(ds, fila).to_numpy(float)[0].tolist(), "avisos": list(avs.values())}
+    res["cascada"] = cascada.evaluar(ds, [res["nn"]])[0] if cascada.disponible(ds) else None
     st.session_state[f"res_{ds}"] = res
     hist = st.session_state.setdefault(f"hist_{ds}", [])
     hist.insert(0, {"hora": datetime.now().strftime("%H:%M:%S"), "clase": clases[0],
                     "confianza": f"{max(res['probs']) * 100:.1f} %".replace(".", ","),
                     "zona_duda": "sí" if zona else "no" if zona is not None else "—"})
+    if res["cascada"]:
+        hist[0]["estado"] = res["cascada"]["estado"] + (f" ({res['cascada']['motivo']})" if res["cascada"]["motivo"] else "")
     st.session_state[f"paso_{ds}"] = 0
     st.rerun()
 
@@ -447,9 +464,9 @@ def seccion_formulario(ds):
     if hist:
         st.markdown('<div class="disp" style="font-size:22px;margin:22px 0 6px">Operaciones clasificadas en esta sesión</div>', unsafe_allow_html=True)
         filas = "".join(f'<tr><td>{h["hora"]}</td><td style="text-align:left">{frontera.nombre(h["clase"])}</td>'
-                        f'<td>{h["confianza"]}</td><td>{h["zona_duda"]}</td></tr>' for h in hist)
+                        f'<td>{h["confianza"]}</td><td>{h["zona_duda"]}</td><td>{h.get("estado", "-")}</td></tr>' for h in hist)
         st.markdown('<table class="tabla"><thead><tr><th>Hora</th><th style="text-align:left">Clase predicha</th><th>Confianza</th>'
-                    '<th>Zona de duda</th></tr></thead><tbody>' + filas + "</tbody></table>", unsafe_allow_html=True)
+                    '<th>Zona de duda</th><th>Cascada</th></tr></thead><tbody>' + filas + "</tbody></table>", unsafe_allow_html=True)
 
     nn = res.get("nn") if res else None
     st.markdown('<div class="disp" style="font-size:24px;margin:26px 0 4px">Frontera de decisión (plano PCA)</div>', unsafe_allow_html=True)
