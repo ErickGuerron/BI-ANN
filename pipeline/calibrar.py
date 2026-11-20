@@ -27,6 +27,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "nucleo"))
 import inferencia as I  # noqa: E402
 
 TOP4 = ["ds7_historico_garantias", "ds1_ingreso_solicitudes", "ds6_gasto_provisiones", "ds5_pagos_multimes"]
+# Datasets donde se aplica temperature scaling. ds6 y ds5 se excluyeron: la temperatura ajustada en validación
+# empeoró (o no mejoró) las métricas en prueba. La decisión se tomó después de ver prueba; ver docs/calibracion.md.
+CON_TEMPERATURA = ["ds7_historico_garantias", "ds1_ingreso_solicitudes"]
 
 
 def logits(pesos, X):
@@ -111,7 +114,7 @@ def calibrar(ds):
 
 
 if __name__ == "__main__":
-    for ds in sys.argv[1:] or TOP4:
+    for ds in sys.argv[1:] or CON_TEMPERATURA:
         s = calibrar(ds)
         print(ds, "T =", s["temperatura"])
         for nombre, m in s["metricas_prueba"].items():

@@ -82,7 +82,7 @@ Lectura:
 - **ds6 y ds5:** la temperatura no mejora en prueba. T se ajustó en validación, y en esos datasets la validación no representa bien la prueba (ds5 y ds6 son temporales). La diferencia es pequeña, pero empeora un poco en ECE (ds6) y NLL (ds5).
 - **Regresión isotónica:** tiene el mejor NLL y ECE, pero en ds6 baja la exactitud balanceada de 0,819 a 0,346. Predice casi siempre la clase mayoritaria. No se usa.
 
-Decisión: se usa temperature scaling en los cuatro datasets, porque no cambia la clase predicha y su efecto en ds6 y ds5 es pequeño. Esto no quiere decir que mejore todos los casos.
+Decisión final: temperature scaling **solo en ds7 y ds1**, donde mejora NLL, Brier y ECE en prueba. En ds6 y ds5 no se aplica, porque la temperatura ajustada en validación empeoró o no mejoró en prueba. Esta selección se hizo **después de ver los resultados de prueba**: no es una estimación independiente para ds6 y ds5. Una forma de evitar ese sesgo sería decidir con una partición de validación adicional, que no se hizo.
 
 ## Efecto en los casos de prueba (`pruebas/casos_no_vistos.md`)
 
