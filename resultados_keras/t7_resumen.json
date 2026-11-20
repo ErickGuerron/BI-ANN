@@ -1,0 +1,762 @@
+{
+  "umbral_H": 0.62,
+  "d_max": 9.223081204414374,
+  "cuantil_umbral": 0.995,
+  "contaminacion": 0.3,
+  "columnas_continuas": 13,
+  "por_tamano": {
+    "100": {
+      "umbrales": {
+        "psi_max": 0.6986,
+        "psi_pred": 0.1133,
+        "tasa_ood": 0.05,
+        "desv_amb": 0.0992
+      },
+      "alarma_falsa_ventanas_limpias": 0.0175,
+      "deteccion": {
+        "ruido_continuas_0.5sd": {
+          "completo": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.007,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.01
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 0.0375,
+            "por_estadistico": {
+              "psi_max": 0.022,
+              "psi_pred": 0.015,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.0
+            }
+          }
+        },
+        "ruido_continuas_1.0sd": {
+          "completo": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.005,
+              "tasa_ood": 0.003,
+              "desv_amb": 0.013
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 0.015,
+            "por_estadistico": {
+              "psi_max": 0.01,
+              "psi_pred": 0.005,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.0
+            }
+          }
+        },
+        "desplazamiento_continuas_1.0sd": {
+          "completo": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.2,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.415
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 0.155,
+            "por_estadistico": {
+              "psi_max": 0.115,
+              "psi_pred": 0.015,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.045
+            }
+          }
+        },
+        "desplazamiento_continuas_2.0sd": {
+          "completo": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.995,
+              "tasa_ood": 1.0,
+              "desv_amb": 1.0
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 0.86,
+            "por_estadistico": {
+              "psi_max": 0.22,
+              "psi_pred": 0.165,
+              "tasa_ood": 0.59,
+              "desv_amb": 0.482
+            }
+          }
+        },
+        "desplazamiento_continuas_3.0sd": {
+          "completo": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 1.0,
+              "tasa_ood": 1.0,
+              "desv_amb": 1.0
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 0.58,
+              "psi_pred": 0.695,
+              "tasa_ood": 1.0,
+              "desv_amb": 0.968
+            }
+          }
+        },
+        "volteo_binarias_10pct": {
+          "completo": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 0.005,
+              "psi_pred": 0.228,
+              "tasa_ood": 1.0,
+              "desv_amb": 0.435
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 0.005,
+              "psi_pred": 0.022,
+              "tasa_ood": 1.0,
+              "desv_amb": 0.03
+            }
+          }
+        },
+        "escala_continuas_x2": {
+          "completo": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.22,
+              "tasa_ood": 0.525,
+              "desv_amb": 0.005
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 0.0825,
+            "por_estadistico": {
+              "psi_max": 0.03,
+              "psi_pred": 0.02,
+              "tasa_ood": 0.035,
+              "desv_amb": 0.0
+            }
+          }
+        },
+        "sintetico_uniforme_-4_4": {
+          "completo": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.203,
+              "tasa_ood": 1.0,
+              "desv_amb": 0.122
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 0.04,
+              "psi_pred": 0.007,
+              "tasa_ood": 1.0,
+              "desv_amb": 0.007
+            }
+          }
+        },
+        "sintetico_normal_x5": {
+          "completo": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.068,
+              "tasa_ood": 1.0,
+              "desv_amb": 0.083
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 0.037,
+              "psi_pred": 0.015,
+              "tasa_ood": 1.0,
+              "desv_amb": 0.018
+            }
+          }
+        },
+        "sintetico_ceros": {
+          "completo": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 1.0,
+              "tasa_ood": 0.0,
+              "desv_amb": 1.0
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 0.637,
+              "psi_pred": 0.065,
+              "tasa_ood": 0.0,
+              "desv_amb": 1.0
+            }
+          }
+        },
+        "cambio_prior_minorias_x0.5": {
+          "completo": {
+            "deteccion": 0.1025,
+            "por_estadistico": {
+              "psi_max": 0.007,
+              "psi_pred": 0.095,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.0
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 0.0125,
+            "por_estadistico": {
+              "psi_max": 0.005,
+              "psi_pred": 0.007,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.0
+            }
+          }
+        },
+        "cambio_prior_minorias_x2.0": {
+          "completo": {
+            "deteccion": 0.1325,
+            "por_estadistico": {
+              "psi_max": 0.003,
+              "psi_pred": 0.11,
+              "tasa_ood": 0.003,
+              "desv_amb": 0.04
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 0.035,
+            "por_estadistico": {
+              "psi_max": 0.013,
+              "psi_pred": 0.01,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.015
+            }
+          }
+        }
+      }
+    },
+    "300": {
+      "umbrales": {
+        "psi_max": 0.133,
+        "psi_pred": 0.0318,
+        "tasa_ood": 0.03,
+        "desv_amb": 0.0526
+      },
+      "alarma_falsa_ventanas_limpias": 0.035,
+      "deteccion": {
+        "ruido_continuas_0.5sd": {
+          "completo": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.013,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.058
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 0.6275,
+            "por_estadistico": {
+              "psi_max": 0.623,
+              "psi_pred": 0.0,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.028
+            }
+          }
+        },
+        "ruido_continuas_1.0sd": {
+          "completo": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.028,
+              "tasa_ood": 0.007,
+              "desv_amb": 0.07
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 0.8375,
+            "por_estadistico": {
+              "psi_max": 0.838,
+              "psi_pred": 0.003,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.025
+            }
+          }
+        },
+        "desplazamiento_continuas_1.0sd": {
+          "completo": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.853,
+              "tasa_ood": 0.037,
+              "desv_amb": 0.938
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.1,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.158
+            }
+          }
+        },
+        "desplazamiento_continuas_2.0sd": {
+          "completo": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 1.0,
+              "tasa_ood": 1.0,
+              "desv_amb": 1.0
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.703,
+              "tasa_ood": 0.993,
+              "desv_amb": 0.988
+            }
+          }
+        },
+        "desplazamiento_continuas_3.0sd": {
+          "completo": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 1.0,
+              "tasa_ood": 1.0,
+              "desv_amb": 1.0
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 1.0,
+              "tasa_ood": 1.0,
+              "desv_amb": 1.0
+            }
+          }
+        },
+        "volteo_binarias_10pct": {
+          "completo": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 0.01,
+              "psi_pred": 0.892,
+              "tasa_ood": 1.0,
+              "desv_amb": 0.95
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 0.025,
+              "psi_pred": 0.048,
+              "tasa_ood": 1.0,
+              "desv_amb": 0.2
+            }
+          }
+        },
+        "escala_continuas_x2": {
+          "completo": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.853,
+              "tasa_ood": 0.983,
+              "desv_amb": 0.015
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.072,
+              "tasa_ood": 0.163,
+              "desv_amb": 0.007
+            }
+          }
+        },
+        "sintetico_uniforme_-4_4": {
+          "completo": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.682,
+              "tasa_ood": 1.0,
+              "desv_amb": 0.427
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.037,
+              "tasa_ood": 1.0,
+              "desv_amb": 0.065
+            }
+          }
+        },
+        "sintetico_normal_x5": {
+          "completo": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.31,
+              "tasa_ood": 1.0,
+              "desv_amb": 0.405
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.01,
+              "tasa_ood": 1.0,
+              "desv_amb": 0.055
+            }
+          }
+        },
+        "sintetico_ceros": {
+          "completo": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 1.0,
+              "tasa_ood": 0.0,
+              "desv_amb": 1.0
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.245,
+              "tasa_ood": 0.0,
+              "desv_amb": 1.0
+            }
+          }
+        },
+        "cambio_prior_minorias_x0.5": {
+          "completo": {
+            "deteccion": 0.3275,
+            "por_estadistico": {
+              "psi_max": 0.077,
+              "psi_pred": 0.307,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.033
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 0.04,
+            "por_estadistico": {
+              "psi_max": 0.013,
+              "psi_pred": 0.022,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.005
+            }
+          }
+        },
+        "cambio_prior_minorias_x2.0": {
+          "completo": {
+            "deteccion": 0.6675,
+            "por_estadistico": {
+              "psi_max": 0.198,
+              "psi_pred": 0.637,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.155
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 0.0875,
+            "por_estadistico": {
+              "psi_max": 0.03,
+              "psi_pred": 0.04,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.03
+            }
+          }
+        }
+      }
+    },
+    "1000": {
+      "umbrales": {
+        "psi_max": 0.0588,
+        "psi_pred": 0.011,
+        "tasa_ood": 0.018,
+        "desv_amb": 0.0292
+      },
+      "alarma_falsa_ventanas_limpias": 0.0575,
+      "deteccion": {
+        "ruido_continuas_0.5sd": {
+          "completo": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.022,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.233
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.013,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.085
+            }
+          }
+        },
+        "ruido_continuas_1.0sd": {
+          "completo": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.0,
+              "tasa_ood": 0.152,
+              "desv_amb": 0.253
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.003,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.087
+            }
+          }
+        },
+        "desplazamiento_continuas_1.0sd": {
+          "completo": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 1.0,
+              "tasa_ood": 0.258,
+              "desv_amb": 1.0
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.302,
+              "tasa_ood": 0.003,
+              "desv_amb": 0.625
+            }
+          }
+        },
+        "desplazamiento_continuas_2.0sd": {
+          "completo": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 1.0,
+              "tasa_ood": 1.0,
+              "desv_amb": 1.0
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 1.0,
+              "tasa_ood": 1.0,
+              "desv_amb": 1.0
+            }
+          }
+        },
+        "desplazamiento_continuas_3.0sd": {
+          "completo": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 1.0,
+              "tasa_ood": 1.0,
+              "desv_amb": 1.0
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 1.0,
+              "tasa_ood": 1.0,
+              "desv_amb": 1.0
+            }
+          }
+        },
+        "volteo_binarias_10pct": {
+          "completo": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 0.033,
+              "psi_pred": 1.0,
+              "tasa_ood": 1.0,
+              "desv_amb": 1.0
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 0.022,
+              "psi_pred": 0.11,
+              "tasa_ood": 1.0,
+              "desv_amb": 0.695
+            }
+          }
+        },
+        "escala_continuas_x2": {
+          "completo": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 1.0,
+              "tasa_ood": 1.0,
+              "desv_amb": 0.228
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.223,
+              "tasa_ood": 0.805,
+              "desv_amb": 0.007
+            }
+          }
+        },
+        "sintetico_uniforme_-4_4": {
+          "completo": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 1.0,
+              "tasa_ood": 1.0,
+              "desv_amb": 0.968
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.048,
+              "tasa_ood": 1.0,
+              "desv_amb": 0.255
+            }
+          }
+        },
+        "sintetico_normal_x5": {
+          "completo": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.865,
+              "tasa_ood": 1.0,
+              "desv_amb": 0.917
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.025,
+              "tasa_ood": 1.0,
+              "desv_amb": 0.22
+            }
+          }
+        },
+        "sintetico_ceros": {
+          "completo": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 1.0,
+              "tasa_ood": 0.0,
+              "desv_amb": 1.0
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.77,
+              "tasa_ood": 0.0,
+              "desv_amb": 1.0
+            }
+          }
+        },
+        "cambio_prior_minorias_x0.5": {
+          "completo": {
+            "deteccion": 0.8725,
+            "por_estadistico": {
+              "psi_max": 0.515,
+              "psi_pred": 0.818,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.1
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 0.075,
+            "por_estadistico": {
+              "psi_max": 0.04,
+              "psi_pred": 0.028,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.01
+            }
+          }
+        },
+        "cambio_prior_minorias_x2.0": {
+          "completo": {
+            "deteccion": 1.0,
+            "por_estadistico": {
+              "psi_max": 0.802,
+              "psi_pred": 1.0,
+              "tasa_ood": 0.013,
+              "desv_amb": 0.512
+            }
+          },
+          "contaminado_30": {
+            "deteccion": 0.2575,
+            "por_estadistico": {
+              "psi_max": 0.077,
+              "psi_pred": 0.16,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.098
+            }
+          }
+        }
+      }
+    }
+  }
+}
