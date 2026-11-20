@@ -1,0 +1,1392 @@
+{
+  "claves_viejas": [
+    "psi_max",
+    "psi_pred",
+    "tasa_ood",
+    "desv_amb"
+  ],
+  "claves_nuevas": [
+    "psi_max",
+    "psi_pred",
+    "tasa_ood",
+    "desv_amb",
+    "tasa_garantia_desv",
+    "ks_cobertura"
+  ],
+  "por_tamano": {
+    "100": {
+      "umbrales": {
+        "psi_max": 0.3934,
+        "psi_pred": 0.2742,
+        "tasa_ood": 0.04,
+        "desv_amb": 0.0782,
+        "tasa_garantia_desv": 2.8,
+        "ks_cobertura": 1.73
+      },
+      "falsa_alarma": {
+        "viejo": 0.035,
+        "nuevo": 0.045
+      },
+      "deteccion": {
+        "ruido_continuas_0.5sd": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.003,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.003,
+              "tasa_garantia_desv": 0.005,
+              "ks_cobertura": 0.005
+            }
+          },
+          "contaminado_30": {
+            "viejo": 0.06,
+            "nuevo": 0.083,
+            "por_estadistico": {
+              "psi_max": 0.05,
+              "psi_pred": 0.003,
+              "tasa_ood": 0.005,
+              "desv_amb": 0.005,
+              "tasa_garantia_desv": 0.013,
+              "ks_cobertura": 0.013
+            }
+          }
+        },
+        "ruido_continuas_1.0sd": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.003,
+              "tasa_ood": 0.025,
+              "desv_amb": 0.028,
+              "tasa_garantia_desv": 0.003,
+              "ks_cobertura": 0.0
+            }
+          },
+          "contaminado_30": {
+            "viejo": 0.135,
+            "nuevo": 0.14,
+            "por_estadistico": {
+              "psi_max": 0.115,
+              "psi_pred": 0.003,
+              "tasa_ood": 0.01,
+              "desv_amb": 0.007,
+              "tasa_garantia_desv": 0.003,
+              "ks_cobertura": 0.005
+            }
+          }
+        },
+        "desplazamiento_continuas_1.0sd": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.058,
+              "tasa_ood": 0.03,
+              "desv_amb": 0.145,
+              "tasa_garantia_desv": 0.007,
+              "ks_cobertura": 0.003
+            }
+          },
+          "contaminado_30": {
+            "viejo": 0.963,
+            "nuevo": 0.963,
+            "por_estadistico": {
+              "psi_max": 0.963,
+              "psi_pred": 0.0,
+              "tasa_ood": 0.003,
+              "desv_amb": 0.013,
+              "tasa_garantia_desv": 0.003,
+              "ks_cobertura": 0.01
+            }
+          }
+        },
+        "desplazamiento_continuas_2.0sd": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.448,
+              "tasa_ood": 1.0,
+              "desv_amb": 0.15,
+              "tasa_garantia_desv": 0.007,
+              "ks_cobertura": 0.007
+            }
+          },
+          "contaminado_30": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.003,
+              "tasa_ood": 0.73,
+              "desv_amb": 0.013,
+              "tasa_garantia_desv": 0.005,
+              "ks_cobertura": 0.0
+            }
+          }
+        },
+        "desplazamiento_continuas_3.0sd": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.755,
+              "tasa_ood": 1.0,
+              "desv_amb": 0.435,
+              "tasa_garantia_desv": 0.005,
+              "ks_cobertura": 0.005
+            }
+          },
+          "contaminado_30": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.028,
+              "tasa_ood": 1.0,
+              "desv_amb": 0.028,
+              "tasa_garantia_desv": 0.01,
+              "ks_cobertura": 0.003
+            }
+          }
+        },
+        "volteo_binarias_10pct": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 0.015,
+              "psi_pred": 0.01,
+              "tasa_ood": 1.0,
+              "desv_amb": 1.0,
+              "tasa_garantia_desv": 0.005,
+              "ks_cobertura": 0.0
+            }
+          },
+          "contaminado_30": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 0.01,
+              "psi_pred": 0.003,
+              "tasa_ood": 1.0,
+              "desv_amb": 0.95,
+              "tasa_garantia_desv": 0.005,
+              "ks_cobertura": 0.005
+            }
+          }
+        },
+        "escala_continuas_x2": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.355,
+              "tasa_ood": 0.787,
+              "desv_amb": 0.0,
+              "tasa_garantia_desv": 0.007,
+              "ks_cobertura": 0.005
+            }
+          },
+          "contaminado_30": {
+            "viejo": 0.463,
+            "nuevo": 0.465,
+            "por_estadistico": {
+              "psi_max": 0.405,
+              "psi_pred": 0.003,
+              "tasa_ood": 0.08,
+              "desv_amb": 0.003,
+              "tasa_garantia_desv": 0.005,
+              "ks_cobertura": 0.005
+            }
+          }
+        },
+        "sintetico_uniforme_-4_4": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.055,
+              "tasa_ood": 1.0,
+              "desv_amb": 1.0,
+              "tasa_garantia_desv": 0.007,
+              "ks_cobertura": 0.005
+            }
+          },
+          "contaminado_30": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 0.307,
+              "psi_pred": 0.005,
+              "tasa_ood": 1.0,
+              "desv_amb": 0.475,
+              "tasa_garantia_desv": 0.003,
+              "ks_cobertura": 0.007
+            }
+          }
+        },
+        "sintetico_normal_x5": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.09,
+              "tasa_ood": 1.0,
+              "desv_amb": 1.0,
+              "tasa_garantia_desv": 0.013,
+              "ks_cobertura": 0.01
+            }
+          },
+          "contaminado_30": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 0.455,
+              "psi_pred": 0.007,
+              "tasa_ood": 1.0,
+              "desv_amb": 0.507,
+              "tasa_garantia_desv": 0.005,
+              "ks_cobertura": 0.003
+            }
+          }
+        },
+        "sintetico_ceros": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.35,
+              "tasa_ood": 0.0,
+              "desv_amb": 1.0,
+              "tasa_garantia_desv": 0.0,
+              "ks_cobertura": 0.007
+            }
+          },
+          "contaminado_30": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.013,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.003,
+              "tasa_garantia_desv": 0.007,
+              "ks_cobertura": 0.003
+            }
+          }
+        },
+        "cambio_prior_minorias_x0.5": {
+          "completo": {
+            "viejo": 0.077,
+            "nuevo": 0.083,
+            "por_estadistico": {
+              "psi_max": 0.043,
+              "psi_pred": 0.043,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.0,
+              "tasa_garantia_desv": 0.007,
+              "ks_cobertura": 0.005
+            }
+          },
+          "contaminado_30": {
+            "viejo": 0.018,
+            "nuevo": 0.022,
+            "por_estadistico": {
+              "psi_max": 0.015,
+              "psi_pred": 0.0,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.003,
+              "tasa_garantia_desv": 0.0,
+              "ks_cobertura": 0.005
+            }
+          }
+        },
+        "cambio_prior_minorias_x2.0": {
+          "completo": {
+            "viejo": 0.08,
+            "nuevo": 0.417,
+            "por_estadistico": {
+              "psi_max": 0.043,
+              "psi_pred": 0.0,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.037,
+              "tasa_garantia_desv": 0.38,
+              "ks_cobertura": 0.01
+            }
+          },
+          "contaminado_30": {
+            "viejo": 0.03,
+            "nuevo": 0.08,
+            "por_estadistico": {
+              "psi_max": 0.02,
+              "psi_pred": 0.005,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.005,
+              "tasa_garantia_desv": 0.043,
+              "ks_cobertura": 0.01
+            }
+          }
+        },
+        "garantia_x10": {
+          "completo": {
+            "viejo": 0.037,
+            "nuevo": 0.892,
+            "por_estadistico": {
+              "psi_max": 0.025,
+              "psi_pred": 0.007,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.005,
+              "tasa_garantia_desv": 0.003,
+              "ks_cobertura": 0.89
+            }
+          },
+          "contaminado_30": {
+            "viejo": 0.022,
+            "nuevo": 0.08,
+            "por_estadistico": {
+              "psi_max": 0.015,
+              "psi_pred": 0.003,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.005,
+              "tasa_garantia_desv": 0.003,
+              "ks_cobertura": 0.06
+            }
+          }
+        },
+        "garantia_x2": {
+          "completo": {
+            "viejo": 0.035,
+            "nuevo": 0.24,
+            "por_estadistico": {
+              "psi_max": 0.03,
+              "psi_pred": 0.005,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.0,
+              "tasa_garantia_desv": 0.005,
+              "ks_cobertura": 0.215
+            }
+          },
+          "contaminado_30": {
+            "viejo": 0.028,
+            "nuevo": 0.05,
+            "por_estadistico": {
+              "psi_max": 0.018,
+              "psi_pred": 0.005,
+              "tasa_ood": 0.003,
+              "desv_amb": 0.003,
+              "tasa_garantia_desv": 0.005,
+              "ks_cobertura": 0.02
+            }
+          }
+        },
+        "garantia_x0.5": {
+          "completo": {
+            "viejo": 0.022,
+            "nuevo": 0.095,
+            "por_estadistico": {
+              "psi_max": 0.018,
+              "psi_pred": 0.003,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.005,
+              "tasa_garantia_desv": 0.0,
+              "ks_cobertura": 0.075
+            }
+          },
+          "contaminado_30": {
+            "viejo": 0.028,
+            "nuevo": 0.03,
+            "por_estadistico": {
+              "psi_max": 0.015,
+              "psi_pred": 0.0,
+              "tasa_ood": 0.003,
+              "desv_amb": 0.01,
+              "tasa_garantia_desv": 0.003,
+              "ks_cobertura": 0.0
+            }
+          }
+        },
+        "garantia_x0.1": {
+          "completo": {
+            "viejo": 0.117,
+            "nuevo": 0.91,
+            "por_estadistico": {
+              "psi_max": 0.022,
+              "psi_pred": 0.087,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.007,
+              "tasa_garantia_desv": 0.005,
+              "ks_cobertura": 0.865
+            }
+          },
+          "contaminado_30": {
+            "viejo": 0.025,
+            "nuevo": 0.065,
+            "por_estadistico": {
+              "psi_max": 0.02,
+              "psi_pred": 0.0,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.005,
+              "tasa_garantia_desv": 0.007,
+              "ks_cobertura": 0.035
+            }
+          }
+        },
+        "garantia_en_blanco": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 1.0,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.0,
+              "tasa_garantia_desv": 1.0,
+              "ks_cobertura": 0.0
+            }
+          },
+          "contaminado_30": {
+            "viejo": 0.04,
+            "nuevo": 0.04,
+            "por_estadistico": {
+              "psi_max": 0.03,
+              "psi_pred": 0.015,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.003,
+              "tasa_garantia_desv": 0.007,
+              "ks_cobertura": 0.0
+            }
+          }
+        }
+      }
+    },
+    "300": {
+      "umbrales": {
+        "psi_max": 0.1368,
+        "psi_pred": 0.0415,
+        "tasa_ood": 0.03,
+        "desv_amb": 0.0447,
+        "tasa_garantia_desv": 2.8,
+        "ks_cobertura": 1.73
+      },
+      "falsa_alarma": {
+        "viejo": 0.015,
+        "nuevo": 0.04
+      },
+      "deteccion": {
+        "ruido_continuas_0.5sd": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.003,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.003,
+              "tasa_garantia_desv": 0.005,
+              "ks_cobertura": 0.022
+            }
+          },
+          "contaminado_30": {
+            "viejo": 0.575,
+            "nuevo": 0.588,
+            "por_estadistico": {
+              "psi_max": 0.57,
+              "psi_pred": 0.005,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.003,
+              "tasa_garantia_desv": 0.015,
+              "ks_cobertura": 0.013
+            }
+          }
+        },
+        "ruido_continuas_1.0sd": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.007,
+              "tasa_ood": 0.007,
+              "desv_amb": 0.095,
+              "tasa_garantia_desv": 0.007,
+              "ks_cobertura": 0.015
+            }
+          },
+          "contaminado_30": {
+            "viejo": 0.865,
+            "nuevo": 0.865,
+            "por_estadistico": {
+              "psi_max": 0.865,
+              "psi_pred": 0.0,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.003,
+              "tasa_garantia_desv": 0.003,
+              "ks_cobertura": 0.013
+            }
+          }
+        },
+        "desplazamiento_continuas_1.0sd": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.76,
+              "tasa_ood": 0.025,
+              "desv_amb": 0.435,
+              "tasa_garantia_desv": 0.01,
+              "ks_cobertura": 0.018
+            }
+          },
+          "contaminado_30": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.025,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.013,
+              "tasa_garantia_desv": 0.005,
+              "ks_cobertura": 0.013
+            }
+          }
+        },
+        "desplazamiento_continuas_2.0sd": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 1.0,
+              "tasa_ood": 1.0,
+              "desv_amb": 0.575,
+              "tasa_garantia_desv": 0.003,
+              "ks_cobertura": 0.02
+            }
+          },
+          "contaminado_30": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.117,
+              "tasa_ood": 0.985,
+              "desv_amb": 0.03,
+              "tasa_garantia_desv": 0.005,
+              "ks_cobertura": 0.013
+            }
+          }
+        },
+        "desplazamiento_continuas_3.0sd": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 1.0,
+              "tasa_ood": 1.0,
+              "desv_amb": 0.94,
+              "tasa_garantia_desv": 0.005,
+              "ks_cobertura": 0.015
+            }
+          },
+          "contaminado_30": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.155,
+              "tasa_ood": 1.0,
+              "desv_amb": 0.105,
+              "tasa_garantia_desv": 0.007,
+              "ks_cobertura": 0.018
+            }
+          }
+        },
+        "volteo_binarias_10pct": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 0.007,
+              "psi_pred": 0.522,
+              "tasa_ood": 1.0,
+              "desv_amb": 1.0,
+              "tasa_garantia_desv": 0.003,
+              "ks_cobertura": 0.018
+            }
+          },
+          "contaminado_30": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 0.007,
+              "psi_pred": 0.01,
+              "tasa_ood": 1.0,
+              "desv_amb": 1.0,
+              "tasa_garantia_desv": 0.003,
+              "ks_cobertura": 0.01
+            }
+          }
+        },
+        "escala_continuas_x2": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 1.0,
+              "tasa_ood": 0.98,
+              "desv_amb": 0.068,
+              "tasa_garantia_desv": 0.007,
+              "ks_cobertura": 0.018
+            }
+          },
+          "contaminado_30": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.152,
+              "tasa_ood": 0.142,
+              "desv_amb": 0.005,
+              "tasa_garantia_desv": 0.007,
+              "ks_cobertura": 0.025
+            }
+          }
+        },
+        "sintetico_uniforme_-4_4": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.395,
+              "tasa_ood": 1.0,
+              "desv_amb": 1.0,
+              "tasa_garantia_desv": 0.003,
+              "ks_cobertura": 0.007
+            }
+          },
+          "contaminado_30": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.015,
+              "tasa_ood": 1.0,
+              "desv_amb": 0.953,
+              "tasa_garantia_desv": 0.005,
+              "ks_cobertura": 0.015
+            }
+          }
+        },
+        "sintetico_normal_x5": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.66,
+              "tasa_ood": 1.0,
+              "desv_amb": 1.0,
+              "tasa_garantia_desv": 0.003,
+              "ks_cobertura": 0.018
+            }
+          },
+          "contaminado_30": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.018,
+              "tasa_ood": 1.0,
+              "desv_amb": 0.973,
+              "tasa_garantia_desv": 0.007,
+              "ks_cobertura": 0.007
+            }
+          }
+        },
+        "sintetico_ceros": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 1.0,
+              "tasa_ood": 0.0,
+              "desv_amb": 1.0,
+              "tasa_garantia_desv": 0.003,
+              "ks_cobertura": 0.01
+            }
+          },
+          "contaminado_30": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.015,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.07,
+              "tasa_garantia_desv": 0.003,
+              "ks_cobertura": 0.025
+            }
+          }
+        },
+        "cambio_prior_minorias_x0.5": {
+          "completo": {
+            "viejo": 0.34,
+            "nuevo": 0.485,
+            "por_estadistico": {
+              "psi_max": 0.037,
+              "psi_pred": 0.32,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.022,
+              "tasa_garantia_desv": 0.448,
+              "ks_cobertura": 0.0
+            }
+          },
+          "contaminado_30": {
+            "viejo": 0.022,
+            "nuevo": 0.037,
+            "por_estadistico": {
+              "psi_max": 0.013,
+              "psi_pred": 0.007,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.003,
+              "tasa_garantia_desv": 0.013,
+              "ks_cobertura": 0.007
+            }
+          }
+        },
+        "cambio_prior_minorias_x2.0": {
+          "completo": {
+            "viejo": 0.595,
+            "nuevo": 0.825,
+            "por_estadistico": {
+              "psi_max": 0.17,
+              "psi_pred": 0.562,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.052,
+              "tasa_garantia_desv": 0.8,
+              "ks_cobertura": 0.03
+            }
+          },
+          "contaminado_30": {
+            "viejo": 0.035,
+            "nuevo": 0.092,
+            "por_estadistico": {
+              "psi_max": 0.022,
+              "psi_pred": 0.01,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.003,
+              "tasa_garantia_desv": 0.043,
+              "ks_cobertura": 0.02
+            }
+          }
+        },
+        "garantia_x10": {
+          "completo": {
+            "viejo": 0.175,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 0.013,
+              "psi_pred": 0.0,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.163,
+              "tasa_garantia_desv": 0.0,
+              "ks_cobertura": 1.0
+            }
+          },
+          "contaminado_30": {
+            "viejo": 0.037,
+            "nuevo": 0.417,
+            "por_estadistico": {
+              "psi_max": 0.018,
+              "psi_pred": 0.015,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.005,
+              "tasa_garantia_desv": 0.015,
+              "ks_cobertura": 0.403
+            }
+          }
+        },
+        "garantia_x2": {
+          "completo": {
+            "viejo": 0.04,
+            "nuevo": 0.877,
+            "por_estadistico": {
+              "psi_max": 0.013,
+              "psi_pred": 0.005,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.022,
+              "tasa_garantia_desv": 0.007,
+              "ks_cobertura": 0.868
+            }
+          },
+          "contaminado_30": {
+            "viejo": 0.013,
+            "nuevo": 0.117,
+            "por_estadistico": {
+              "psi_max": 0.01,
+              "psi_pred": 0.0,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.003,
+              "tasa_garantia_desv": 0.0,
+              "ks_cobertura": 0.105
+            }
+          }
+        },
+        "garantia_x0.5": {
+          "completo": {
+            "viejo": 0.065,
+            "nuevo": 0.432,
+            "por_estadistico": {
+              "psi_max": 0.01,
+              "psi_pred": 0.035,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.02,
+              "tasa_garantia_desv": 0.007,
+              "ks_cobertura": 0.405
+            }
+          },
+          "contaminado_30": {
+            "viejo": 0.025,
+            "nuevo": 0.037,
+            "por_estadistico": {
+              "psi_max": 0.01,
+              "psi_pred": 0.01,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.005,
+              "tasa_garantia_desv": 0.007,
+              "ks_cobertura": 0.01
+            }
+          }
+        },
+        "garantia_x0.1": {
+          "completo": {
+            "viejo": 0.938,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 0.022,
+              "psi_pred": 0.932,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.055,
+              "tasa_garantia_desv": 0.007,
+              "ks_cobertura": 1.0
+            }
+          },
+          "contaminado_30": {
+            "viejo": 0.062,
+            "nuevo": 0.255,
+            "por_estadistico": {
+              "psi_max": 0.007,
+              "psi_pred": 0.048,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.01,
+              "tasa_garantia_desv": 0.007,
+              "ks_cobertura": 0.223
+            }
+          }
+        },
+        "garantia_en_blanco": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 1.0,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.013,
+              "tasa_garantia_desv": 1.0,
+              "ks_cobertura": 0.0
+            }
+          },
+          "contaminado_30": {
+            "viejo": 0.087,
+            "nuevo": 0.155,
+            "por_estadistico": {
+              "psi_max": 0.013,
+              "psi_pred": 0.072,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.005,
+              "tasa_garantia_desv": 0.113,
+              "ks_cobertura": 0.007
+            }
+          }
+        }
+      }
+    },
+    "1000": {
+      "umbrales": {
+        "psi_max": 0.0621,
+        "psi_pred": 0.0086,
+        "tasa_ood": 0.018,
+        "desv_amb": 0.021,
+        "tasa_garantia_desv": 2.8,
+        "ks_cobertura": 1.73
+      },
+      "falsa_alarma": {
+        "viejo": 0.0475,
+        "nuevo": 0.1175
+      },
+      "deteccion": {
+        "ruido_continuas_0.5sd": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.04,
+              "tasa_ood": 0.005,
+              "desv_amb": 0.035,
+              "tasa_garantia_desv": 0.013,
+              "ks_cobertura": 0.075
+            }
+          },
+          "contaminado_30": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.02,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.007,
+              "tasa_garantia_desv": 0.003,
+              "ks_cobertura": 0.09
+            }
+          }
+        },
+        "ruido_continuas_1.0sd": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.052,
+              "tasa_ood": 0.2,
+              "desv_amb": 0.477,
+              "tasa_garantia_desv": 0.013,
+              "ks_cobertura": 0.068
+            }
+          },
+          "contaminado_30": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.028,
+              "tasa_ood": 0.003,
+              "desv_amb": 0.043,
+              "tasa_garantia_desv": 0.005,
+              "ks_cobertura": 0.09
+            }
+          }
+        },
+        "desplazamiento_continuas_1.0sd": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 1.0,
+              "tasa_ood": 0.27,
+              "desv_amb": 0.978,
+              "tasa_garantia_desv": 0.005,
+              "ks_cobertura": 0.058
+            }
+          },
+          "contaminado_30": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.417,
+              "tasa_ood": 0.007,
+              "desv_amb": 0.168,
+              "tasa_garantia_desv": 0.015,
+              "ks_cobertura": 0.085
+            }
+          }
+        },
+        "desplazamiento_continuas_2.0sd": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 1.0,
+              "tasa_ood": 1.0,
+              "desv_amb": 1.0,
+              "tasa_garantia_desv": 0.022,
+              "ks_cobertura": 0.08
+            }
+          },
+          "contaminado_30": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.895,
+              "tasa_ood": 1.0,
+              "desv_amb": 0.182,
+              "tasa_garantia_desv": 0.005,
+              "ks_cobertura": 0.065
+            }
+          }
+        },
+        "desplazamiento_continuas_3.0sd": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 1.0,
+              "tasa_ood": 1.0,
+              "desv_amb": 1.0,
+              "tasa_garantia_desv": 0.005,
+              "ks_cobertura": 0.09
+            }
+          },
+          "contaminado_30": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.953,
+              "tasa_ood": 1.0,
+              "desv_amb": 0.532,
+              "tasa_garantia_desv": 0.015,
+              "ks_cobertura": 0.087
+            }
+          }
+        },
+        "volteo_binarias_10pct": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 0.015,
+              "psi_pred": 1.0,
+              "tasa_ood": 1.0,
+              "desv_amb": 1.0,
+              "tasa_garantia_desv": 0.01,
+              "ks_cobertura": 0.058
+            }
+          },
+          "contaminado_30": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 0.01,
+              "psi_pred": 0.207,
+              "tasa_ood": 1.0,
+              "desv_amb": 1.0,
+              "tasa_garantia_desv": 0.005,
+              "ks_cobertura": 0.085
+            }
+          }
+        },
+        "escala_continuas_x2": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 1.0,
+              "tasa_ood": 1.0,
+              "desv_amb": 0.665,
+              "tasa_garantia_desv": 0.005,
+              "ks_cobertura": 0.083
+            }
+          },
+          "contaminado_30": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.912,
+              "tasa_ood": 0.848,
+              "desv_amb": 0.043,
+              "tasa_garantia_desv": 0.01,
+              "ks_cobertura": 0.09
+            }
+          }
+        },
+        "sintetico_uniforme_-4_4": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 1.0,
+              "tasa_ood": 1.0,
+              "desv_amb": 1.0,
+              "tasa_garantia_desv": 0.01,
+              "ks_cobertura": 0.098
+            }
+          },
+          "contaminado_30": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.098,
+              "tasa_ood": 1.0,
+              "desv_amb": 1.0,
+              "tasa_garantia_desv": 0.007,
+              "ks_cobertura": 0.09
+            }
+          }
+        },
+        "sintetico_normal_x5": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 1.0,
+              "tasa_ood": 1.0,
+              "desv_amb": 1.0,
+              "tasa_garantia_desv": 0.013,
+              "ks_cobertura": 0.083
+            }
+          },
+          "contaminado_30": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.16,
+              "tasa_ood": 1.0,
+              "desv_amb": 1.0,
+              "tasa_garantia_desv": 0.005,
+              "ks_cobertura": 0.06
+            }
+          }
+        },
+        "sintetico_ceros": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 1.0,
+              "tasa_ood": 0.0,
+              "desv_amb": 1.0,
+              "tasa_garantia_desv": 0.015,
+              "ks_cobertura": 0.077
+            }
+          },
+          "contaminado_30": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 0.225,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.708,
+              "tasa_garantia_desv": 0.007,
+              "ks_cobertura": 0.122
+            }
+          }
+        },
+        "cambio_prior_minorias_x0.5": {
+          "completo": {
+            "viejo": 0.995,
+            "nuevo": 0.998,
+            "por_estadistico": {
+              "psi_max": 0.223,
+              "psi_pred": 0.995,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.318,
+              "tasa_garantia_desv": 0.998,
+              "ks_cobertura": 0.01
+            }
+          },
+          "contaminado_30": {
+            "viejo": 0.113,
+            "nuevo": 0.172,
+            "por_estadistico": {
+              "psi_max": 0.003,
+              "psi_pred": 0.09,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.033,
+              "tasa_garantia_desv": 0.11,
+              "ks_cobertura": 0.015
+            }
+          }
+        },
+        "cambio_prior_minorias_x2.0": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 0.748,
+              "psi_pred": 1.0,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.492,
+              "tasa_garantia_desv": 1.0,
+              "ks_cobertura": 0.217
+            }
+          },
+          "contaminado_30": {
+            "viejo": 0.343,
+            "nuevo": 0.42,
+            "por_estadistico": {
+              "psi_max": 0.055,
+              "psi_pred": 0.305,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.035,
+              "tasa_garantia_desv": 0.165,
+              "ks_cobertura": 0.085
+            }
+          }
+        },
+        "garantia_x10": {
+          "completo": {
+            "viejo": 0.905,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 0.018,
+              "psi_pred": 0.055,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.89,
+              "tasa_garantia_desv": 0.005,
+              "ks_cobertura": 1.0
+            }
+          },
+          "contaminado_30": {
+            "viejo": 0.122,
+            "nuevo": 0.988,
+            "por_estadistico": {
+              "psi_max": 0.007,
+              "psi_pred": 0.015,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.1,
+              "tasa_garantia_desv": 0.005,
+              "ks_cobertura": 0.983
+            }
+          }
+        },
+        "garantia_x2": {
+          "completo": {
+            "viejo": 0.21,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 0.022,
+              "psi_pred": 0.02,
+              "tasa_ood": 0.003,
+              "desv_amb": 0.185,
+              "tasa_garantia_desv": 0.013,
+              "ks_cobertura": 1.0
+            }
+          },
+          "contaminado_30": {
+            "viejo": 0.058,
+            "nuevo": 0.578,
+            "por_estadistico": {
+              "psi_max": 0.007,
+              "psi_pred": 0.01,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.04,
+              "tasa_garantia_desv": 0.01,
+              "ks_cobertura": 0.552
+            }
+          }
+        },
+        "garantia_x0.5": {
+          "completo": {
+            "viejo": 0.565,
+            "nuevo": 0.985,
+            "por_estadistico": {
+              "psi_max": 0.015,
+              "psi_pred": 0.505,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.122,
+              "tasa_garantia_desv": 0.007,
+              "ks_cobertura": 0.978
+            }
+          },
+          "contaminado_30": {
+            "viejo": 0.102,
+            "nuevo": 0.12,
+            "por_estadistico": {
+              "psi_max": 0.03,
+              "psi_pred": 0.06,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.015,
+              "tasa_garantia_desv": 0.005,
+              "ks_cobertura": 0.02
+            }
+          }
+        },
+        "garantia_x0.1": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 0.018,
+              "psi_pred": 1.0,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.247,
+              "tasa_garantia_desv": 0.007,
+              "ks_cobertura": 1.0
+            }
+          },
+          "contaminado_30": {
+            "viejo": 0.55,
+            "nuevo": 0.948,
+            "por_estadistico": {
+              "psi_max": 0.007,
+              "psi_pred": 0.545,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.025,
+              "tasa_garantia_desv": 0.01,
+              "ks_cobertura": 0.935
+            }
+          }
+        },
+        "garantia_en_blanco": {
+          "completo": {
+            "viejo": 1.0,
+            "nuevo": 1.0,
+            "por_estadistico": {
+              "psi_max": 1.0,
+              "psi_pred": 1.0,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.15,
+              "tasa_garantia_desv": 1.0,
+              "ks_cobertura": 0.0
+            }
+          },
+          "contaminado_30": {
+            "viejo": 0.718,
+            "nuevo": 0.818,
+            "por_estadistico": {
+              "psi_max": 0.01,
+              "psi_pred": 0.71,
+              "tasa_ood": 0.0,
+              "desv_amb": 0.028,
+              "tasa_garantia_desv": 0.688,
+              "ks_cobertura": 0.037
+            }
+          }
+        }
+      }
+    }
+  }
+}
