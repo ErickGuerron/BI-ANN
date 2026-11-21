@@ -22,6 +22,18 @@ Estado al cierre de la sesión. Rama de trabajo: `ds7-ensamble-incertidumbre`.
 8. **ds5-B y ds6-A (pendientes de definición).** ds5-B: la red ya usa GB_Esperanza como entrada, así que no hay otra red a la que volver. ds6-A: el plan original no quedó claro.
 9. **ds5 brecha (+3,09 pp).** Cumple el 5 % pero no el 3 %. Revisar regularización o validación temporal.
 
+## Actualización 2026-11-21 (ds5 MORA_LEVE)
+
+Detalle en `docs/ds5_mora_leve.md`. Rama: `ann-ds5-mora-leve`.
+
+- El peso por clase y el sesgo por clase no recuperan MORA_LEVE. Los proxies de puntualidad de pago, derivados de las fechas de la tabla de pagos, suben su F1 unos 4 puntos y el macro F1 cerca de 1 punto (tres pliegues temporales, 5 semillas).
+- Cierra el punto 9 solo en parte: la brecha de entrenamiento a prueba no se estudió.
+- Nuevos pendientes:
+  1. Decidir de dónde saldrían los proxies en producción (precálculo o API). La app sigue sin ellos.
+  2. Reajustar `GB_*` por pliegue para confirmar el resultado sin esa limitación.
+  3. Revisar MORA_MAYOR_90, que baja un poco con los proxies en la partición original.
+  4. Verificar con el equipo de origen cómo se calcula `Info_Dias_Morosidad_Objetivo`.
+
 ## Decisión tomada
 
 - Temperature scaling solo en ds7 y ds1. ds5 y ds6 quedaron sin calibración porque empeoraron en prueba (ver `docs/calibracion.md`).
