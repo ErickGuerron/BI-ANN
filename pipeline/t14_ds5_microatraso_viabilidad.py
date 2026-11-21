@@ -55,7 +55,8 @@ def proxies(fechas_cuotas, corte):
     }
 
 
-def construir():
+def construir(estricto=False, excluir_mes_corte=False):
+    """estricto: only payments with Fecha < Corte. excluir_mes_corte: only payments before the cut month."""
     d = pd.read_csv(LIMPIO)
     d["CorteF"] = pd.to_datetime(d.Corte.astype(str), format="%Y%m%d")
     p = pd.read_parquet(FACT, columns=["Num_Operacion", "Num_Cuota", "Tiempo_ID"])
@@ -67,7 +68,16 @@ def construir():
     filas = []
     for op, corte in zip(d.Num_Operacion, d.CorteF):
         g = grupos.get(op)
-        filas.append(proxies(g[g.Fecha <= corte], corte) if g is not None else proxies(vacio, corte))
+        if g is None:
+            filas.append(proxies(vacio, corte))
+            continue
+        if excluir_mes_corte:
+            visible = g[g.Fecha < corte.replace(day=1)]
+        elif estricto:
+            visible = g[g.Fecha < corte]
+        else:
+            visible = g[g.Fecha <= corte]
+        filas.append(proxies(visible, corte))
     return d, pd.DataFrame(filas, index=d.index)
 
 
