@@ -81,4 +81,4 @@ Estado y limitaciones en `docs/ds7_garantia_cascada_monitoreo.md`. Rama publicad
 
 - Descartado: decidir de dónde saldrían los proxies en producción. El proyecto no saldrá a producción.
 - Pendiente externo: cómo calcula el origen `Info_Dias_Morosidad_Objetivo` (preguntas: desde qué cuota se cuenta el atraso, si es el valor al corte o el siguiente mes, tratamiento del pago parcial, días de gracia).
-- Hecho (`t25`, `t26`): señal de cuotas atrasadas con fecha de desembolso. Macro F1 de HGB 0,682 a 0,701 sobre el par de proxies (0,710 con la edad del crédito); MORA_LEVE casi igual (+0,006); gana sobre todo MORA_MAYOR_90. Detalle en `docs/ds5_mora_leve.md`.
+- Hecho (`t25`, `t26`): señal de cuotas atrasadas con fecha de desembolso. Macro F1 de HGB 0,682 a 0,701 sobre el par de proxies (0,710 con la edad del crédito); MORA_LEVE casi igual (+0,006); gana sobre todo MORA_MAYOR_90. Detalle en `docs/ds5_mora_leve.md`.- Confirmado con la red (	27, 5 semillas): la señal de cuotas suma +0,008 de macro F1 sobre el par y +0,006 en MORA_LEVE; la edad del crédito no aporta. Sin efecto sobre la confusión 31_90 a LEVE.

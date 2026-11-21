@@ -149,3 +149,11 @@ Se derivó, con `Fecha_Desembolso` de `FACT_Desembolsos` (cobertura 99,9 % de la
 - HGB en los 3 pliegues temporales, una semilla, prueba leída una vez (`t26`), macro F1 medio / F1 MORA_LEVE medio / % de 31_90 predicho como LEVE: sin proxies 0,659 / 0,487 / 16,6 %; con el par 0,682 / 0,562 / 17,5 %; par + `cuotas_atrasadas_max` 0,701 / 0,568 / 15,7 %; además `meses_desde_desemb` 0,710 / 0,574 / 15,1 %.
 - La ganancia nueva viene sobre todo de MORA_MAYOR_90 (en un pliegue su F1 pasa de 0,72 a 0,81). MORA_LEVE casi no se mueve (+0,006) y la confusión 31_90 a LEVE baja solo 1 a 2 puntos. El techo de MORA_LEVE sigue siendo de información.
 - `meses_desde_desemb` aporta por sí sola un punto más: puede ser edad del crédito y no atraso. Una semilla, un modelo; falta confirmar con la red y con más semillas.
+### Confirmación con la red (t27)
+
+Variante B, 3 pliegues temporales, 5 semillas, `GB_*` reajustado por pliegue (mismo protocolo que `t20`). Macro F1 / F1 MORA_LEVE / F1 MORA_31_90 / F1 MORA_MAYOR_90: sin proxies 0,679 / 0,505 / 0,704 / 0,621; par 0,692 / 0,548 / 0,707 / 0,616; par + `cuotas_atrasadas_max` 0,701 / 0,554 / 0,715 / 0,635; además `meses_desde_desemb` 0,701 / 0,552 / 0,714 / 0,637.
+
+- La señal de cuotas suma unos 0,008 de macro F1 sobre el par y 0,006 en MORA_LEVE; MORA_31_90 sube 0,007 y MORA_MAYOR_90 casi 0,02. Con la red la ganancia es menor que con HGB.
+- La edad del crédito no aporta en la red (0,7008 contra 0,7005), así que el punto extra de HGB era edad del crédito, no atraso.
+- La confusión de MORA_31_90 hacia MORA_LEVE no cambia (pliegue F3: 17,6 % con el par, 17,1 % con la señal). El techo de MORA_LEVE sigue siendo de información.
+- No se hizo un contraste formal entre variantes: son diferencias de unas décimas con 15 corridas dependientes (los pliegues se solapan).
