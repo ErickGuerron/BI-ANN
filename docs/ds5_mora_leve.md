@@ -164,3 +164,13 @@ Variante B, 3 pliegues temporales, 5 semillas, `GB_*` reajustado por pliegue (mi
 - La validación es plana: de 0,734 a 0,741 en las 12 configuraciones, con error estándar de 0,007 a 0,010. Todas caen dentro de una desviación estándar de la mejor (64 neuronas, alpha 1,0).
 - La regla elige la más simple, 16 neuronas con alpha 10. En prueba: macro F1 0,696 y F1 MORA_LEVE 0,545, contra 0,700 y 0,554 de la configuración actual (32, alpha 3,0). No mejora.
 - Conclusión: la regularización no limita a la red. Junto con la regresión logística (`t24`), confirma que el techo de ds5 es de información. No se cambian los pesos de la app.
+## Búsqueda de más datos y cierre de ds5
+
+Se revisó `datasets_multiclase_v2/salida/ds5_pagos_multimes/` y las fuentes de las que sale. No hay información adicional utilizable para las clases que se confunden.
+
+- **La etiqueta es la mora del corte.** `Info_Dias_Morosidad_Objetivo` coincide al 100 % (25.542 de 25.542 filas cruzables) con `Dias_Morosidad_Actual` de ds4 en el mismo corte. Responde en parte la pregunta pendiente al origen: son los días de mora al cierre del corte, no del mes siguiente. Sigue sin saberse desde qué cuota se cuentan, el trato de pagos parciales ni los días de gracia.
+- **ds4 no sirve de fuente de mora previa.** Su `dataset_limpio` solo contiene filas con mora actual de hasta 30 días: ninguna de las 2.263 filas MORA_31_90 ni de las 312 MORA_MAYOR_90 de ds5 está en ds4. `Dias_Mora_Cierre_Anterior` existe solo para AL_DIA y MORA_LEVE, así que usarla filtraría la etiqueta por ausencia. `Max_Dias_Mora_6` y `Cierres_Con_Mora_6` incluyen el corte actual (el máximo nunca es menor que la mora actual), por lo que son fuga directa.
+- **Más filas no hay.** Las etiquetas existen solo para las operaciones del cierre de cartera (4.928, de las cuales 4.755 están en ds5) en 10 cortes de 2022. La tabla de pagos tiene 19.047 operaciones, pero 14.000 no tienen etiqueta. Sumar el corte de enero o las 173 operaciones restantes añadiría filas del mismo tipo, no información nueva sobre atraso.
+- **Lo que ya se agotó:** peso y sesgo por clase, proxies de fechas de pago, señal de cuotas atrasadas con fecha de desembolso, regularización y modelos de referencia (logística, HGB).
+
+**Limitación aceptada.** Con los datos disponibles (pagos con fecha y calendario de cuotas, sin días de atraso por evento ni historial de mora de las clases altas), la confusión de MORA_31_90 hacia MORA_LEVE (15 % a 25 %) y el F1 de MORA_LEVE (alrededor de 0,55) no se pueden subir de forma honesta. El modelo de ds5 de la app se deja como está.
