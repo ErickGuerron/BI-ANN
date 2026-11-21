@@ -2,6 +2,7 @@
 
 Modo "entrenamiento": color y grosor de cada conexión según el peso de la época actual.
 Modo "prueba": color y grosor según la contribución (activación de origen x peso) para un caso.
+Modo "final": los pesos del modelo ya entrenado, sin época ni caso (se usa en la ficha de la red).
 El HTML se entrega a st.components.v1.html; no depende de librerías externas.
 """
 import json
@@ -13,9 +14,13 @@ COLOR_TINTA = "#4A5B70"
 
 
 def html_lienzo(capas, coefs, modo="entrenamiento", entradas=None, clases=None,
-                activaciones=None, probas=None, alto=600, umbral=0.0):
-    """capas: tamaños por capa; coefs: pesos por capa (n_in x n_out); activaciones: por capa (opcional)."""
+                activaciones=None, probas=None, alto=600, umbral=0.0, separacion=240):
+    """capas: tamaños por capa; coefs: pesos por capa (n_in x n_out); activaciones: por capa (opcional).
+
+    separacion: distancia horizontal entre capas. Con muchas entradas la red es muy alta; una separación
+    mayor la acerca a la proporción del lienzo y deja más espacio útil al ajustar la vista."""
     datos = {
+        "separacion": separacion,
         "capas": list(capas),
         "coefs": [w.tolist() if hasattr(w, "tolist") else w for w in coefs],
         "modo": modo,
@@ -52,10 +57,10 @@ const D = {payload};
 const NAVY = "{COLOR_NAVY}", OCRE = "{COLOR_OCRE}", FONDO = "{COLOR_FONDO}", TINTA = "{COLOR_TINTA}";
 const wrap = document.getElementById('wrap'), cv = document.getElementById('c'), ctx = cv.getContext('2d');
 const tip = document.getElementById('tip'), umbralEl = document.getElementById('umbral');
-document.getElementById('modo').textContent = D.modo === 'prueba' ? 'Contribución de cada conexión a este caso' : 'Pesos de la época actual';
+document.getElementById('modo').textContent = D.modo === 'prueba' ? 'Contribución de cada conexión a este caso' : (D.modo === 'final' ? 'Pesos del modelo final' : 'Pesos de la época actual');
 umbralEl.value = D.umbral;
 const L = D.capas.length;
-const COL_X = D.capas.map((_, l) => 60 + l * 240);
+const COL_X = D.capas.map((_, l) => 60 + l * D.separacion);
 const ESP = D.capas.map((_, l) => (l === 0 ? 14 : 26));
 const POS = D.capas.map((n, l) => Array.from({{length: n}}, (_, i) => ({{x: COL_X[l], y: (i - (n - 1) / 2) * ESP[l]}})));
 const MAXW = D.coefs.map(W => Math.max(1e-9, ...W.flat().map(Math.abs)));
@@ -69,14 +74,15 @@ if (ACT) {{
   }});
 }}
 const ACT_MAX = ACT ? ACT.map(a => Math.max(1e-9, ...a.map(Math.abs))) : null;
-let W = 0, H = 0, dpr = window.devicePixelRatio || 1, scale = 1, ox = 0, oy = 0, arrastrando = null, anclaje = null;
+let W = 0, H = 0, dpr = window.devicePixelRatio || 1, scale = 1, ox = 0, oy = 0, arrastrando = null, anclaje = null, movida = false;
 const SOMA = 4.2, BOUT = 13, DEND = 12;
 
 function ajustar() {{
   const xs = POS.flat().map(p => p.x), ys = POS.flat().map(p => p.y);
   const x0 = Math.min(...xs) - 40, x1 = Math.max(...xs) + 140, y0 = Math.min(...ys) - 40, y1 = Math.max(...ys) + 40;
-  scale = Math.min(W / (x1 - x0), H / (y1 - y0));
-  ox = (W - (x1 - x0) * scale) / 2 - x0 * scale;
+  const RESERVA = 190;                    // ancho de la leyenda: la red empieza a su derecha y no queda tapada
+  scale = Math.min((W - RESERVA) / (x1 - x0), H / (y1 - y0));
+  ox = RESERVA + (W - RESERVA - (x1 - x0) * scale) / 2 - x0 * scale;
   oy = (H - (y1 - y0) * scale) / 2 - y0 * scale;
   dibujar();
 }}
@@ -158,7 +164,7 @@ function mundo(ev) {{
   return {{x: (ev.clientX - r.left - ox) / scale, y: (ev.clientY - r.top - oy) / scale, px: ev.clientX - r.left, py: ev.clientY - r.top}};
 }}
 
-cv.addEventListener('pointerdown', ev => {{ arrastrando = {{x: ev.clientX, y: ev.clientY, ox, oy}}; cv.classList.add('drag'); cv.setPointerCapture(ev.pointerId); }});
+cv.addEventListener('pointerdown', ev => {{ movida = true; arrastrando = {{x: ev.clientX, y: ev.clientY, ox, oy}}; cv.classList.add('drag'); cv.setPointerCapture(ev.pointerId); }});
 cv.addEventListener('pointerup', () => {{ arrastrando = null; cv.classList.remove('drag'); }});
 cv.addEventListener('pointermove', ev => {{
   if (arrastrando) {{
@@ -180,15 +186,16 @@ cv.addEventListener('pointermove', ev => {{
   tip.style.left = Math.min(m.px + 14, W - 240) + 'px'; tip.style.top = (m.py + 14) + 'px';
 }});
 cv.addEventListener('wheel', ev => {{
-  ev.preventDefault();
+  ev.preventDefault(); movida = true;
   const r = cv.getBoundingClientRect(), mx = ev.clientX - r.left, my = ev.clientY - r.top;
   const f = Math.exp(-ev.deltaY * 0.0015), nueva = Math.min(4, Math.max(0.05, scale * f));
   const k = nueva / scale; ox = mx - (mx - ox) * k; oy = my - (my - oy) * k; scale = nueva;
   dibujar();
 }}, {{passive: false}});
 umbralEl.addEventListener('input', dibujar);
-document.getElementById('ajustar').addEventListener('click', ajustar);
-window.addEventListener('resize', redimensionar);
+document.getElementById('ajustar').addEventListener('click', () => {{ movida = false; ajustar(); }});
+window.addEventListener('resize', () => {{ redimensionar(); if (!movida) ajustar(); }});
+if (window.ResizeObserver) new ResizeObserver(() => {{ if (wrap.clientWidth !== W || wrap.clientHeight !== H) {{ redimensionar(); if (!movida) ajustar(); }} }}).observe(wrap);
 redimensionar(); ajustar();
 </script>
 </body></html>"""

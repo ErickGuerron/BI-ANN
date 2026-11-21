@@ -12,7 +12,8 @@ programa_ann/
 │   ├── ann_core.py         carga de datos, configuración de la red, entrenamiento y métricas
 │   ├── inferencia.py       convierte un dato del formulario en la entrada de la red y predice
 │   ├── frontera.py         dibuja la frontera de decisión en el plano PCA
-│   └── visual_red.py       lienzo HTML de las neuronas y conexiones
+│   ├── visual_red.py       lienzo HTML de las neuronas y conexiones
+│   └── ficha_red.py        datos de la ventana "Ver red neuronal" (pesos, configuración, métricas, matriz de confusión)
 ├── pipeline/               ← scripts que se ejecutan en orden para generar lo que usa la app
 │   ├── ajuste_convergencia.py   1. búsqueda de hiperparámetros con parada temprana
 │   ├── generar_top3.py          2. resume las 3 mejores configuraciones por dataset
@@ -111,6 +112,8 @@ streamlit run app.py
 
 Si el puerto 8501 está ocupado: `streamlit run app.py --server.port 8502`.
 
+**Ver la red neuronal.** En cada pestaña de dataset, el botón "Ver red neuronal" abre una ventana con dos pestañas: *Diagrama* (todas las neuronas y conexiones con los pesos del modelo final, junto con la configuración aplicada) y *Métricas* (AUC, exactitud, validación cruzada, calibración y matriz de confusión en prueba con recall y precisión por clase). En el diagrama se arrastra para mover, la rueda acerca y "Mostrar desde" oculta las conexiones más débiles. Para ds7 se dibuja la red base; la app clasifica con el ensamble de 5 redes y la ventana lo avisa. Los datos salen de archivos que ya genera el pipeline (`pesos_`, `ajuste_` y `predicciones_prueba_` en `resultados_convergencia/`).
+
 ## Ramas y experimentos
 
 | Rama | Contenido |
@@ -127,6 +130,7 @@ Solo hacen falta después de tener los pasos 1 a 5.
 python pruebas/verificar_inferencia.py          # compara la cadena de inferencia con las salidas guardadas
 python pruebas/prueba_front.py                  # casos válidos e inválidos en la app
 python pruebas/depura_front.py                  # revisa un caso concreto
+python -m unittest pruebas.test_ficha_red pruebas.test_app_ficha_red   # ventana "Ver red neuronal"
 ```
 
 ## Cómo funciona la predicción

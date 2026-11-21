@@ -14,13 +14,16 @@ from pathlib import Path
 
 import pandas as pd
 import streamlit as st
+import streamlit.components.v1 as components
 
 sys.path.insert(0, str(Path(__file__).resolve().parent / "nucleo"))
 
 import frontera  # noqa: E402
+import ficha_red  # noqa: E402
 import inferencia as I  # noqa: E402
 import cascada  # noqa: E402
 import garantia  # noqa: E402
+import visual_red  # noqa: E402
 
 CARPETA = I.PROGRAMA / "resultados_convergencia"
 TOP4 = [
@@ -313,6 +316,96 @@ def render_resultado(res):
             f'<div style="margin:8px 0">{duda}</div>{estado_cascada(res)}{barras(res["clases"], res["probs"])}</div>')
 
 
+@st.cache_data(show_spinner=False)
+def cargar_ficha(ds):
+    return ficha_red.cargar_ficha(ds)
+
+
+def _texto_config(f):
+    c = f["config"]
+    capas = " → ".join(str(n) for n in f["capas"])
+    return (f'Capas: <b>{capas}</b> (entradas → oculta → salida) · α (L2) <b>{fmt(c["alpha"], 1)}</b> · lote <b>{c["tamano_lote"]}</b> · '
+            f'tasa de aprendizaje <b>{fmt(c["tasa_aprendizaje"], 4)}</b> · sobremuestreo <b>{"sí" if c["sobremuestreo"] else "no"}</b> · '
+            'activación ReLU, salida softmax')
+
+
+def _resumen_config(f):
+    return f'<div class="mut" style="font-size:13px;margin:4px 0 10px">{_texto_config(f)}</div>'
+
+
+def _tabla_confusion(f):
+    nombres = [frontera.nombre(c) for c in f["clases"]]
+    cabecera = "".join(f"<th>{n}</th>" for n in nombres)
+    filas = []
+    for k, fila in enumerate(f["confusion"]):
+        celdas = "".join(f'<td style="{"font-weight:600;background:#C9D2DC" if j == k else ""}">{v}</td>' for j, v in enumerate(fila))
+        filas.append(f'<tr><td style="text-align:left">{nombres[k]}</td>{celdas}<td>{fmt(f["recall"][k], 2)}</td></tr>')
+    precision = "".join(f'<td>{fmt(p, 2)}</td>' for p in f["precision"])
+    filas.append(f'<tr style="color:#4A5B70"><td style="text-align:left">Precisión</td>{precision}<td></td></tr>')
+    return ('<table class="tabla"><thead><tr><th style="text-align:left">Real \\ predicha</th>' + cabecera +
+            '<th>Recall</th></tr></thead><tbody>' + "".join(filas) + "</tbody></table>")
+
+
+def mostrar_html(html, alto):
+    """st.iframe replaces components.html, which Streamlit removes; keep the old call for older versions."""
+    if hasattr(st, "iframe"):
+        st.iframe(html, height=alto)
+    else:
+        components.html(html, height=alto)
+
+
+def _pestana_diagrama(f):
+    if f["nota"]:
+        st.markdown(f'<div class="aviso">{f["nota"]}</div>', unsafe_allow_html=True)
+    st.markdown(_resumen_config(f), unsafe_allow_html=True)
+    html = visual_red.html_lienzo(f["capas"], f["coefs"], modo="final", entradas=f["entradas"], clases=f["clases"], alto=520,
+                                  umbral=ficha_red.UMBRAL_INICIAL, separacion=ficha_red.separacion_capas(f["capas"]))
+    mostrar_html(html, 530)
+    st.markdown('<div class="mut" style="font-size:12px">Arrastre para mover, use la rueda para acercar y el control '
+                '"Mostrar desde" para ocultar las conexiones más débiles. Pase el cursor sobre una neurona para ver su nombre.</div>',
+                unsafe_allow_html=True)
+
+
+def _pestana_metricas(f):
+    m, p, v = f["metricas"], f["metricas"]["prueba"], f["metricas"]["validacion"]
+    c1, c2, c3, c4 = st.columns(4)
+    c1.markdown(f'<div class="tarjeta oscura"><div class="mut">AUC de prueba</div><div class="valor">{fmt(p["auc_macro_ovr"])}</div>'
+                f'<div class="nota">Validación: {fmt(v["auc_macro_ovr"])}</div></div>', unsafe_allow_html=True)
+    c2.markdown(f'<div class="tarjeta"><div class="mut">Exactitud balanceada</div><div class="valor">{fmt(p["exactitud_balanceada"])}</div>'
+                f'<div class="nota">Validación: {fmt(v["exactitud_balanceada"])}</div></div>', unsafe_allow_html=True)
+    c3.markdown(f'<div class="tarjeta"><div class="mut">Exactitud</div><div class="valor">{fmt(p["exactitud"])}</div>'
+                f'<div class="nota">Validación: {fmt(v["exactitud"])}</div></div>', unsafe_allow_html=True)
+    c4.markdown(f'<div class="tarjeta"><div class="mut">CV balanceada (k = 5)</div><div class="valor">{fmt(m["cv_promedio"])}</div>'
+                f'<div class="nota">Rango por semilla: {fmt(min(m["cv_por_semilla"]))} – {fmt(max(m["cv_por_semilla"]))}</div></div>',
+                unsafe_allow_html=True)
+    if f["nota"]:
+        st.markdown(f'<div class="aviso" style="margin-top:10px">{f["nota"]}</div>', unsafe_allow_html=True)
+    if f["temperatura"] is not None:
+        cal = (f'Calibración por temperatura aplicada: T = {fmt(f["temperatura"])}. Cambia la confianza mostrada, no la clase predicha.')
+    else:
+        cal = 'Sin calibración por temperatura: no mejoró en prueba. La confianza mostrada es la que entrega la red.'
+    st.markdown(f'<div class="mut" style="font-size:13px;margin:12px 0 4px">{_texto_config(f)}'
+                f'<br>Época final: {m["epoca_final"]} (entrenó {m["epocas_entrenadas"]} épocas con parada temprana). {cal}</div>',
+                unsafe_allow_html=True)
+    st.markdown('<div class="disp" style="font-size:22px;margin:14px 0 4px">Matriz de confusión en prueba</div>', unsafe_allow_html=True)
+    st.markdown(_tabla_confusion(f), unsafe_allow_html=True)
+    st.markdown('<div class="mut" style="font-size:12px">Las filas son la clase real y las columnas la predicha. '
+                'Recall: de los casos reales de la fila, cuántos acertó. Precisión: de los casos que predijo en la columna, cuántos eran de esa clase.</div>',
+                unsafe_allow_html=True)
+
+
+@st.dialog("Red neuronal", width="large")
+def ficha_dialogo(ds):
+    f = cargar_ficha(ds)
+    nombre = next((n for d, n in TOP4 if d == ds), ds)
+    st.markdown(f'<div class="disp" style="font-size:24px;margin-bottom:4px">{nombre}</div>', unsafe_allow_html=True)
+    diagrama, metricas = st.tabs(["Diagrama", "Métricas"])
+    with diagrama:
+        _pestana_diagrama(f)
+    with metricas:
+        _pestana_metricas(f)
+
+
 def seccion_dashboard(ds):
     ajuste, top = cargar_metricas(ds)
     p, v = ajuste["prueba"], ajuste["validacion"]
@@ -330,6 +423,8 @@ def seccion_dashboard(ds):
     st.markdown(f'<div class="mut" style="font-size:13px;margin:10px 0 14px">Arquitectura elegida: {capas} neuronas, '
                 f'α (L2) {fmt(cfg["alpha"], 1)}, lote {cfg["tamano_lote"]}, tasa {fmt(cfg["tasa_aprendizaje"], 4)}, '
                 f'sobremuestreo {"sí" if cfg["sobremuestreo"] else "no"}.</div>', unsafe_allow_html=True)
+    if st.button("Ver red neuronal", key=f"ver_red_{ds}"):
+        ficha_dialogo(ds)
     filas = []
     for c in top["configuraciones"]:
         marca = '<span class="chip">Elegida</span>' if c["elegida"] else ""
