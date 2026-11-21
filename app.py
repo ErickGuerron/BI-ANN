@@ -118,7 +118,7 @@ def requisitos(c):
     if c["tipo"] == "num":
         minimo, tope = limites_numero(c)
         partes = ["Número"] + (["entero"] if c["entero"] else ["con decimales"]) + \
-            (["no negativo"] if minimo == 0 else []) + (["opcional (vac\u00edo = 0)"] if c.get("opcional") else [])
+            (["no negativo"] if minimo == 0 else []) + (["opcional (vac\u00edo = 0)"] if c.get("opcional") else []) + ([c["ayuda"]] if c.get("ayuda") else [])
         return " · ".join(partes) + f" · hasta {len(str(tope))} dígitos (máximo {tope})"
     n = c["n_valores"]
     base = f"{n} {'valor conocido' if n == 1 else 'valores conocidos'}"
@@ -203,7 +203,7 @@ def _revisar_numero(c, et, bruto):
     if bruto is None or bruto == "":
         if c.get("opcional"):
             return None, None, 0.0
-        return f"{et}: falta el dato. Escriba un valor.", None, None
+        return f"{et}: falta el dato. {c.get('ayuda') or 'Escriba un valor.'}", None, None
     if isinstance(bruto, str):
         return f"{et}: solo admite números.", None, None
     x = float(bruto)
@@ -215,7 +215,7 @@ def _revisar_numero(c, et, bruto):
             if minimo == 0 else (f"{et}: el mínimo es {minimo}.", None, None)
     if x > tope:
         return f"{et}: el máximo es {tope}.", None, None
-    return None, None, x
+    return None, (c.get("aviso_cero") if x == 0 else None), x
 
 
 def revisar(c, bruto):
