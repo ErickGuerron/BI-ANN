@@ -70,6 +70,23 @@ Quitar un proxy a la vez (`t19`) mostró que solo dos pesan: `dia_ult_menos_med`
 - **Consecuencia para producción:** bastan dos variables calculadas con las fechas de pago de los últimos 6 meses, en lugar de nueve.
 - Ninguna variante cambia la confusión entre MORA_31_90 y MORA_LEVE: de los casos reales de MORA_31_90, entre el 19 % y el 21 % se predicen MORA_LEVE con cualquiera, y el recall de MORA_31_90 queda entre 0,749 y 0,763. Los proxies miden la irregularidad del día de pago, no cuántos días de atraso hay.
 
+## Casos externos sintéticos (`t21`, `t22`)
+
+Archivo `ANN_morosidad_100_orden_formulario_etiqueta.xlsx`: 100 escenarios, 25 por clase, 32 campos del formulario. Su hoja de instrucciones dice que las etiquetas son **condicionales y sintéticas, sin morosidad futura observada**, y pide no calcular exactitud real. Por eso se reporta acuerdo con el escenario, no exactitud. Se usan 99 casos (se excluye el 019, con campos vacíos; el 003 queda marcado: más cuotas pagadas que contratadas). Prueba la red que usa la app hoy, sin proxies: el formulario no trae fechas de pago.
+
+| Escenario | → AL_DIA | → MORA_LEVE | → MORA_31_90 | → MORA_MAYOR_90 | Acuerdo |
+|---|---|---|---|---|---|
+| AL_DIA (24) | 14 | 10 | 0 | 0 | 58 % |
+| MORA_LEVE (25) | 9 | 15 | 1 | 0 | 60 % |
+| MORA_31_90 (25) | 0 | 0 | 24 | 1 | 96 % |
+| MORA_MAYOR_90 (25) | 0 | 0 | 6 | 19 | 76 % |
+
+- La confusión es entre AL_DIA y MORA_LEVE, en los dos sentidos. **Ningún caso de MORA_31_90 se predice como MORA_LEVE.** La confusión 31_90 → LEVE que se ve en los datos de prueba reales (16 % a 25 %) no aparece en este archivo.
+- Los casos AL_DIA están dentro de la distribución: distancia al vecino más cercano de entrenamiento 0,93 (mediana), contra 1,8 en validación real; solo 1 de 24 supera el percentil 95. Sus 15 vecinos son 74 % AL_DIA y 23 % MORA_LEVE, coherente con la predicción. El solape entre AL_DIA y MORA_LEVE es real, no un problema de datos fuera de rango.
+- El análisis de sustituir campos por valores típicos de AL_DIA no concluyó: ningún campo solo mueve más de 1 caso, y sustituir todos produce una fila mediana que no es un caso típico. No se usa.
+
+**Corrección de un resultado propio.** Una primera versión de este análisis reportó que 23 de 24 casos AL_DIA se predecían MORA_LEVE. Era un error de preparación: se pasó `Tasa_Interes` y `Cargas_Familiares` como enteros crudos, y la red los leyó como categoría `OTROS`. La app convierte lo que se escribe (`15`) en el valor canónico (`15.0`) con `revisar`; el script se saltó ese paso. Ahora los casos pasan por el mismo `revisar` (`pipeline/casos_externos.py`). La función `predecir` de `nucleo/inferencia.py` **no avisa** cuando recibe un valor numérico en el formato equivocado: lo manda a `OTROS` sin error. La app no lo sufre; cualquier otro consumidor (scripts, una API) sí.
+
 ## MORA_MAYOR_90: matriz de confusión por pliegue
 
 Soporte en prueba: 99, 94 y 88 casos por semilla en F1, F2 y F3. Fracción de los casos reales de MORA_MAYOR_90 que se predicen en cada clase (suma sobre 5 semillas, `GB_*` reajustado):

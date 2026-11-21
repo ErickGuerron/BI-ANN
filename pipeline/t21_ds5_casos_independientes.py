@@ -21,22 +21,18 @@ warnings.filterwarnings("ignore")
 PROGRAMA = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROGRAMA / "nucleo"))
 import inferencia as I  # noqa: E402
+import casos_externos  # noqa: E402
 
 DS = "ds5_pagos_multimes"
-EXCLUIDOS = {"MORA-NUEVO-019"}
+EXCLUIDOS = casos_externos.EXCLUIDOS
 MARCADOS = {"MORA-NUEVO-003"}
-BOOL = ["Sin_Pagos", "Es_Persona_Juridica", "Es_Dependiente"]
 
 
 def main(ruta):
-    d = pd.read_excel(ruta, sheet_name=0)
-    esperado = d["Etiqueta_Esperada_Condicional"].to_numpy()
-    ids = d["ID_Caso"].to_numpy()
-    entrada = d.drop(columns=["ID_Caso", "Y_Esperado_Condicional", "Etiqueta_Esperada_Condicional"]).copy()
-    for c in BOOL:
-        entrada[c] = entrada[c].map({"SÍ": 1, "NO": 0, 1: 1, 0: 0})
-    usar = ~np.isin(ids, list(EXCLUIDOS))
-    clases, pr = I.predecir(DS, entrada[usar].reset_index(drop=True))
+    entrada, ids, esperado, errores = casos_externos.preparar(ruta)
+    print("errores de formato segun la app:", errores or "ninguno", flush=True)
+    usar = np.ones(len(ids), bool)
+    clases, pr = I.predecir(DS, entrada)
     clases = np.array(clases)
     nombres = I.cargar(DS)["aux"]["clases"]
     esp, idu = esperado[usar], ids[usar]
@@ -49,7 +45,7 @@ def main(ruta):
 
     cols_perfil = ["Dias_Desde_Ultimo_Pago", "Cuotas_Ult_3M", "Cuotas_Ult_6M", "Pct_Cuotas_Pagadas", "Saldo_Ultimo_Pago",
                    "Monto_Ult_3M", "Meses_Con_Pagos", "N_Cuotas_Con_Pago", "Numero_Cuotas", "Sin_Pagos"]
-    sub = entrada[usar].reset_index(drop=True)
+    sub = entrada.astype({c: float for c in cols_perfil if c != "Sin_Pagos"}).assign(Sin_Pagos=entrada["Sin_Pagos"].astype(float))
     perfil = {}
     for nombre, mask in (("31_90_predicho_31_90", (esp == "MORA_31_90") & (clases == "MORA_31_90")),
                          ("31_90_predicho_LEVE", (esp == "MORA_31_90") & (clases == "MORA_LEVE")),
