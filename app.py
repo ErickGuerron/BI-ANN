@@ -14,13 +14,16 @@ from pathlib import Path
 
 import pandas as pd
 import streamlit as st
+import streamlit.components.v1 as components
 
 sys.path.insert(0, str(Path(__file__).resolve().parent / "nucleo"))
 
 import frontera  # noqa: E402
+import ficha_red  # noqa: E402
 import inferencia as I  # noqa: E402
 import cascada  # noqa: E402
 import garantia  # noqa: E402
+import visual_red  # noqa: E402
 
 CARPETA = I.PROGRAMA / "resultados_convergencia"
 TOP4 = [
@@ -313,6 +316,155 @@ def render_resultado(res):
             f'<div style="margin:8px 0">{duda}</div>{estado_cascada(res)}{barras(res["clases"], res["probs"])}</div>')
 
 
+@st.cache_data(show_spinner=False)
+def cargar_ficha(ds):
+    return ficha_red.cargar_ficha(ds)
+
+
+def _texto_config(f):
+    c = f["config"]
+    capas = " → ".join(str(n) for n in f["capas"])
+    return (f'Capas: <b>{capas}</b> (entradas → oculta → salida) · α (L2) <b>{fmt(c["alpha"], 1)}</b> · lote <b>{c["tamano_lote"]}</b> · '
+            f'tasa de aprendizaje <b>{fmt(c["tasa_aprendizaje"], 4)}</b> · sobremuestreo <b>{"sí" if c["sobremuestreo"] else "no"}</b> · '
+            'activación ReLU, salida softmax')
+
+
+def _resumen_config(f):
+    return f'<div class="mut" style="font-size:13px;margin:4px 0 10px">{_texto_config(f)}</div>'
+
+
+def _tabla_confusion(f):
+    nombres = [frontera.nombre(c) for c in f["clases"]]
+    cabecera = "".join(f"<th>{n}</th>" for n in nombres)
+    filas = []
+    for k, fila in enumerate(f["confusion"]):
+        celdas = "".join(f'<td style="{"font-weight:600;background:#C9D2DC" if j == k else ""}">{v}</td>' for j, v in enumerate(fila))
+        filas.append(f'<tr><td style="text-align:left">{nombres[k]}</td>{celdas}<td>{fmt(f["recall"][k], 2)}</td></tr>')
+    precision = "".join(f'<td>{fmt(p, 2)}</td>' for p in f["precision"])
+    filas.append(f'<tr style="color:#4A5B70"><td style="text-align:left">Precisión</td>{precision}<td></td></tr>')
+    return ('<table class="tabla"><thead><tr><th style="text-align:left">Real \\ predicha</th>' + cabecera +
+            '<th>Recall</th></tr></thead><tbody>' + "".join(filas) + "</tbody></table>")
+
+
+def mostrar_html(html, alto):
+    """st.iframe replaces components.html, which Streamlit removes; keep the old call for older versions."""
+    if hasattr(st, "iframe"):
+        st.iframe(html, height=alto)
+    else:
+        components.html(html, height=alto)
+
+
+def _pestana_diagrama(f):
+    if f["nota"]:
+        st.markdown(f'<div class="aviso">{f["nota"]}</div>', unsafe_allow_html=True)
+    st.markdown(_resumen_config(f), unsafe_allow_html=True)
+    html = visual_red.html_lienzo(f["capas"], f["coefs"], modo="final", entradas=f["entradas"], clases=f["clases"], alto=520,
+                                  umbral=ficha_red.UMBRAL_INICIAL, separacion=ficha_red.separacion_capas(f["capas"]))
+    mostrar_html(html, 530)
+    st.markdown('<div class="mut" style="font-size:12px">Arrastre para mover, use la rueda para acercar y el control '
+                '"Mostrar desde" para ocultar las conexiones más débiles. Pase el cursor sobre una neurona para ver su nombre.</div>',
+                unsafe_allow_html=True)
+
+
+def pct(x, dec=2):
+    return f"{fmt(x * 100, dec)} %"
+
+
+def pp(x, dec=2):
+    """Signed difference in percentage points, with the real minus sign so it reads well in a table."""
+    texto = fmt(abs(x) * 100, dec)
+    return f'{"+" if x >= 0 else "−"}{texto} pp'
+
+
+def _estado_limite(cumple, limite):
+    if cumple:
+        return f'<span class="chip" style="border-color:#2F6B4F;color:#2F6B4F">Cumple el límite de {limite} %</span>'
+    return f'<span class="chip" style="border-color:#B0443F;color:#B0443F">No cumple el límite de {limite} %</span>'
+
+
+def _seccion_entrenamiento(f):
+    e = f["entrenamiento"]
+    st.markdown('<div class="disp" style="font-size:22px;margin:4px 0 6px">Entrenamiento y generalización</div>', unsafe_allow_html=True)
+    if e is None:
+        st.markdown('<div class="aviso">No se encontraron los datos de entrenamiento (X_train_nn.csv y compañeros) junto a este programa; '
+                    'no se puede calcular el error de entrenamiento ni la brecha.</div>', unsafe_allow_html=True)
+        return
+    c1, c2, c3, c4 = st.columns(4)
+    c1.markdown(f'<div class="tarjeta"><div class="mut">Error de entrenamiento</div><div class="valor">{pct(e["error"]["train"])}</div>'
+                f'<div class="nota">Sobre las filas originales de train</div></div>', unsafe_allow_html=True)
+    c2.markdown(f'<div class="tarjeta"><div class="mut">Error de validación</div><div class="valor">{pct(e["error"]["val"])}</div>'
+                f'<div class="nota">Brecha con train: {pp(e["brecha_val"])}</div></div>', unsafe_allow_html=True)
+    c3.markdown(f'<div class="tarjeta"><div class="mut">Error de prueba</div><div class="valor">{pct(e["error"]["test"])}</div>'
+                f'<div class="nota">Solo se mide, no decide nada</div></div>', unsafe_allow_html=True)
+    c4.markdown(f'<div class="tarjeta oscura"><div class="mut">Brecha |prueba − entrenamiento|</div>'
+                f'<div class="valor">{fmt(e["brecha_abs"] * 100, 2)} pp</div>'
+                f'<div class="nota">Prueba − entrenamiento: {pp(e["brecha"])}</div></div>', unsafe_allow_html=True)
+    st.markdown(f'<div style="margin:8px 0 2px">{_estado_limite(e["cumple_5"], 5)} {_estado_limite(e["cumple_3"], 3)}</div>'
+                '<div class="mut" style="font-size:12px;margin-bottom:10px">Error = 1 − exactitud. La brecha es la diferencia absoluta entre el '
+                'error de prueba y el de entrenamiento, en puntos porcentuales (pp); se compara con 5 %, y con 3 % que es el criterio más '
+                'estricto de la documentación. Una brecha grande indica sobreajuste; una brecha negativa, que la prueba resultó más fácil '
+                'que el entrenamiento.</div>', unsafe_allow_html=True)
+    filas = []
+    for nombre, clave, formato in (("Error", "error", pct), ("Exactitud balanceada", "exactitud_balanceada", fmt),
+                                   ("Macro F1", "macro_f1", fmt), ("Pérdida (log-loss)", "perdida", fmt)):
+        r = e[clave]
+        filas.append(f'<tr><td style="text-align:left">{nombre}</td><td>{formato(r["train"])}</td><td>{formato(r["val"])}</td>'
+                     f'<td>{formato(r["test"])}</td></tr>')
+    st.markdown('<table class="tabla"><thead><tr><th style="text-align:left">Medida</th><th>Entrenamiento</th><th>Validación</th><th>Prueba</th>'
+                '</tr></thead><tbody>' + "".join(filas) + "</tbody></table>"
+                '<div class="mut" style="font-size:12px">Calculado con los pesos guardados, sin calibrar. El entrenamiento usó sobremuestreo, '
+                'pero aquí se mide sobre las filas originales.</div>', unsafe_allow_html=True)
+    h = pd.DataFrame(e["historial"]).set_index("epoca")
+    st.markdown(f'<div class="disp" style="font-size:20px;margin:16px 0 4px">Curva de entrenamiento</div>'
+                f'<div class="mut" style="font-size:12px;margin-bottom:6px">Se entrenaron {len(h)} épocas y se conservó la época '
+                f'{f["metricas"]["epoca_final"]}, la de mejor exactitud balanceada de validación (parada temprana).</div>', unsafe_allow_html=True)
+    g1, g2 = st.columns(2)
+    g1.line_chart(h[["perdida_train"]].rename(columns={"perdida_train": "Pérdida de entrenamiento"}), height=220)
+    g2.line_chart(h[["exactitud_balanceada_val"]].rename(columns={"exactitud_balanceada_val": "Exactitud balanceada de validación"}), height=220)
+
+
+def _pestana_metricas(f):
+    m, p, v = f["metricas"], f["metricas"]["prueba"], f["metricas"]["validacion"]
+    _seccion_entrenamiento(f)
+    st.markdown('<div class="disp" style="font-size:22px;margin:18px 0 6px">Rendimiento</div>', unsafe_allow_html=True)
+    c1, c2, c3, c4 = st.columns(4)
+    c1.markdown(f'<div class="tarjeta oscura"><div class="mut">AUC de prueba</div><div class="valor">{fmt(p["auc_macro_ovr"])}</div>'
+                f'<div class="nota">Validación: {fmt(v["auc_macro_ovr"])}</div></div>', unsafe_allow_html=True)
+    c2.markdown(f'<div class="tarjeta"><div class="mut">Exactitud balanceada</div><div class="valor">{fmt(p["exactitud_balanceada"])}</div>'
+                f'<div class="nota">Validación: {fmt(v["exactitud_balanceada"])}</div></div>', unsafe_allow_html=True)
+    c3.markdown(f'<div class="tarjeta"><div class="mut">Exactitud</div><div class="valor">{fmt(p["exactitud"])}</div>'
+                f'<div class="nota">Validación: {fmt(v["exactitud"])}</div></div>', unsafe_allow_html=True)
+    c4.markdown(f'<div class="tarjeta"><div class="mut">CV balanceada (k = 5)</div><div class="valor">{fmt(m["cv_promedio"])}</div>'
+                f'<div class="nota">Rango por semilla: {fmt(min(m["cv_por_semilla"]))} – {fmt(max(m["cv_por_semilla"]))}</div></div>',
+                unsafe_allow_html=True)
+    if f["nota"]:
+        st.markdown(f'<div class="aviso" style="margin-top:10px">{f["nota"]}</div>', unsafe_allow_html=True)
+    if f["temperatura"] is not None:
+        cal = (f'Calibración por temperatura aplicada: T = {fmt(f["temperatura"])}. Cambia la confianza mostrada, no la clase predicha.')
+    else:
+        cal = 'Sin calibración por temperatura: no mejoró en prueba. La confianza mostrada es la que entrega la red.'
+    st.markdown(f'<div class="mut" style="font-size:13px;margin:12px 0 4px">{_texto_config(f)}'
+                f'<br>Época final: {m["epoca_final"]} (entrenó {m["epocas_entrenadas"]} épocas con parada temprana). {cal}</div>',
+                unsafe_allow_html=True)
+    st.markdown('<div class="disp" style="font-size:22px;margin:14px 0 4px">Matriz de confusión en prueba</div>', unsafe_allow_html=True)
+    st.markdown(_tabla_confusion(f), unsafe_allow_html=True)
+    st.markdown('<div class="mut" style="font-size:12px">Las filas son la clase real y las columnas la predicha. '
+                'Recall: de los casos reales de la fila, cuántos acertó. Precisión: de los casos que predijo en la columna, cuántos eran de esa clase.</div>',
+                unsafe_allow_html=True)
+
+
+@st.dialog("Red neuronal", width="large")
+def ficha_dialogo(ds):
+    f = cargar_ficha(ds)
+    nombre = next((n for d, n in TOP4 if d == ds), ds)
+    st.markdown(f'<div class="disp" style="font-size:24px;margin-bottom:4px">{nombre}</div>', unsafe_allow_html=True)
+    diagrama, metricas = st.tabs(["Diagrama", "Métricas"])
+    with diagrama:
+        _pestana_diagrama(f)
+    with metricas:
+        _pestana_metricas(f)
+
+
 def seccion_dashboard(ds):
     ajuste, top = cargar_metricas(ds)
     p, v = ajuste["prueba"], ajuste["validacion"]
@@ -330,6 +482,8 @@ def seccion_dashboard(ds):
     st.markdown(f'<div class="mut" style="font-size:13px;margin:10px 0 14px">Arquitectura elegida: {capas} neuronas, '
                 f'α (L2) {fmt(cfg["alpha"], 1)}, lote {cfg["tamano_lote"]}, tasa {fmt(cfg["tasa_aprendizaje"], 4)}, '
                 f'sobremuestreo {"sí" if cfg["sobremuestreo"] else "no"}.</div>', unsafe_allow_html=True)
+    if st.button("Ver red neuronal", key=f"ver_red_{ds}"):
+        ficha_dialogo(ds)
     filas = []
     for c in top["configuraciones"]:
         marca = '<span class="chip">Elegida</span>' if c["elegida"] else ""
