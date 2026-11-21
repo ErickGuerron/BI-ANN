@@ -157,3 +157,10 @@ Variante B, 3 pliegues temporales, 5 semillas, `GB_*` reajustado por pliegue (mi
 - La edad del crédito no aporta en la red (0,7008 contra 0,7005), así que el punto extra de HGB era edad del crédito, no atraso.
 - La confusión de MORA_31_90 hacia MORA_LEVE no cambia (pliegue F3: 17,6 % con el par, 17,1 % con la señal). El techo de MORA_LEVE sigue siendo de información.
 - No se hizo un contraste formal entre variantes: son diferencias de unas décimas con 15 corridas dependientes (los pliegues se solapan).
+### Barrido de regularización (t28)
+
+12 configuraciones (capa 16, 32 o 64 neuronas; alpha 0,3, 1, 3 o 10), red con el par de proxies y `cuotas_atrasadas_max`, 3 pliegues temporales, 3 semillas, `GB_*` reajustado por pliegue. Selección por macro F1 de validación con la regla de una desviación estándar; la prueba se leyó una sola vez, solo para la elegida y para la configuración actual.
+
+- La validación es plana: de 0,734 a 0,741 en las 12 configuraciones, con error estándar de 0,007 a 0,010. Todas caen dentro de una desviación estándar de la mejor (64 neuronas, alpha 1,0).
+- La regla elige la más simple, 16 neuronas con alpha 10. En prueba: macro F1 0,696 y F1 MORA_LEVE 0,545, contra 0,700 y 0,554 de la configuración actual (32, alpha 3,0). No mejora.
+- Conclusión: la regularización no limita a la red. Junto con la regresión logística (`t24`), confirma que el techo de ds5 es de información. No se cambian los pesos de la app.
