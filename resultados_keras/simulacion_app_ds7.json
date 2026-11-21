@@ -1,0 +1,57 @@
+{
+  "paridad_max_abs": 4.997553644248143e-07,
+  "n": 600,
+  "registros_reales": {
+    "automatico": 0.88,
+    "fuera_de_rango": 0.0067,
+    "ambiguedad": 0.1133,
+    "exactitud_automaticos": 0.964
+  },
+  "valor_entregado_x3": {
+    "automatico": 0.7333,
+    "fuera_de_rango": 0.0233,
+    "ambiguedad": 0.2433
+  },
+  "valor_entregado_x50": {
+    "automatico": 0.4917,
+    "fuera_de_rango": 0.1667,
+    "ambiguedad": 0.3417
+  },
+  "numero_cuotas_x5": {
+    "automatico": 0.88,
+    "fuera_de_rango": 0.0133,
+    "ambiguedad": 0.1067
+  },
+  "anio_9999": {
+    "automatico": 0.925,
+    "fuera_de_rango": 0.0083,
+    "ambiguedad": 0.0667
+  },
+  "tasa_99": {
+    "automatico": 0.875,
+    "fuera_de_rango": 0.0067,
+    "ambiguedad": 0.1183
+  },
+  "canton_nuevo": {
+    "automatico": 0.88,
+    "fuera_de_rango": 0.0067,
+    "ambiguedad": 0.1133
+  },
+  "producto_y_sucursal_nuevos": {
+    "automatico": 0.7567,
+    "fuera_de_rango": 0.1833,
+    "ambiguedad": 0.06
+  },
+  "ejemplo_alto": {
+    "estado": "REVISION_MANUAL",
+    "motivo": "FUERA_DE_RANGO",
+    "entropia": 0.836,
+    "distancia": 35.391
+  },
+  "ejemplo_bajo": {
+    "estado": "REVISION_MANUAL",
+    "motivo": "FUERA_DE_RANGO",
+    "entropia": 0.015,
+    "distancia": 15.12
+  }
+}

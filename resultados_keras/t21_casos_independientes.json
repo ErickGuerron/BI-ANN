@@ -1,0 +1,778 @@
+{
+  "n_usados": 99,
+  "excluidos": [
+    "MORA-NUEVO-019"
+  ],
+  "marcados": [
+    "MORA-NUEVO-003"
+  ],
+  "advertencia": "etiquetas condicionales sinteticas: acuerdo con el escenario, no exactitud",
+  "confusion": {
+    "AL_DIA": {
+      "AL_DIA": 14,
+      "MORA_LEVE": 10,
+      "MORA_31_90": 0,
+      "MORA_MAYOR_90": 0
+    },
+    "MORA_LEVE": {
+      "AL_DIA": 9,
+      "MORA_LEVE": 15,
+      "MORA_31_90": 1,
+      "MORA_MAYOR_90": 0
+    },
+    "MORA_31_90": {
+      "AL_DIA": 0,
+      "MORA_LEVE": 0,
+      "MORA_31_90": 24,
+      "MORA_MAYOR_90": 1
+    },
+    "MORA_MAYOR_90": {
+      "AL_DIA": 0,
+      "MORA_LEVE": 0,
+      "MORA_31_90": 6,
+      "MORA_MAYOR_90": 19
+    }
+  },
+  "acuerdo_por_clase": {
+    "AL_DIA": 0.583,
+    "MORA_LEVE": 0.6,
+    "MORA_31_90": 0.96,
+    "MORA_MAYOR_90": 0.76
+  },
+  "perfil_mediana": {
+    "31_90_predicho_31_90": {
+      "n": 24,
+      "Dias_Desde_Ultimo_Pago": 10.5,
+      "Cuotas_Ult_3M": 3.0,
+      "Cuotas_Ult_6M": 6.0,
+      "Pct_Cuotas_Pagadas": 0.546,
+      "Saldo_Ultimo_Pago": 21.18,
+      "Monto_Ult_3M": 1661.175,
+      "Meses_Con_Pagos": 25.5,
+      "N_Cuotas_Con_Pago": 25.0,
+      "Numero_Cuotas": 48.0,
+      "Sin_Pagos": 0.0
+    },
+    "LEVE_predicho_LEVE": {
+      "n": 15,
+      "Dias_Desde_Ultimo_Pago": 9.0,
+      "Cuotas_Ult_3M": 4.0,
+      "Cuotas_Ult_6M": 6.0,
+      "Pct_Cuotas_Pagadas": 0.292,
+      "Saldo_Ultimo_Pago": 2141.24,
+      "Monto_Ult_3M": 2908.48,
+      "Meses_Con_Pagos": 11.0,
+      "N_Cuotas_Con_Pago": 13.0,
+      "Numero_Cuotas": 36.0,
+      "Sin_Pagos": 0.0
+    },
+    "LEVE_predicho_31_90": {
+      "n": 1,
+      "Dias_Desde_Ultimo_Pago": 0.0,
+      "Cuotas_Ult_3M": 4.0,
+      "Cuotas_Ult_6M": 7.0,
+      "Pct_Cuotas_Pagadas": 0.415,
+      "Saldo_Ultimo_Pago": 0.0,
+      "Monto_Ult_3M": 2117.72,
+      "Meses_Con_Pagos": 46.0,
+      "N_Cuotas_Con_Pago": 51.0,
+      "Numero_Cuotas": 123.0,
+      "Sin_Pagos": 0.0
+    }
+  },
+  "casos": [
+    {
+      "id": "MORA-NUEVO-001",
+      "esperada": "AL_DIA",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.524,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-002",
+      "esperada": "AL_DIA",
+      "predicha": "AL_DIA",
+      "prob_max": 0.784,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-003",
+      "esperada": "AL_DIA",
+      "predicha": "AL_DIA",
+      "prob_max": 0.594,
+      "marcado": true
+    },
+    {
+      "id": "MORA-NUEVO-004",
+      "esperada": "AL_DIA",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.549,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-005",
+      "esperada": "AL_DIA",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.562,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-006",
+      "esperada": "AL_DIA",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.772,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-007",
+      "esperada": "AL_DIA",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.748,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-008",
+      "esperada": "AL_DIA",
+      "predicha": "AL_DIA",
+      "prob_max": 0.72,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-009",
+      "esperada": "AL_DIA",
+      "predicha": "AL_DIA",
+      "prob_max": 0.86,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-010",
+      "esperada": "AL_DIA",
+      "predicha": "AL_DIA",
+      "prob_max": 0.802,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-011",
+      "esperada": "AL_DIA",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.766,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-012",
+      "esperada": "AL_DIA",
+      "predicha": "AL_DIA",
+      "prob_max": 0.661,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-013",
+      "esperada": "AL_DIA",
+      "predicha": "AL_DIA",
+      "prob_max": 0.795,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-014",
+      "esperada": "AL_DIA",
+      "predicha": "AL_DIA",
+      "prob_max": 0.625,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-015",
+      "esperada": "AL_DIA",
+      "predicha": "AL_DIA",
+      "prob_max": 0.871,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-016",
+      "esperada": "AL_DIA",
+      "predicha": "AL_DIA",
+      "prob_max": 0.609,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-017",
+      "esperada": "AL_DIA",
+      "predicha": "AL_DIA",
+      "prob_max": 0.871,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-018",
+      "esperada": "AL_DIA",
+      "predicha": "AL_DIA",
+      "prob_max": 0.839,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-020",
+      "esperada": "AL_DIA",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.7,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-021",
+      "esperada": "AL_DIA",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.83,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-022",
+      "esperada": "AL_DIA",
+      "predicha": "AL_DIA",
+      "prob_max": 0.848,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-023",
+      "esperada": "AL_DIA",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.489,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-024",
+      "esperada": "AL_DIA",
+      "predicha": "AL_DIA",
+      "prob_max": 0.552,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-025",
+      "esperada": "AL_DIA",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.625,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-026",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.699,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-027",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.769,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-028",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.535,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-029",
+      "esperada": "MORA_LEVE",
+      "predicha": "AL_DIA",
+      "prob_max": 0.66,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-030",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.723,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-031",
+      "esperada": "MORA_LEVE",
+      "predicha": "AL_DIA",
+      "prob_max": 0.734,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-032",
+      "esperada": "MORA_LEVE",
+      "predicha": "AL_DIA",
+      "prob_max": 0.773,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-033",
+      "esperada": "MORA_LEVE",
+      "predicha": "AL_DIA",
+      "prob_max": 0.751,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-034",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.739,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-035",
+      "esperada": "MORA_LEVE",
+      "predicha": "AL_DIA",
+      "prob_max": 0.624,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-036",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.673,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-037",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.639,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-038",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.627,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-039",
+      "esperada": "MORA_LEVE",
+      "predicha": "AL_DIA",
+      "prob_max": 0.556,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-040",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.755,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-041",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.776,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-042",
+      "esperada": "MORA_LEVE",
+      "predicha": "AL_DIA",
+      "prob_max": 0.735,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-043",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.809,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-044",
+      "esperada": "MORA_LEVE",
+      "predicha": "AL_DIA",
+      "prob_max": 0.504,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-045",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.659,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-046",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.54,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-047",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.62,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-048",
+      "esperada": "MORA_LEVE",
+      "predicha": "AL_DIA",
+      "prob_max": 0.799,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-049",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.533,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-050",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.649,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-051",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.881,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-052",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.902,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-053",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.798,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-054",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.823,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-055",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.563,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-056",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.779,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-057",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.809,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-058",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.859,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-059",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.901,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-060",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.83,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-061",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.704,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-062",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.623,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-063",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.845,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-064",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.621,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-065",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.62,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-066",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.871,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-067",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.747,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-068",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.817,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-069",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.82,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-070",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.753,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-071",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.791,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-072",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.563,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-073",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.824,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-074",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.85,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-075",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.619,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-076",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.91,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-077",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.666,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-078",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.976,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-079",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.921,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-080",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.982,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-081",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.991,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-082",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.988,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-083",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.986,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-084",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.994,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-085",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.969,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-086",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.992,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-087",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.86,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-088",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.988,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-089",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.574,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-090",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.986,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-091",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.838,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-092",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.989,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-093",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.894,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-094",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.987,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-095",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.988,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-096",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.993,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-097",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.996,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-098",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.746,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-099",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.62,
+      "marcado": false
+    },
+    {
+      "id": "MORA-NUEVO-100",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.953,
+      "marcado": false
+    }
+  ]
+}

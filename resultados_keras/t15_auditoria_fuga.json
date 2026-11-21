@@ -1,0 +1,63 @@
+{
+  "A_menor_igual": {
+    "auc": {
+      "gap_max": 0.4976,
+      "gap_medio": 0.3772,
+      "gap_desv": 0.5393,
+      "n_fechas": 0.7047,
+      "dia_ult": 0.6515,
+      "dia_ult_menos_med": 0.6604,
+      "dia_desv": 0.802,
+      "frac_cuotas_parciales": 0.7027,
+      "dias_ult_pago_vs_gap_medio": 0.4857
+    },
+    "cobertura": 0.9474
+  },
+  "B_estricto": {
+    "auc": {
+      "gap_max": 0.4947,
+      "gap_medio": 0.377,
+      "gap_desv": 0.5371,
+      "n_fechas": 0.7005,
+      "dia_ult": 0.6416,
+      "dia_ult_menos_med": 0.6454,
+      "dia_desv": 0.799,
+      "frac_cuotas_parciales": 0.7,
+      "dias_ult_pago_vs_gap_medio": 0.501
+    },
+    "cobertura": 0.947
+  },
+  "C_antes_del_mes": {
+    "auc": {
+      "gap_max": 0.5132,
+      "gap_medio": 0.3924,
+      "gap_desv": 0.5358,
+      "n_fechas": 0.6515,
+      "dia_ult": 0.6187,
+      "dia_ult_menos_med": 0.5744,
+      "dia_desv": 0.7463,
+      "frac_cuotas_parciales": 0.6655,
+      "dias_ult_pago_vs_gap_medio": 0.504
+    },
+    "cobertura": 0.9059
+  },
+  "filas_con_pago_el_dia_del_corte": 621,
+  "filas_totales_unicas": 32507,
+  "orden_vs_v4": {
+    "train": {
+      "igual_orden": true,
+      "n_v4": 21601,
+      "n_limpio": 21601
+    },
+    "val": {
+      "igual_orden": true,
+      "n_v4": 3635,
+      "n_limpio": 3635
+    },
+    "test": {
+      "igual_orden": true,
+      "n_v4": 7271,
+      "n_limpio": 7271
+    }
+  }
+}

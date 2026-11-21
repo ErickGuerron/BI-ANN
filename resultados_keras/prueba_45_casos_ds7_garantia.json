@@ -1,0 +1,177 @@
+{
+  "archivo": "45_casos_con_etiqueta_esperada_condicional.csv",
+  "n": 45,
+  "clases": [
+    "SIN_GARANTIA",
+    "COBERTURA_BAJA",
+    "COBERTURA_ALTA"
+  ],
+  "advertencia": "La etiqueta esperada es condicional a una garantia supuesta que no es entrada del modelo.",
+  "campos_en_otros_sin_normalizar": {
+    "Para_Vivienda": 45,
+    "Es_Agricola_Gan": 45,
+    "Es_Persona_Juridica": 45,
+    "Nivel_Educacion": 1,
+    "Cargas_Familiares": 45,
+    "Es_Dependiente": 45,
+    "Nombre_Producto": 3,
+    "Sucursal": 1
+  },
+  "campos_en_otros_tras_normalizar": {
+    "Nivel_Educacion": 1,
+    "Nombre_Producto": 3,
+    "Sucursal": 1
+  },
+  "casos_con_anio_posterior_a_2022": 23,
+  "usa_valor_garantiza": true,
+  "paridad_columna_extra_max_abs": 0.0,
+  "garantia_en_blanco_todos_los_casos": {
+    "prediccion": [
+      26,
+      19,
+      0
+    ],
+    "automatico": 0.7333
+  },
+  "red_de_la_app": {
+    "prediccion": [
+      15,
+      5,
+      25
+    ],
+    "confianza_media": 0.751,
+    "exactitud_indicativa": 0.7333,
+    "exactitud_balanceada_indicativa": 0.7333,
+    "macro_f1_indicativo": 0.7111,
+    "recall_por_clase": [
+      0.9333,
+      0.3333,
+      0.9333
+    ],
+    "matriz_confusion_filas_esperada": [
+      [
+        14,
+        0,
+        1
+      ],
+      [
+        0,
+        5,
+        10
+      ],
+      [
+        1,
+        0,
+        14
+      ]
+    ]
+  },
+  "ensamble": {
+    "prediccion": [
+      16,
+      7,
+      22
+    ],
+    "exactitud_indicativa": 0.7778,
+    "exactitud_balanceada_indicativa": 0.7778,
+    "macro_f1_indicativo": 0.7567,
+    "recall_por_clase": [
+      1.0,
+      0.4,
+      0.9333
+    ],
+    "matriz_confusion_filas_esperada": [
+      [
+        15,
+        0,
+        0
+      ],
+      [
+        1,
+        6,
+        8
+      ],
+      [
+        0,
+        1,
+        14
+      ]
+    ]
+  },
+  "cascada": {
+    "automatico": 0.6222,
+    "fuera_de_rango": 0.0222,
+    "ambiguedad": 0.3556,
+    "automatico_por_clase_esperada": [
+      1.0,
+      0.2667,
+      0.6
+    ],
+    "acuerdo_indicativo_en_automaticos": 0.9286,
+    "n_automaticos": 28
+  },
+  "red_anio_hasta_2022": {
+    "n": 22,
+    "exactitud_indicativa": 0.8182,
+    "exactitud_balanceada_indicativa": 0.8095,
+    "macro_f1_indicativo": 0.7714,
+    "recall_por_clase": [
+      1.0,
+      0.4286,
+      1.0
+    ],
+    "matriz_confusion_filas_esperada": [
+      [
+        10,
+        0,
+        0
+      ],
+      [
+        0,
+        3,
+        4
+      ],
+      [
+        0,
+        0,
+        5
+      ]
+    ]
+  },
+  "cascada_anio_hasta_2022": {
+    "automatico": 0.5909,
+    "fuera_de_rango": 0.0
+  },
+  "red_anio_posterior_2022": {
+    "n": 23,
+    "exactitud_indicativa": 0.6522,
+    "exactitud_balanceada_indicativa": 0.65,
+    "macro_f1_indicativo": 0.6308,
+    "recall_por_clase": [
+      0.8,
+      0.25,
+      0.9
+    ],
+    "matriz_confusion_filas_esperada": [
+      [
+        4,
+        0,
+        1
+      ],
+      [
+        0,
+        2,
+        6
+      ],
+      [
+        1,
+        0,
+        9
+      ]
+    ]
+  },
+  "cascada_anio_posterior_2022": {
+    "automatico": 0.6522,
+    "fuera_de_rango": 0.0435
+  }
+}

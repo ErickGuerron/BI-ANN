@@ -4,7 +4,7 @@ y devuelve la clase predicha con sus probabilidades.
 Cadena (idéntica a la de entrenamiento):
   1. preparacion.py + preprocesador.joblib (limpieza, derivadas, log1p, one-hot)   -> X one-hot
   2. HistGradientBoosting completo (variables GB_*, solo si el conjunto las usa)   -> X + GB_*
-     (se reajusta al cargar, con los datos de train y los hiperparametros guardados)
+     (se ajusta con los datos de train y los hiperparametros guardados; el modelo se guarda y se reutiliza)
   3. Estandarizacion con media y escala de train (guardadas en auxiliares/*.npz)  -> estandarizado
   4. NCA de 10 componentes (solo conjuntos N): S @ componentes.T                  -> entrada de la red
   5. Red MLP entrenada (pesos_<dataset>.json): ReLU en ocultas, softmax en salida
@@ -29,6 +29,13 @@ AUX = PROGRAMA / "auxiliares"
 PESOS = PROGRAMA / "resultados_convergencia"
 SEMILLA = 42
 
+# Money fields accept cents even when every training value was a round number.
+PREFIJOS_MONETARIOS = ("Valor_", "Monto_", "Saldo_", "Total_", "Provision_")
+
+
+def es_monetario(nombre):
+    return nombre.startswith(PREFIJOS_MONETARIOS)
+
 
 @lru_cache(maxsize=1)
 def motor():
@@ -43,12 +50,32 @@ def motor():
 
 
 def _ajustar_gb(ds, meta):
-    """Reajusta el HistGradientBoosting completo con train (mismos hiperparametros y semilla que el entrenamiento)."""
+    """HistGradientBoosting completo con train (mismos hiperparametros y semilla que el entrenamiento).
+
+    El modelo ajustado se guarda en auxiliares/gb_<ds>.joblib y se reutiliza mientras coincidan la version de
+    scikit-learn y los hiperparametros; si no coinciden, se reajusta y se vuelve a guardar."""
+    import sklearn
     from sklearn.ensemble import HistGradientBoostingClassifier
+    huella = {"sklearn": sklearn.__version__, "iter": meta["gb_iter"], "params": meta["gb_params"], "semilla": SEMILLA}
+    ruta = AUX / f"gb_{ds}.joblib"
+    if ruta.exists():
+        try:
+            guardado = joblib.load(ruta)
+            if guardado.get("huella") == huella:
+                return guardado["modelo"]
+        except Exception:
+            pass
     Xtr = pd.read_csv(V2_SALIDA / ds / "X_train_onehot.csv", float_precision="round_trip").fillna(0)
     ytr = pd.read_csv(V2_SALIDA / ds / "y_train.csv")["Y"].to_numpy()
-    return HistGradientBoostingClassifier(class_weight="balanced", random_state=SEMILLA, max_iter=meta["gb_iter"],
-                                          early_stopping=False, **meta["gb_params"]).fit(Xtr, ytr)
+    modelo = HistGradientBoostingClassifier(class_weight="balanced", random_state=SEMILLA, max_iter=meta["gb_iter"],
+                                            early_stopping=False, **meta["gb_params"]).fit(Xtr, ytr)
+    try:
+        temporal = ruta.with_suffix(f".{os.getpid()}.tmp")
+        joblib.dump({"huella": huella, "modelo": modelo}, temporal)
+        os.replace(temporal, ruta)
+    except OSError:
+        pass  # a read-only folder only costs the refit on the next start
+    return modelo
 
 
 @lru_cache(maxsize=None)
@@ -68,6 +95,29 @@ def cargar(ds):
     return {"pre": pre, "aux": aux, "pesos": pesos, "cfg": M.CONFIGS[ds], "P": P}
 
 
+def _numero(valor):
+    try:
+        return float(str(valor).strip().replace(",", "."))
+    except ValueError:
+        return None
+
+
+def canonizar_categorias_numericas(df, categorias):
+    """Para las categorias que son numeros (p. ej. Tasa_Interes: '15.0'), un valor equivalente escrito de otra
+    forma (15, '15', 15.0) se reemplaza por la categoria conocida. Sin esto, 15 no coincide con '15.0' y la red
+    lo lee como OTROS sin avisar. Las categorias de texto (p. ej. 'DESCONOCIDO') no se tocan, y un numero que
+    no es ninguna categoria sigue siendo OTROS."""
+    df = df.copy()
+    for c, cats in categorias.items():
+        if c not in df.columns:
+            continue
+        conocidas = {n: k for k in cats if (n := _numero(k)) is not None}
+        if not conocidas:
+            continue
+        df[c] = df[c].map(lambda v: conocidas.get(_numero(v), v) if pd.notna(v) else v)
+    return df
+
+
 def onehot(ds, filas):
     """filas: DataFrame con las columnas crudas de la fuente. Devuelve X one-hot en el orden de entrenamiento."""
     d = cargar(ds)
@@ -76,6 +126,7 @@ def onehot(ds, filas):
     df["Etiqueta"] = "X"
     df = P.limpiar_texto(df, excluir=[cfg["id"], "Etiqueta"])
     df = cfg["derivar"](df).reset_index(drop=True)
+    df = canonizar_categorias_numericas(df, pre.categorias_)
     Xc = pre.transform_categorico(df)
     Xg = pre.transform_gaussiano(df)[pre.columnas_gaussiano_]
     partes = {c: Xg[c].to_numpy() for c in pre.columnas_gaussiano_}

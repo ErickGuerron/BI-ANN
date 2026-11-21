@@ -1,0 +1,49 @@
+{
+  "cobertura": 0.9987,
+  "auc_leve_vs_aldia": {
+    "meses_desde_desemb": 0.6335,
+    "cuotas_esperadas": 0.6344,
+    "cuotas_atrasadas": 0.5666,
+    "cuotas_atrasadas_max": 0.5078,
+    "ratio_atraso": 0.4698
+  },
+  "auc_3190_vs_leve": {
+    "meses_desde_desemb": 0.6877,
+    "cuotas_esperadas": 0.6875,
+    "cuotas_atrasadas": 0.6678,
+    "cuotas_atrasadas_max": 0.756,
+    "ratio_atraso": 0.5799
+  },
+  "mediana_por_clase": {
+    "meses_desde_desemb": {
+      "AL_DIA": 9.0,
+      "MORA_LEVE": 14.0,
+      "MORA_31_90": 24.0,
+      "MORA_MAYOR_90": 26.0
+    },
+    "cuotas_esperadas": {
+      "AL_DIA": 9.0,
+      "MORA_LEVE": 14.0,
+      "MORA_31_90": 24.0,
+      "MORA_MAYOR_90": 23.0
+    },
+    "cuotas_atrasadas": {
+      "AL_DIA": 2.0,
+      "MORA_LEVE": 3.0,
+      "MORA_31_90": 6.0,
+      "MORA_MAYOR_90": 7.0
+    },
+    "cuotas_atrasadas_max": {
+      "AL_DIA": 0.0,
+      "MORA_LEVE": 0.0,
+      "MORA_31_90": 1.0,
+      "MORA_MAYOR_90": 3.0
+    },
+    "ratio_atraso": {
+      "AL_DIA": 0.25,
+      "MORA_LEVE": 0.23,
+      "MORA_31_90": 0.27,
+      "MORA_MAYOR_90": 0.38
+    }
+  }
+}

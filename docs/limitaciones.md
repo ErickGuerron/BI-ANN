@@ -22,3 +22,5 @@ Pendiente de definición. Ver la sección "Pendiente" de `docs/calibracion.md`.
 ## ds5-B y ds7-B
 
 Pendientes de decisión (ver la sección "Pendiente" de `docs/calibracion.md`).
+
+- **ds5 MORA_LEVE y MORA_31_90 (cierre 2026-11-21).** El F1 de MORA_LEVE queda cerca de 0,55 y MORA_31_90 se confunde con MORA_LEVE en 15 % a 25 % de los casos. Los datos no traen días de atraso por evento ni historial de mora de las clases altas; ds4 solo contiene mora de hasta 30 días. Ver `docs/ds5_mora_leve.md`.
