@@ -30,8 +30,8 @@ Detalle en `docs/ds5_mora_leve.md`. Rama: `ann-ds5-mora-leve`.
 - Cierra el punto 9 solo en parte: la brecha de entrenamiento a prueba no se estudió.
 - Nuevos pendientes:
   1. Decidir de dónde saldrían los proxies en producción (precálculo o API). La app sigue sin ellos.
-  2. Reajustar `GB_*` por pliegue para confirmar el resultado sin esa limitación.
-  3. Revisar MORA_MAYOR_90, que baja un poco con los proxies en la partición original.
+  2. ~~Reajustar `GB_*` por pliegue~~ Hecho (`t18`): la ganancia se mantiene (+0,013 macro F1, +0,039 MORA_LEVE) y la base de F1 y F2 estaba inflada unos 4 puntos. Queda por resolver por qué el reajuste no reproduce exactamente las columnas `GB_*` guardadas (concordancia del argmax: 95,7 %).
+  3. ~~Revisar MORA_MAYOR_90~~ Hecho: el recall no baja; baja la precisión porque más casos de MORA_31_90 se predicen como MORA_MAYOR_90. Falta un intervalo de confianza (soporte de unos 90 casos por pliegue).
   4. Verificar con el equipo de origen cómo se calcula `Info_Dias_Morosidad_Objetivo`.
 
 ## Decisión tomada

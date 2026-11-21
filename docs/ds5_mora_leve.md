@@ -34,11 +34,43 @@ ds5 se parte por fecha de corte, así que se usaron ventanas hacia adelante: F1 
 
 MORA_LEVE mejora en los 15 pares pliegue por semilla. El macro F1 mejora en 14 de 15.
 
+## `GB_*` reajustado por pliegue (`t18`, `t18b`)
+
+Los pliegues de arriba usaban las columnas `GB_*` guardadas, que se generaron con la partición original. Se reajustaron por pliegue (HGB sobre las 101 columnas one-hot, probabilidades fuera de muestra con `GroupKFold` por corte en entrenamiento, modelo completo para validación y prueba). Mismas 5 semillas, mismos proxies.
+
+| Pliegue | Base macro F1 (GB guardado → refit) | Δ macro con proxies (guardado / refit) | Δ MORA_LEVE (guardado / refit) |
+|---|---|---|---|
+| F1 | 0,694 → 0,652 | +0,008 / +0,008 | +0,031 / +0,029 |
+| F2 | 0,717 → 0,679 | +0,009 / +0,012 | +0,040 / +0,040 |
+| F3 | 0,707 → 0,706 | +0,010 / +0,018 | +0,039 / +0,049 |
+| Global (15 pares) | 0,706 → 0,679 | +0,009 / **+0,013** | +0,037 / **+0,039** |
+
+- **La preocupación era fundada.** Con `GB_*` reajustado, la base cae 4 puntos de macro F1 en F1 y F2. Esos pliegues estaban inflados por las columnas `GB_*` generadas con información de cortes posteriores. En F3, que es la partición original, no cambia (0,707 contra 0,706).
+- **La ganancia de los proxies se mantiene y no es menor.** Con `GB_*` reajustado es +0,013 de macro F1 (positivo en 15 de 15 pares) y +0,039 en MORA_LEVE (15 de 15).
+- **El reajuste no reproduce exactamente las columnas guardadas.** En F3, con las mismas entradas e hiperparámetros, la diferencia media de las probabilidades es de 0,001 a 0,09 según la columna (la mayor en `GB_Zona_Duda`, 0,09, y `GB_Margen`, 0,06), y el argmax coincide en el 95,7 % de las filas. No se encontró la causa (se probó variar el número de iteraciones). El macro F1 de la base en F3 sí coincide (0,706 contra 0,707), así que la calidad es equivalente, pero no es una réplica bit a bit.
+- **Desviación de la receta:** F1 tiene solo 4 cortes de entrenamiento, así que su `GroupKFold` usa 4 pliegues en vez de 5. No se reajustaron los hiperparámetros por pliegue.
+- Las probabilidades fuera de muestra de entrenamiento siguen usando cortes posteriores dentro del propio entrenamiento del pliegue (`GroupKFold` no respeta el orden temporal). No fuga prueba, pero el entrenamiento ve parte del futuro de sí mismo.
+
+## MORA_MAYOR_90: matriz de confusión por pliegue
+
+Soporte en prueba: 99, 94 y 88 casos por semilla en F1, F2 y F3. Fracción de los casos reales de MORA_MAYOR_90 que se predicen en cada clase (suma sobre 5 semillas, `GB_*` reajustado):
+
+| Pliegue | Variante | AL_DIA | MORA_LEVE | MORA_31_90 | MORA_MAYOR_90 |
+|---|---|---|---|---|---|
+| F1 | base | 0,230 | 0,022 | 0,349 | 0,398 |
+| F1 | proxies | 0,240 | 0,016 | 0,352 | 0,392 |
+| F2 | base | 0,223 | 0,049 | 0,236 | 0,491 |
+| F2 | proxies | 0,219 | 0,053 | 0,240 | 0,487 |
+| F3 | base | 0,023 | 0,030 | 0,173 | 0,775 |
+| F3 | proxies | 0,023 | 0,032 | 0,130 | 0,816 |
+
+- Los errores de MORA_MAYOR_90 van sobre todo a MORA_31_90 (13 % a 35 %). En F1 y F2 también a AL_DIA (22 % a 24 %), no en F3. Hacia MORA_LEVE solo van 2 % a 5 %, y los proxies no lo cambian: **no es un desplazamiento hacia MORA_LEVE.**
+- El recall de MORA_MAYOR_90 no baja con los proxies (es igual en F1 y F2, y sube de 0,775 a 0,816 en F3). Lo que cambia es la **precisión**: en F3 pasa de 0,763 a 0,731, porque más casos reales de MORA_31_90 se predicen como MORA_MAYOR_90 (55 a 85 de 5 semillas). La caída de F1 de esa clase viene de ahí, no de perder casos graves.
+- El soporte es de unos 90 casos por pliegue, así que estas fracciones tienen un margen amplio. No se calcularon intervalos.
+
 ## Limitaciones
 
 - La mejora en macro F1 es de alrededor de un punto. En MORA_LEVE es de unos 4 puntos, y la clase sigue en 0,50 a 0,57.
-- Los pliegues comparten las columnas `GB_*` guardadas en los archivos v4; no se reajustaron por pliegue. Cada fila tiene un `GB_*` fuera de muestra respecto de sí misma, pero el modelo que lo generó se entrenó con la partición original.
 - Los pliegues no son independientes: se solapan en entrenamiento y las mismas operaciones aparecen en varios cortes.
-- MORA_MAYOR_90 (312 filas) tiende a bajar un poco con los proxies en la partición original; no se estudió.
 - **La app no puede usar los proxies.** No recibe la tabla de pagos. Hace falta decidir si se precalculan en el sistema de la cooperativa o si la API los calcula al vuelo desde el historial de pagos. Hasta decidirlo, la app sigue con el modelo sin proxies.
 - Los pesos de la app (`resultados_convergencia/pesos_ds5_*.json`) no se tocaron.
