@@ -104,6 +104,20 @@ Soporte en prueba: 99, 94 y 88 casos por semilla en F1, F2 y F3. Fracción de lo
 - El recall de MORA_MAYOR_90 no baja con los proxies (es igual en F1 y F2, y sube de 0,775 a 0,816 en F3). Lo que cambia es la **precisión**: en F3 pasa de 0,763 a 0,731, porque más casos reales de MORA_31_90 se predicen como MORA_MAYOR_90 (55 a 85 de 5 semillas). La caída de F1 de esa clase viene de ahí, no de perder casos graves.
 - El soporte es de unos 90 casos por pliegue, así que estas fracciones tienen un margen amplio. No se calcularon intervalos.
 
+## Veredicto de cierre
+
+**No está demostrado que la generalización y la exactitud actuales sean el máximo alcanzable.** Lo que sí está demostrado:
+
+- Con lo ensayado, el peso por clase y el sesgo por clase no mejoran MORA_LEVE. Los proxies de puntualidad sí: +0,013 de macro F1 y +0,04 en MORA_LEVE, en 3 pliegues temporales y 5 semillas, con `GB_*` reajustado. Dos proxies bastan.
+- Generalización medida: macro F1 de prueba entre 0,65 y 0,72 según el pliegue temporal (con `GB_*` reajustado, base: 0,652, 0,679 y 0,706 en F1, F2 y F3). Una sola cooperativa y un solo periodo (2022). No hay una prueba externa real: los dos archivos de casos sintéticos y el de Kiva no sirven para medir exactitud (ver arriba).
+- Techo de información visible: MORA_LEVE se queda en torno a 0,50 a 0,55; AL_DIA y MORA_LEVE se solapan; MORA_31_90 se confunde con MORA_LEVE en 16 % a 25 % de los casos. Ninguna señal de las probadas mide cuántos días de atraso hay.
+
+Lo que **no** se probó y puede mover los números:
+
+- **Lo desplegado no es lo mejor que probamos.** Los pesos de ds5 de la app (capa de 32, alpha 3,0, sobremuestreo) no se tocaron. La variante B de Keras con los dos proxies no está en la app, y la app no puede calcular los proxies.
+- **Había un modelo simple por encima de la red.** En `resumen_comparativo_v4.csv`, la regresión logística tuvo exactitud equilibrada de prueba 0,741 y la red de la app 0,685 (misma partición y conjunto de variables). La variante B de Keras llega a 0,74 a 0,75, y con proxies a 0,74 a 0,77. Eso sugiere que la receta de la app ya estaba lejos de su techo.
+- Sin probar: comparar optimizadores (Adam, SGD con momento, L-BFGS), regularización (`alpha`, tamaño de capa), un ensamble de redes en ds5 (se usa en ds7), HGB y regresión logística con los proxies como referencia, y más datos reales de MORA_LEVE y MORA_31_90.
+
 ## Limitaciones
 
 - La mejora en macro F1 es de alrededor de un punto. En MORA_LEVE es de unos 4 puntos, y la clase sigue en 0,50 a 0,57.
