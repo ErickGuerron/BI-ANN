@@ -133,7 +133,11 @@ def clave(ds, nombre):
 
 @st.cache_data(show_spinner=False)
 def cargar_campos(ds):
-    return json.loads((I.AUX / f"campos_{ds}.json").read_text(encoding="utf-8"))
+    campos = json.loads((I.AUX / f"campos_{ds}.json").read_text(encoding="utf-8"))
+    for c in campos:
+        if c["tipo"] == "num" and I.es_monetario(c["nombre"]):
+            c["entero"] = False
+    return campos
 
 
 @st.cache_data(show_spinner=False)
