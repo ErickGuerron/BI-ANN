@@ -24,7 +24,7 @@ Detalles que ya tienen su propio documento: calibración (`docs/calibracion.md`)
 | Exactitud balanceada en prueba | 0,824 | 0,753 | 0,819 | 0,752 |
 | AUC macro en prueba | 0,959 | 0,887 | 0,956 | 0,962 |
 | Clase más débil (recall) | AJUSTADA 0,73 | MORA_LEVE 0,57 | DETERIORA 0,73 | COBERTURA_ALTA 0,64 |
-| Calibración (temperatura) | Sí, T = 0,709 | No (empeoraba) | No (empeoraba) | Sí, T = 0,592 |
+| Calibración (temperatura) | Sí, T = 0,709 | No (no mejoró; ver 3.6) | No (no mejoró; ver 3.6) | Sí en la red base, T = 0,592; el ensamble final no la usa |
 | Modelo que usa la app hoy | Red scikit-learn | Red scikit-learn (sin proxies) | Red scikit-learn | Ensamble de 5 redes Keras con `Valor_Garantiza`, cascada de rechazo |
 
 Fuentes: `resultados_convergencia/ajuste_<ds>.json`, `resultados_convergencia/pesos_<ds>.json`, `../<ds>/resumen_v4.json`, `docs/calibracion.md`. La exactitud balanceada de ds7 de la tabla es la de la red de base; el ensamble final se mide con macro F1 (sección 7).
@@ -75,7 +75,44 @@ La época elegida por validación en el modelo final fue 2 (ds1), 4 (ds5), 3 (ds
 En train las probabilidades del árbol son fuera de muestra (cada fila se predice con un modelo que no la vio). En validación y prueba vienen del modelo completo. Esa diferencia puede limitar a la red (advertencia de `../cambios_v4.md`). Solución parcial: se mantiene fuera de muestra en train, que es la forma correcta de evitar que la red confíe en un árbol que memorizó. Para ds5 se midió el efecto con rigor (sección 5).
 
 **Problema E: la confianza de la red no es la probabilidad de acierto.**
-Una red puede acertar mucho y aun así dar 90 % en casos que acierta 60 % de las veces. Solución: escalado por temperatura (una sola temperatura T ajustada en validación, que no cambia la clase predicha). Mejoró NLL, Brier y ECE en ds7 y ds1; en ds5 y ds6 no mejoró en prueba y no se aplicó (`docs/calibracion.md`). La regresión isotónica quedó descartada: en ds6 bajó la exactitud balanceada de 0,819 a 0,346 porque casi siempre predecía la clase mayoritaria.
+Una red puede acertar mucho y aun así dar 90 % en casos que acierta 60 % de las veces. Solución: escalado por temperatura, explicado en la sección 3.6 con el criterio de cuándo se aplicó y cuándo no, y sus límites.
+
+### 3.6 Escalado por temperatura (calibración de la confianza)
+
+**Qué es.** La red produce logits `z` (la salida antes del softmax). En lugar de `softmax(z)` se calcula `softmax(z / T)` con una sola temperatura `T > 0`. Con `T < 1` las probabilidades se afilan (más confianza); con `T > 1` se acercan a la uniforme (menos confianza). Como todos los logits se dividen por el mismo número, su orden no cambia: **la clase predicha es siempre la misma**, y por eso la exactitud no se mueve. Corrige la confianza, no la clasificación.
+
+**Cómo se ajusta** (`pipeline/calibrar.py`). `T` se elige para minimizar la pérdida logarítmica (NLL) en **validación**. La prueba solo mide. `nucleo/inferencia.py` lee `auxiliares/calibracion_<ds>.json` y divide los logits entre `T`; si el archivo no existe, usa `T = 1`.
+
+**Resultados en prueba** (`docs/calibracion.md`; menor es mejor en NLL, Brier y ECE):
+
+| Red | T | NLL sin → con T | Brier sin → con T | ECE sin → con T | Exactitud balanceada | Decisión |
+|---|---|---|---|---|---|---|
+| ds7 (red base) | 0,592 | 0,419 → 0,356 | 0,195 → 0,169 | 0,130 → 0,049 | 0,752 (igual) | Se aplica |
+| ds1 | 0,709 | 0,485 → 0,444 | 0,250 → 0,234 | 0,094 → 0,033 | 0,824 (igual) | Se aplica |
+| ds6 | 1,108 | 0,435 → 0,433 | 0,222 → 0,221 | 0,052 → 0,061 | 0,819 (igual) | No se aplica |
+| ds5 | 0,836 | 0,651 → 0,653 | 0,382 → 0,385 | 0,031 → 0,034 | 0,753 (igual) | No se aplica |
+
+**Criterio.** Se aplicó la temperatura donde mejoraba NLL, Brier y ECE en prueba (ds7 y ds1). En ds5 y ds6 no mejoraba las tres.
+
+**Qué significa realmente "empeoraba" en ds5 y ds6.** La temperatura **no empeoró el modelo**: la clase predicha y la exactitud son idénticas. Solo cambió un poco la calidad de la confianza, y la diferencia es muy pequeña:
+
+- ds5: NLL +0,002, Brier +0,003, ECE +0,003. Las tres métricas quedan un poco peor.
+- ds6: NLL −0,002 y Brier −0,001 (apenas mejores), pero ECE +0,009 (peor). Es mejora mixta, no un empeoramiento claro.
+
+Estas diferencias son de milésimas y no se midió su variabilidad, así que no se puede afirmar que la temperatura sea mala en ds5 o ds6; se puede afirmar que **no hay evidencia de que ayude**, y que añadir un parámetro sin beneficio medible no se justificó.
+
+**Por qué probablemente no funcionó en ds5 y ds6.** `T` se ajustó en validación, y estos dos datasets se parten por fecha: la validación son cortes más tempranos y la prueba son cortes posteriores. Si la forma en que se distribuye la confianza cambia entre cortes, una `T` ajustada en un periodo no sirve igual en otro. Esta es una explicación plausible, **no comprobada** (no se hizo una prueba que la confirme).
+
+**Límites que hay que tener presentes.**
+
+1. **La decisión se tomó después de ver la prueba.** Elegir "temperatura en ds7 y ds1, no en ds5 y ds6" usó los resultados de prueba, así que esas cifras no son una estimación independiente para ds5 y ds6. Para evitarlo habría hecho falta una segunda partición de validación; no se hizo.
+2. **Calibrar no mejora la generalización.** En el caso de prueba ds7-B (`pruebas/casos_no_vistos.md`), la confianza en la clase equivocada subió de 67,2 % a 82,5 % con temperatura; en ds5-B, de 70,1 % a 76,6 %. Con `T < 1` la red queda más segura también cuando se equivoca. Un caso fuera de lo visto en entrenamiento puede recibir una probabilidad alta aunque sea erróneo.
+3. **No arregla el exceso de confianza fuera de distribución** (ds7, secciones 7 y `docs/ds7_ml_puro.md`): la confianza alta en errores persiste. Por eso en ds7 se agregaron el rechazo por soporte y el desacuerdo del ensamble.
+4. **El ensamble final de ds7 no usa temperatura.** En el código, `temperatura` solo aparece en `nucleo/inferencia.py` (la red única); no aparece en `nucleo/garantia.py` ni `nucleo/cascada.py`. El ensamble con `Valor_Garantiza` se midió sin calibrar (ECE 0,004). La temperatura de 0,592 de la tabla corresponde a la red base de ds7.
+5. **Una sola temperatura global.** Corrige una escala común, no los errores propios de cada clase.
+6. **La zona de duda de la app no usa estas probabilidades:** viene del modelo de árboles (`GB_Zona_Duda`), por lo que no cambia con la calibración.
+
+**Regresión isotónica (comparada y descartada).** Ajusta una función monótona por clase. Tuvo el mejor NLL y ECE, pero cambia la clase predicha: en ds6 bajó la exactitud balanceada de 0,819 a 0,346 porque casi siempre predice la clase mayoritaria. Además necesita más datos y se sobreajusta en clases pequeñas. No se usa.
 
 ## 4. ds1: ingreso de solicitudes
 
@@ -166,7 +203,7 @@ Resumen de lo medido con Keras (3 pliegues, 5 semillas, `GB_*` reajustado):
 - **Techo de información.** La confusión entre AL_DIA, MORA_LEVE y MORA_31_90 no se puede bajar con los datos disponibles: no hay días de atraso por evento ni historial de mora de las clases altas. MORA_LEVE queda cerca de 0,55 de F1.
 - **Datos limitados:** una cooperativa y un solo periodo (2022); el macro F1 de prueba va de 0,65 a 0,72 según el pliegue. Los pliegues se solapan en entrenamiento y las mismas operaciones aparecen en varios cortes.
 - **Cómo calculó el origen la etiqueta** (desde qué cuota se cuenta el atraso, pagos parciales, días de gracia) no se pudo verificar; queda pendiente con la cooperativa.
-- **Sin calibración:** la temperatura de ds5 no mejoró en prueba, así que la confianza mostrada es la cruda.
+- **Sin calibración:** la temperatura de ds5 no mostró mejora en prueba (diferencias de milésimas, ver 3.6), así que la confianza mostrada es la cruda.
 - **Reajuste de `GB_*` no exacto:** el reajuste coincide en el argmax en 95,7 % de las filas con las columnas guardadas; no se encontró la causa.
 - **MORA_MAYOR_90** tiene 88 casos en prueba y 99, 94 y 88 por pliegue: cualquier cifra de esa clase tiene un margen amplio y no se calcularon intervalos.
 - **Caso documentado:** un crédito sin pagos (`Sin_Pagos = 1`) se clasifica AL_DIA con ~60 % de confianza; coincide con los datos (97,6 % de esos casos son AL_DIA) y se deja así (`docs/limitaciones.md`).
@@ -197,7 +234,7 @@ Precisión por clase: MEJORA 0,40; IGUAL 0,999; DETERIORA 0,13.
 
 - **Desbalance extremo (95 % IGUAL).** Sin sobremuestreo la validación cruzada da 0,454 de exactitud balanceada; con sobremuestreo, 0,786, y con `alpha = 10`, 0,810. Es el caso donde el sobremuestreo hace la mayor diferencia, por la razón de la sección 3.5 (A).
 - **Recall alto de las clases raras a costa de precisión.** De cada 100 casos que la red predice DETERIORA, solo 13 lo son. Es una consecuencia esperable de haber igualado las clases en entrenamiento: la red aprende como si las tres fueran igual de frecuentes, cuando DETERIORA es el 2,3 % de la prueba. No se definió cuánto cuesta cada tipo de error, así que no se decidió si ese equilibrio es el adecuado.
-- **Calibración.** La temperatura de validación (T = 1,108) no mejoró en prueba y no se aplicó. La isotónica colapsó la exactitud balanceada a 0,346 (casi siempre predice IGUAL) y se descartó.
+- **Calibración.** La temperatura de validación (T = 1,108) dio una mejora mixta en prueba (NLL y Brier apenas mejores, ECE peor) y no se aplicó; ver 3.6. La isotónica colapsó la exactitud balanceada a 0,346 (casi siempre predice IGUAL) y se descartó.
 - **Validación y prueba temporales.** La exactitud balanceada de validación (0,842) es mayor que la de prueba (0,819). Una explicación probable es que los cortes posteriores se parecen menos al entrenamiento, y sería una razón por la que la temperatura ajustada en validación no se transfirió; no se comprobó.
 
 ### Limitaciones
@@ -258,10 +295,10 @@ Las cifras de las etapas no son comparables entre sí sin cuidado: cambian los d
 1. **Una sola semilla y una sola partición de prueba** para los pesos de la app. La búsqueda de hiperparámetros sí usó validación cruzada, pero los resultados de prueba no traen dispersión.
 2. **No hay evidencia de que la red supere a un modelo lineal.** En `cambios_v4.md`, la regresión logística tuvo mejor exactitud balanceada que la red de la receta v4 en los 8 datasets (ds1 0,832 contra 0,814; ds5 0,741 contra 0,685; ds6 0,796 contra 0,730; ds7 0,735 contra 0,661). Las redes de la app, con la búsqueda de este programa (sobremuestreo y regularización), llegaron más alto que la receta v4 (ds5 0,753; ds6 0,819; ds7 0,752), pero la logística de v4 no se volvió a ajustar con ese procedimiento, así que esas cifras no son comparables entre sí. La única comparación hecha en igualdad de condiciones es la de ds5 (`t24`: mismas entradas, pliegues y semillas): la red y la logística empatan. Las redes sirven para ordenar casos (AUC 0,89 a 0,96).
 3. **Los datos limitan más que el modelo.** En ds5 tres familias de modelos llegan al mismo nivel; en ds7 faltan ejemplos de cobertura media; en ds6 la clase de interés es el 2,3 % de la prueba.
-4. **Generalización temporal.** ds5 y ds6 se parten por fecha. El rendimiento cambia entre pliegues (ds5: 0,65 a 0,72 de macro F1) y la validación no representa bien a la prueba; por eso la temperatura no se transfirió.
+4. **Generalización temporal.** ds5 y ds6 se parten por fecha. El rendimiento cambia entre pliegues (ds5: 0,65 a 0,72 de macro F1) y la validación puede no representar bien a la prueba. Es una explicación plausible de que la temperatura no se transfiriera en ds5 y ds6 (3.6), no una causa comprobada.
 5. **Una sola cooperativa y un solo periodo** para ds5 (2022). No hay evidencia de que los resultados valgan para otra entidad o fecha.
 6. **Optimizador no comparado.** Solo se usó Adam (pendiente 1 de `docs/pendientes.md`).
-7. **Confianza.** Aun calibrada por temperatura, la confianza no es fiable fuera de lo visto en entrenamiento (ds7) y ds5/ds6 se muestran sin calibrar.
+7. **Confianza.** Aun calibrada por temperatura, la confianza no es fiable fuera de lo visto en entrenamiento (ds7); ds5 y ds6 se muestran sin calibrar, y la decisión de qué redes calibrar se tomó viendo la prueba (3.6).
 8. **El proyecto no saldrá a producción.** Las decisiones pendientes que dependían de un despliegue (de dónde salen los proxies de ds5, el monitoreo continuo de ds7) se descartaron o quedaron como sugerencias.
 
 ## 9. Dónde está cada cosa
