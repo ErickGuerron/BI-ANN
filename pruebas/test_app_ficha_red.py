@@ -37,6 +37,34 @@ class FichaAppTest(unittest.TestCase):
             self.assertIn("Matriz de confusión en prueba", t, ds)
             self.assertIn("AUC de prueba", t, ds)
 
+    def abrir(self, ds):
+        at = AppTest.from_file(APP, default_timeout=60).run()
+        next(b for b in at.button if b.key == f"ver_red_{ds}").click().run()
+        self.assertFalse(at.exception, f"{ds}: {[e.value for e in at.exception]}")
+        return at
+
+    def test_las_metricas_de_entrenamiento_aparecen_en_cada_red(self):
+        for ds in TOP4:
+            t = texto(self.abrir(ds))
+            for esperado in ("Error de entrenamiento", "Error de prueba", "Brecha |prueba − entrenamiento|",
+                             "Pérdida (log-loss)", "Curva de entrenamiento"):
+                self.assertIn(esperado, t, f"{ds}: falta {esperado}")
+
+    def test_ds5_cumple_el_limite_de_5_pero_no_el_de_3(self):
+        t = texto(self.abrir("ds5_pagos_multimes"))
+        self.assertIn("3,09 pp", t)
+        self.assertIn("Cumple el límite de 5 %", t)
+        self.assertIn("No cumple el límite de 3 %", t)
+
+    def test_ds1_con_error_de_prueba_menor_que_el_de_entrenamiento_muestra_signo_negativo(self):
+        t = texto(self.abrir("ds1_ingreso_solicitudes"))
+        self.assertIn("−0,61 pp", t)
+        self.assertIn("Cumple el límite de 5 %", t)
+
+    def test_hay_curvas_de_entrenamiento_por_red(self):
+        for ds in TOP4:
+            self.assertEqual(len(self.abrir(ds).get("vega_lite_chart")), 2, ds)  # st.line_chart: pérdida y exactitud
+
     def test_ds7_muestra_el_aviso_del_ensamble_y_ds1_no(self):
         at = AppTest.from_file(APP, default_timeout=60).run()
         next(b for b in at.button if b.key == "ver_red_ds7_historico_garantias").click().run()

@@ -13,7 +13,10 @@ import numpy as np
 import pandas as pd
 
 PROGRAMA = Path(__file__).resolve().parents[1]
+DATOS = PROGRAMA.parent                 # carpeta con ds1_..., ds8_... y sus X_*_nn.csv
 PESOS = PROGRAMA / "resultados_convergencia"
+LIMITE_BRECHA = 0.05                    # |error de prueba - error de entrenamiento| debe ser menor
+LIMITE_BRECHA_ESTRICTO = 0.03           # criterio más estricto que usan docs/ds7_*.md
 AUX = PROGRAMA / "auxiliares"
 
 NOTA_ENSAMBLE = ("Se muestra la red base de ds7 (una sola red, sin la garantía como entrada). "
@@ -37,6 +40,79 @@ def separacion_capas(capas):
 
 def _leer(ruta):
     return json.loads(Path(ruta).read_text(encoding="utf-8"))
+
+
+def _softmax(z):
+    z = z - z.max(axis=1, keepdims=True)
+    e = np.exp(z)
+    return e / e.sum(axis=1, keepdims=True)
+
+
+def _propagar(pesos, X):
+    """Forward pass of the saved network: ReLU in the hidden layers, softmax at the output."""
+    a = X
+    for k, (w, b) in enumerate(zip(pesos["coefs"], pesos["intercepts"])):
+        a = a @ np.asarray(w) + np.asarray(b)
+        if k < len(pesos["coefs"]) - 1:
+            a = np.maximum(a, 0.0)
+    return _softmax(a)
+
+
+def evaluar_brecha(error_train, error_test):
+    """Train-test gap as defined in the project docs: test error minus training error.
+
+    The limits are checked on the absolute value, so a test error lower than the training error that
+    differs by more than the limit also fails."""
+    brecha = error_test - error_train
+    return {"brecha": brecha, "brecha_abs": abs(brecha),
+            "cumple_5": abs(brecha) < LIMITE_BRECHA, "cumple_3": abs(brecha) < LIMITE_BRECHA_ESTRICTO}
+
+
+def _metricas_particion(P, y, K):
+    pred = P.argmax(axis=1)
+    recall, f1 = [], []
+    for k in range(K):
+        tp = float(((pred == k) & (y == k)).sum())
+        real, previsto = float((y == k).sum()), float((pred == k).sum())
+        r = tp / real if real else 0.0
+        p = tp / previsto if previsto else 0.0
+        recall.append(r)
+        f1.append(2 * p * r / (p + r) if p + r else 0.0)
+    return {"error": 1.0 - float((pred == y).mean()), "exactitud_balanceada": float(np.mean(recall)),
+            "macro_f1": float(np.mean(f1)),
+            "perdida": float(-np.log(np.clip(P[np.arange(len(y)), y], 1e-15, 1.0)).mean())}
+
+
+_CACHE_ENTRENAMIENTO = {}
+
+
+def metricas_entrenamiento(ds, pesos, historial):
+    """Cached per dataset and data folder: evaluating 20 000 rows three times is the slow part of the sheet."""
+    clave = (ds, str(DATOS))
+    if clave not in _CACHE_ENTRENAMIENTO:
+        _CACHE_ENTRENAMIENTO[clave] = _calcular_entrenamiento(ds, pesos, historial)
+    return _CACHE_ENTRENAMIENTO[clave]
+
+
+def _calcular_entrenamiento(ds, pesos, historial):
+    """Error, balanced accuracy, macro F1 and log-loss on train, validation and test, plus the gap.
+
+    Computed with the saved weights on the same X_*_nn.csv files the network was trained with. The training
+    split is evaluated as it is (without the oversampling used to fit). Returns None if the data are not there."""
+    K = len(pesos["clases"])
+    por_parte = {}
+    try:
+        for parte in ("train", "val", "test"):
+            X = pd.read_csv(DATOS / ds / f"X_{parte}_nn.csv").to_numpy(dtype=np.float64)
+            y = pd.read_csv(DATOS / ds / f"y_{parte}.csv")["Y"].to_numpy(dtype=int)
+            por_parte[parte] = _metricas_particion(_propagar(pesos, X), y, K)
+    except FileNotFoundError:
+        return None
+    salida = {m: {p: por_parte[p][m] for p in por_parte} for m in ("error", "exactitud_balanceada", "macro_f1", "perdida")}
+    salida.update(evaluar_brecha(por_parte["train"]["error"], por_parte["test"]["error"]))
+    salida["brecha_val"] = por_parte["val"]["error"] - por_parte["train"]["error"]
+    salida["historial"] = [dict(h) for h in historial]
+    return salida
 
 
 def matriz_confusion(ds, clases):
@@ -76,6 +152,7 @@ def cargar_ficha(ds):
             "epoca_final": ajuste["epoca_final"],
             "epocas_entrenadas": ajuste["epocas_entrenadas"],
         },
+        "entrenamiento": metricas_entrenamiento(ds, pesos, ajuste["historial"]),
         "confusion": cm.tolist(),
         "recall": recall.tolist(),
         "precision": precision.tolist(),

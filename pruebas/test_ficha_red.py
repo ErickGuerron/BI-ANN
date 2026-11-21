@@ -76,6 +76,72 @@ class FichaRedTest(unittest.TestCase):
             self.assertEqual(ficha_red.cargar_ficha(ds)["nota"], "", ds)
 
 
+class EntrenamientoTest(unittest.TestCase):
+    """Training-side metrics: error by split, train-test gap, limits and learning curve."""
+
+    def ficha(self, ds):
+        return ficha_red.cargar_ficha(ds)
+
+    def ajuste(self, ds):
+        return json.loads((PROGRAMA / "resultados_convergencia" / f"ajuste_{ds}.json").read_text(encoding="utf-8"))
+
+    def test_el_error_de_validacion_y_prueba_coincide_con_el_ajuste_guardado(self):
+        for ds in TOP4:
+            e, a = self.ficha(ds)["entrenamiento"], self.ajuste(ds)
+            self.assertAlmostEqual(e["error"]["val"], 1 - a["validacion"]["exactitud"], places=6, msg=ds)
+            self.assertAlmostEqual(e["error"]["test"], 1 - a["prueba"]["exactitud"], places=6, msg=ds)
+
+    def test_la_exactitud_balanceada_coincide_con_el_ajuste_guardado(self):
+        for ds in TOP4:
+            e, a = self.ficha(ds)["entrenamiento"], self.ajuste(ds)
+            self.assertAlmostEqual(e["exactitud_balanceada"]["test"], a["prueba"]["exactitud_balanceada"], places=6, msg=ds)
+            self.assertAlmostEqual(e["exactitud_balanceada"]["val"], a["validacion"]["exactitud_balanceada"], places=6, msg=ds)
+
+    def test_la_brecha_es_error_de_prueba_menos_error_de_entrenamiento(self):
+        for ds in TOP4:
+            e = self.ficha(ds)["entrenamiento"]
+            self.assertAlmostEqual(e["brecha"], e["error"]["test"] - e["error"]["train"], places=9, msg=ds)
+            self.assertAlmostEqual(e["brecha_abs"], abs(e["brecha"]), places=9, msg=ds)
+
+    def test_la_brecha_de_ds5_es_la_documentada(self):
+        self.assertAlmostEqual(self.ficha("ds5_pagos_multimes")["entrenamiento"]["brecha"], 0.0309, places=3)
+
+    def test_los_limites_se_evaluan_sobre_el_valor_absoluto(self):
+        for ds in TOP4:
+            e = self.ficha(ds)["entrenamiento"]
+            self.assertEqual(e["cumple_5"], e["brecha_abs"] < 0.05, ds)
+            self.assertEqual(e["cumple_3"], e["brecha_abs"] < 0.03, ds)
+        self.assertTrue(self.ficha("ds5_pagos_multimes")["entrenamiento"]["cumple_5"])
+        self.assertFalse(self.ficha("ds5_pagos_multimes")["entrenamiento"]["cumple_3"])
+
+    def test_una_brecha_negativa_tambien_se_mide_en_valor_absoluto(self):
+        e = ficha_red.evaluar_brecha(error_train=0.20, error_test=0.14)
+        self.assertAlmostEqual(e["brecha"], -0.06)
+        self.assertAlmostEqual(e["brecha_abs"], 0.06)
+        self.assertFalse(e["cumple_5"])
+
+    def test_el_historial_tiene_una_fila_por_epoca_entrenada(self):
+        for ds in TOP4:
+            f = self.ficha(ds)
+            self.assertEqual(len(f["entrenamiento"]["historial"]), f["metricas"]["epocas_entrenadas"], ds)
+
+    def test_la_perdida_de_entrenamiento_es_positiva_y_finita(self):
+        for ds in TOP4:
+            p = self.ficha(ds)["entrenamiento"]["perdida"]
+            for parte in ("train", "val", "test"):
+                self.assertTrue(np.isfinite(p[parte]) and p[parte] > 0, f"{ds} {parte}")
+
+    def test_sin_los_datos_de_entrenamiento_la_ficha_sigue_funcionando(self):
+        original = ficha_red.DATOS
+        try:
+            ficha_red.DATOS = Path("no_existe")
+            f = ficha_red.cargar_ficha("ds1_ingreso_solicitudes")
+        finally:
+            ficha_red.DATOS = original
+        self.assertIsNone(f["entrenamiento"])
+        self.assertTrue(f["metricas"])
+
+
 class SeparacionTest(unittest.TestCase):
     def test_una_red_pequena_conserva_la_separacion_por_defecto(self):
         self.assertEqual(ficha_red.separacion_capas([4, 3, 2]), 240)

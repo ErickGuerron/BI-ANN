@@ -112,7 +112,7 @@ streamlit run app.py
 
 Si el puerto 8501 está ocupado: `streamlit run app.py --server.port 8502`.
 
-**Ver la red neuronal.** En cada pestaña de dataset, el botón "Ver red neuronal" abre una ventana con dos pestañas: *Diagrama* (todas las neuronas y conexiones con los pesos del modelo final, junto con la configuración aplicada) y *Métricas* (AUC, exactitud, validación cruzada, calibración y matriz de confusión en prueba con recall y precisión por clase). En el diagrama se arrastra para mover, la rueda acerca y "Mostrar desde" oculta las conexiones más débiles. Para ds7 se dibuja la red base; la app clasifica con el ensamble de 5 redes y la ventana lo avisa. Los datos salen de archivos que ya genera el pipeline (`pesos_`, `ajuste_` y `predicciones_prueba_` en `resultados_convergencia/`).
+**Ver la red neuronal.** En cada pestaña de dataset, el botón "Ver red neuronal" abre una ventana con dos pestañas: *Diagrama* (todas las neuronas y conexiones con los pesos del modelo final, junto con la configuración aplicada) y *Métricas* (error de entrenamiento, validación y prueba, brecha |prueba − entrenamiento| frente a los límites de 5 % y 3 %, exactitud balanceada, macro F1 y pérdida por partición, curva de entrenamiento, AUC, validación cruzada, calibración y matriz de confusión en prueba con recall y precisión por clase). En el diagrama se arrastra para mover, la rueda acerca y "Mostrar desde" oculta las conexiones más débiles. Para ds7 se dibuja la red base; la app clasifica con el ensamble de 5 redes y la ventana lo avisa. Los datos salen de archivos que ya genera el pipeline (`pesos_`, `ajuste_` y `predicciones_prueba_` en `resultados_convergencia/`).
 
 ## Ramas y experimentos
 

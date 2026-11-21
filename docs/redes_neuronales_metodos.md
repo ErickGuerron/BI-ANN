@@ -29,6 +29,25 @@ Detalles que ya tienen su propio documento: calibración (`docs/calibracion.md`)
 
 Fuentes: `resultados_convergencia/ajuste_<ds>.json`, `resultados_convergencia/pesos_<ds>.json`, `../<ds>/resumen_v4.json`, `docs/calibracion.md`. La exactitud balanceada de ds7 de la tabla es la de la red de base; el ensamble final se mide con macro F1 (sección 7).
 
+### Error de entrenamiento, error de prueba y brecha
+
+Error = 1 − exactitud. Brecha = error de prueba − error de entrenamiento, y se compara su valor absoluto con 5 % (y con 3 %, el criterio más estricto de `docs/ds7_*.md`). Se calcula con los pesos guardados sobre los mismos `X_*_nn.csv` del entrenamiento, sin sobremuestreo y sin calibrar. La ventana "Ver red neuronal" de la app muestra estas cifras y la curva de entrenamiento (`nucleo/ficha_red.py`; las pruebas verifican que los errores de validación y prueba coinciden con los de `ajuste_<ds>.json`).
+
+| Red | Error entrenamiento | Error validación | Error prueba | Brecha (prueba − entrenamiento) | < 5 % | < 3 % |
+|---|---|---|---|---|---|---|
+| ds1 | 15,82 % | 15,79 % | 15,20 % | −0,61 pp | Sí | Sí |
+| ds5 | 24,43 % | 23,82 % | 27,52 % | +3,09 pp | Sí | **No** |
+| ds6 | 14,02 % | 16,38 % | 15,21 % | +1,19 pp | Sí | Sí |
+| ds7 (red base) | 11,09 % | 10,79 % | 11,77 % | +0,68 pp | Sí | Sí |
+
+Lectura:
+
+- **Las cuatro cumplen el 5 %.** Solo ds5 queda por encima del 3 % (3,09 pp), como ya decía `docs/pendientes.md` (punto 9).
+- **No hay sobreajuste marcado.** Con regularización alta (alpha 3 a 10) y parada temprana, el error de entrenamiento y el de prueba quedan cerca. En ds1 el error de prueba es incluso menor que el de entrenamiento: la prueba resultó algo más fácil, no es una mejora real.
+- **ds5 tiene el error de entrenamiento más alto (24,4 %).** El error es alto también en train, así que el problema de ds5 no es memorización sino falta de información en las entradas, coherente con el techo medido en la sección 5. Su brecha de 3,09 pp puede deberse además al cambio de periodo entre entrenamiento y prueba (partición temporal); no se comprobó.
+- **ds6:** el error de validación (16,38 %) supera al de entrenamiento en 2,36 pp. Es el otro dataset temporal y muestra el mismo efecto.
+- **El error simple engaña con clases desbalanceadas.** En ds6, responder siempre IGUAL daría 5 % de error; el 15 % de la red viene de haber igualado las clases en entrenamiento (sección 6). Por eso el resto del documento usa exactitud balanceada y recall por clase.
+
 ## 3. Método común
 
 ### 3.1 Qué es cada red

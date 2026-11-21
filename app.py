@@ -366,8 +366,67 @@ def _pestana_diagrama(f):
                 unsafe_allow_html=True)
 
 
+def pct(x, dec=2):
+    return f"{fmt(x * 100, dec)} %"
+
+
+def pp(x, dec=2):
+    """Signed difference in percentage points, with the real minus sign so it reads well in a table."""
+    texto = fmt(abs(x) * 100, dec)
+    return f'{"+" if x >= 0 else "−"}{texto} pp'
+
+
+def _estado_limite(cumple, limite):
+    if cumple:
+        return f'<span class="chip" style="border-color:#2F6B4F;color:#2F6B4F">Cumple el límite de {limite} %</span>'
+    return f'<span class="chip" style="border-color:#B0443F;color:#B0443F">No cumple el límite de {limite} %</span>'
+
+
+def _seccion_entrenamiento(f):
+    e = f["entrenamiento"]
+    st.markdown('<div class="disp" style="font-size:22px;margin:4px 0 6px">Entrenamiento y generalización</div>', unsafe_allow_html=True)
+    if e is None:
+        st.markdown('<div class="aviso">No se encontraron los datos de entrenamiento (X_train_nn.csv y compañeros) junto a este programa; '
+                    'no se puede calcular el error de entrenamiento ni la brecha.</div>', unsafe_allow_html=True)
+        return
+    c1, c2, c3, c4 = st.columns(4)
+    c1.markdown(f'<div class="tarjeta"><div class="mut">Error de entrenamiento</div><div class="valor">{pct(e["error"]["train"])}</div>'
+                f'<div class="nota">Sobre las filas originales de train</div></div>', unsafe_allow_html=True)
+    c2.markdown(f'<div class="tarjeta"><div class="mut">Error de validación</div><div class="valor">{pct(e["error"]["val"])}</div>'
+                f'<div class="nota">Brecha con train: {pp(e["brecha_val"])}</div></div>', unsafe_allow_html=True)
+    c3.markdown(f'<div class="tarjeta"><div class="mut">Error de prueba</div><div class="valor">{pct(e["error"]["test"])}</div>'
+                f'<div class="nota">Solo se mide, no decide nada</div></div>', unsafe_allow_html=True)
+    c4.markdown(f'<div class="tarjeta oscura"><div class="mut">Brecha |prueba − entrenamiento|</div>'
+                f'<div class="valor">{fmt(e["brecha_abs"] * 100, 2)} pp</div>'
+                f'<div class="nota">Prueba − entrenamiento: {pp(e["brecha"])}</div></div>', unsafe_allow_html=True)
+    st.markdown(f'<div style="margin:8px 0 2px">{_estado_limite(e["cumple_5"], 5)} {_estado_limite(e["cumple_3"], 3)}</div>'
+                '<div class="mut" style="font-size:12px;margin-bottom:10px">Error = 1 − exactitud. La brecha es la diferencia absoluta entre el '
+                'error de prueba y el de entrenamiento, en puntos porcentuales (pp); se compara con 5 %, y con 3 % que es el criterio más '
+                'estricto de la documentación. Una brecha grande indica sobreajuste; una brecha negativa, que la prueba resultó más fácil '
+                'que el entrenamiento.</div>', unsafe_allow_html=True)
+    filas = []
+    for nombre, clave, formato in (("Error", "error", pct), ("Exactitud balanceada", "exactitud_balanceada", fmt),
+                                   ("Macro F1", "macro_f1", fmt), ("Pérdida (log-loss)", "perdida", fmt)):
+        r = e[clave]
+        filas.append(f'<tr><td style="text-align:left">{nombre}</td><td>{formato(r["train"])}</td><td>{formato(r["val"])}</td>'
+                     f'<td>{formato(r["test"])}</td></tr>')
+    st.markdown('<table class="tabla"><thead><tr><th style="text-align:left">Medida</th><th>Entrenamiento</th><th>Validación</th><th>Prueba</th>'
+                '</tr></thead><tbody>' + "".join(filas) + "</tbody></table>"
+                '<div class="mut" style="font-size:12px">Calculado con los pesos guardados, sin calibrar. El entrenamiento usó sobremuestreo, '
+                'pero aquí se mide sobre las filas originales.</div>', unsafe_allow_html=True)
+    h = pd.DataFrame(e["historial"]).set_index("epoca")
+    st.markdown(f'<div class="disp" style="font-size:20px;margin:16px 0 4px">Curva de entrenamiento</div>'
+                f'<div class="mut" style="font-size:12px;margin-bottom:6px">Se entrenaron {len(h)} épocas y se conservó la época '
+                f'{f["metricas"]["epoca_final"]}, la de mejor exactitud balanceada de validación (parada temprana).</div>', unsafe_allow_html=True)
+    g1, g2 = st.columns(2)
+    g1.line_chart(h[["perdida_train"]].rename(columns={"perdida_train": "Pérdida de entrenamiento"}), height=220)
+    g2.line_chart(h[["exactitud_balanceada_val"]].rename(columns={"exactitud_balanceada_val": "Exactitud balanceada de validación"}), height=220)
+
+
 def _pestana_metricas(f):
     m, p, v = f["metricas"], f["metricas"]["prueba"], f["metricas"]["validacion"]
+    _seccion_entrenamiento(f)
+    st.markdown('<div class="disp" style="font-size:22px;margin:18px 0 6px">Rendimiento</div>', unsafe_allow_html=True)
     c1, c2, c3, c4 = st.columns(4)
     c1.markdown(f'<div class="tarjeta oscura"><div class="mut">AUC de prueba</div><div class="valor">{fmt(p["auc_macro_ovr"])}</div>'
                 f'<div class="nota">Validación: {fmt(v["auc_macro_ovr"])}</div></div>', unsafe_allow_html=True)
