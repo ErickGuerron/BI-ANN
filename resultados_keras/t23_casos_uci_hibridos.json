@@ -1,0 +1,859 @@
+{
+  "n": 100,
+  "advertencia": "etiquetas condicionales sinteticas e hibridas: acuerdo, no exactitud",
+  "errores_de_formato": [],
+  "confusion": {
+    "AL_DIA": {
+      "AL_DIA": 17,
+      "MORA_LEVE": 8,
+      "MORA_31_90": 0,
+      "MORA_MAYOR_90": 0
+    },
+    "MORA_LEVE": {
+      "AL_DIA": 6,
+      "MORA_LEVE": 16,
+      "MORA_31_90": 2,
+      "MORA_MAYOR_90": 1
+    },
+    "MORA_31_90": {
+      "AL_DIA": 0,
+      "MORA_LEVE": 3,
+      "MORA_31_90": 22,
+      "MORA_MAYOR_90": 0
+    },
+    "MORA_MAYOR_90": {
+      "AL_DIA": 0,
+      "MORA_LEVE": 0,
+      "MORA_31_90": 2,
+      "MORA_MAYOR_90": 23
+    }
+  },
+  "acuerdo_por_clase": {
+    "AL_DIA": 0.68,
+    "MORA_LEVE": 0.64,
+    "MORA_31_90": 0.88,
+    "MORA_MAYOR_90": 0.92
+  },
+  "acuerdo_global": 0.78,
+  "particion_del_perfil_de_referencia": {
+    "train": 67,
+    "test": 20,
+    "val": 13
+  },
+  "acuerdo_por_particion_de_referencia": {
+    "train": {
+      "n": 67,
+      "acuerdo": 0.836
+    },
+    "val": {
+      "n": 13,
+      "acuerdo": 0.615
+    },
+    "test": {
+      "n": 20,
+      "acuerdo": 0.7
+    }
+  },
+  "casos": [
+    {
+      "id": "UCI-REAL-001",
+      "esperada": "AL_DIA",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.685,
+      "ref": "33473_20220930",
+      "particion_ref": "test"
+    },
+    {
+      "id": "UCI-REAL-002",
+      "esperada": "MORA_LEVE",
+      "predicha": "AL_DIA",
+      "prob_max": 0.472,
+      "ref": "35201_20220630",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-003",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.695,
+      "ref": "27759_20220228",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-004",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.967,
+      "ref": "34174_20220228",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-005",
+      "esperada": "AL_DIA",
+      "predicha": "AL_DIA",
+      "prob_max": 0.681,
+      "ref": "36751_20220430",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-006",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.819,
+      "ref": "36922_20220430",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-007",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.632,
+      "ref": "37098_20220531",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-008",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.986,
+      "ref": "37011_20220531",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-009",
+      "esperada": "AL_DIA",
+      "predicha": "AL_DIA",
+      "prob_max": 0.804,
+      "ref": "39331_20220331",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-010",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.731,
+      "ref": "35959_20220228",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-011",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.5,
+      "ref": "38522_20220531",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-012",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.995,
+      "ref": "36577_20220430",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-013",
+      "esperada": "AL_DIA",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.623,
+      "ref": "37310_20220731",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-014",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.438,
+      "ref": "37584_20220630",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-015",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.694,
+      "ref": "36644_20221031",
+      "particion_ref": "test"
+    },
+    {
+      "id": "UCI-REAL-016",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.98,
+      "ref": "32752_20220630",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-017",
+      "esperada": "AL_DIA",
+      "predicha": "AL_DIA",
+      "prob_max": 0.807,
+      "ref": "36004_20220430",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-018",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.696,
+      "ref": "38494_20220430",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-019",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.764,
+      "ref": "35847_20220831",
+      "particion_ref": "val"
+    },
+    {
+      "id": "UCI-REAL-020",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.986,
+      "ref": "34402_20220831",
+      "particion_ref": "val"
+    },
+    {
+      "id": "UCI-REAL-021",
+      "esperada": "AL_DIA",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.528,
+      "ref": "39543_20220731",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-022",
+      "esperada": "MORA_LEVE",
+      "predicha": "AL_DIA",
+      "prob_max": 0.566,
+      "ref": "38229_20220831",
+      "particion_ref": "val"
+    },
+    {
+      "id": "UCI-REAL-023",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.619,
+      "ref": "35052_20220630",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-024",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.995,
+      "ref": "35603_20220731",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-025",
+      "esperada": "AL_DIA",
+      "predicha": "AL_DIA",
+      "prob_max": 0.722,
+      "ref": "41325_20221031",
+      "particion_ref": "test"
+    },
+    {
+      "id": "UCI-REAL-026",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.808,
+      "ref": "29840_20220430",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-027",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.5,
+      "ref": "37064_20220831",
+      "particion_ref": "val"
+    },
+    {
+      "id": "UCI-REAL-028",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.998,
+      "ref": "32734_20220630",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-029",
+      "esperada": "AL_DIA",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.497,
+      "ref": "33709_20220331",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-030",
+      "esperada": "MORA_LEVE",
+      "predicha": "AL_DIA",
+      "prob_max": 0.615,
+      "ref": "39553_20220731",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-031",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.653,
+      "ref": "33863_20220531",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-032",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.727,
+      "ref": "34103_20220831",
+      "particion_ref": "val"
+    },
+    {
+      "id": "UCI-REAL-033",
+      "esperada": "AL_DIA",
+      "predicha": "AL_DIA",
+      "prob_max": 0.882,
+      "ref": "37229_20220331",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-034",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.722,
+      "ref": "37876_20220531",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-035",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.643,
+      "ref": "34402_20220228",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-036",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.994,
+      "ref": "36472_20220531",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-037",
+      "esperada": "AL_DIA",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.512,
+      "ref": "27605_20220531",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-038",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.649,
+      "ref": "35545_20220630",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-039",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.884,
+      "ref": "35903_20220930",
+      "particion_ref": "test"
+    },
+    {
+      "id": "UCI-REAL-040",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.994,
+      "ref": "31739_20220531",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-041",
+      "esperada": "AL_DIA",
+      "predicha": "AL_DIA",
+      "prob_max": 0.729,
+      "ref": "40202_20220930",
+      "particion_ref": "test"
+    },
+    {
+      "id": "UCI-REAL-042",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.756,
+      "ref": "39162_20220930",
+      "particion_ref": "test"
+    },
+    {
+      "id": "UCI-REAL-043",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.6,
+      "ref": "32227_20220731",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-044",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.984,
+      "ref": "37011_20220930",
+      "particion_ref": "test"
+    },
+    {
+      "id": "UCI-REAL-045",
+      "esperada": "AL_DIA",
+      "predicha": "AL_DIA",
+      "prob_max": 0.807,
+      "ref": "40885_20220930",
+      "particion_ref": "test"
+    },
+    {
+      "id": "UCI-REAL-046",
+      "esperada": "MORA_LEVE",
+      "predicha": "AL_DIA",
+      "prob_max": 0.557,
+      "ref": "32645_20220430",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-047",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.602,
+      "ref": "37173_20220331",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-048",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.954,
+      "ref": "37011_20220531",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-049",
+      "esperada": "AL_DIA",
+      "predicha": "AL_DIA",
+      "prob_max": 0.81,
+      "ref": "35395_20220630",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-050",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.995,
+      "ref": "37452_20220831",
+      "particion_ref": "val"
+    },
+    {
+      "id": "UCI-REAL-051",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.915,
+      "ref": "36978_20220228",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-052",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.876,
+      "ref": "37116_20220831",
+      "particion_ref": "val"
+    },
+    {
+      "id": "UCI-REAL-053",
+      "esperada": "AL_DIA",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.738,
+      "ref": "38054_20221031",
+      "particion_ref": "test"
+    },
+    {
+      "id": "UCI-REAL-054",
+      "esperada": "MORA_LEVE",
+      "predicha": "AL_DIA",
+      "prob_max": 0.577,
+      "ref": "39808_20220731",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-055",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.891,
+      "ref": "37416_20220731",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-056",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.99,
+      "ref": "31739_20220731",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-057",
+      "esperada": "AL_DIA",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.52,
+      "ref": "35969_20221031",
+      "particion_ref": "test"
+    },
+    {
+      "id": "UCI-REAL-058",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.657,
+      "ref": "39010_20221031",
+      "particion_ref": "test"
+    },
+    {
+      "id": "UCI-REAL-059",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.835,
+      "ref": "36991_20221031",
+      "particion_ref": "test"
+    },
+    {
+      "id": "UCI-REAL-060",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.936,
+      "ref": "31636_20220531",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-061",
+      "esperada": "AL_DIA",
+      "predicha": "AL_DIA",
+      "prob_max": 0.577,
+      "ref": "39482_20220531",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-062",
+      "esperada": "MORA_LEVE",
+      "predicha": "AL_DIA",
+      "prob_max": 0.677,
+      "ref": "38603_20220228",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-063",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.923,
+      "ref": "32046_20220731",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-064",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.994,
+      "ref": "34531_20220831",
+      "particion_ref": "val"
+    },
+    {
+      "id": "UCI-REAL-065",
+      "esperada": "AL_DIA",
+      "predicha": "AL_DIA",
+      "prob_max": 0.646,
+      "ref": "38654_20221031",
+      "particion_ref": "test"
+    },
+    {
+      "id": "UCI-REAL-066",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.506,
+      "ref": "35949_20220228",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-067",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.868,
+      "ref": "31741_20220630",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-068",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.991,
+      "ref": "34188_20220430",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-069",
+      "esperada": "AL_DIA",
+      "predicha": "AL_DIA",
+      "prob_max": 0.813,
+      "ref": "39067_20220930",
+      "particion_ref": "test"
+    },
+    {
+      "id": "UCI-REAL-070",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.819,
+      "ref": "35064_20221031",
+      "particion_ref": "test"
+    },
+    {
+      "id": "UCI-REAL-071",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.706,
+      "ref": "36249_20221031",
+      "particion_ref": "test"
+    },
+    {
+      "id": "UCI-REAL-072",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.996,
+      "ref": "37298_20220430",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-073",
+      "esperada": "AL_DIA",
+      "predicha": "AL_DIA",
+      "prob_max": 0.65,
+      "ref": "39737_20220930",
+      "particion_ref": "test"
+    },
+    {
+      "id": "UCI-REAL-074",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.832,
+      "ref": "39155_20220831",
+      "particion_ref": "val"
+    },
+    {
+      "id": "UCI-REAL-075",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.756,
+      "ref": "28233_20220331",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-076",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.984,
+      "ref": "37011_20220731",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-077",
+      "esperada": "AL_DIA",
+      "predicha": "AL_DIA",
+      "prob_max": 0.825,
+      "ref": "37289_20220930",
+      "particion_ref": "test"
+    },
+    {
+      "id": "UCI-REAL-078",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.722,
+      "ref": "35489_20220531",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-079",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.605,
+      "ref": "37375_20220430",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-080",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.993,
+      "ref": "31636_20220731",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-081",
+      "esperada": "AL_DIA",
+      "predicha": "AL_DIA",
+      "prob_max": 0.751,
+      "ref": "38856_20220430",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-082",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.532,
+      "ref": "35095_20220531",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-083",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.504,
+      "ref": "33980_20221031",
+      "particion_ref": "test"
+    },
+    {
+      "id": "UCI-REAL-084",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.734,
+      "ref": "35017_20220831",
+      "particion_ref": "val"
+    },
+    {
+      "id": "UCI-REAL-085",
+      "esperada": "AL_DIA",
+      "predicha": "AL_DIA",
+      "prob_max": 0.74,
+      "ref": "36335_20220531",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-086",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.722,
+      "ref": "34632_20220430",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-087",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.581,
+      "ref": "31239_20220430",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-088",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.968,
+      "ref": "37011_20220430",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-089",
+      "esperada": "AL_DIA",
+      "predicha": "AL_DIA",
+      "prob_max": 0.6,
+      "ref": "32761_20220630",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-090",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.576,
+      "ref": "38963_20220630",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-091",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.818,
+      "ref": "31110_20220228",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-092",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.994,
+      "ref": "31985_20220331",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-093",
+      "esperada": "AL_DIA",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.503,
+      "ref": "39411_20220831",
+      "particion_ref": "val"
+    },
+    {
+      "id": "UCI-REAL-094",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.678,
+      "ref": "36488_20220630",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-095",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.795,
+      "ref": "32225_20220831",
+      "particion_ref": "val"
+    },
+    {
+      "id": "UCI-REAL-096",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.997,
+      "ref": "37501_20221031",
+      "particion_ref": "test"
+    },
+    {
+      "id": "UCI-REAL-097",
+      "esperada": "AL_DIA",
+      "predicha": "AL_DIA",
+      "prob_max": 0.799,
+      "ref": "40259_20220731",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-098",
+      "esperada": "MORA_LEVE",
+      "predicha": "MORA_LEVE",
+      "prob_max": 0.611,
+      "ref": "39020_20220831",
+      "particion_ref": "val"
+    },
+    {
+      "id": "UCI-REAL-099",
+      "esperada": "MORA_31_90",
+      "predicha": "MORA_31_90",
+      "prob_max": 0.808,
+      "ref": "32714_20220531",
+      "particion_ref": "train"
+    },
+    {
+      "id": "UCI-REAL-100",
+      "esperada": "MORA_MAYOR_90",
+      "predicha": "MORA_MAYOR_90",
+      "prob_max": 0.987,
+      "ref": "33559_20220228",
+      "particion_ref": "train"
+    }
+  ]
+}
