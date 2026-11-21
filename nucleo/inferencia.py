@@ -26,6 +26,13 @@ BI = PROGRAMA.parents[1]
 PREP = BI / "para_companero_cadena_datasets"
 V2_SALIDA = BI / "datasets_multiclase_v2" / "salida"
 AUX = PROGRAMA / "auxiliares"
+
+# Money fields accept cents even when every training value was a round number.
+PREFIJOS_MONETARIOS = ("Valor_", "Monto_", "Saldo_", "Total_", "Provision_")
+
+
+def es_monetario(nombre):
+    return nombre.startswith(PREFIJOS_MONETARIOS)
 PESOS = PROGRAMA / "resultados_convergencia"
 SEMILLA = 42
 
