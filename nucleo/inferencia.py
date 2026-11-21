@@ -95,6 +95,29 @@ def cargar(ds):
     return {"pre": pre, "aux": aux, "pesos": pesos, "cfg": M.CONFIGS[ds], "P": P}
 
 
+def _numero(valor):
+    try:
+        return float(str(valor).strip().replace(",", "."))
+    except ValueError:
+        return None
+
+
+def canonizar_categorias_numericas(df, categorias):
+    """Para las categorias que son numeros (p. ej. Tasa_Interes: '15.0'), un valor equivalente escrito de otra
+    forma (15, '15', 15.0) se reemplaza por la categoria conocida. Sin esto, 15 no coincide con '15.0' y la red
+    lo lee como OTROS sin avisar. Las categorias de texto (p. ej. 'DESCONOCIDO') no se tocan, y un numero que
+    no es ninguna categoria sigue siendo OTROS."""
+    df = df.copy()
+    for c, cats in categorias.items():
+        if c not in df.columns:
+            continue
+        conocidas = {n: k for k in cats if (n := _numero(k)) is not None}
+        if not conocidas:
+            continue
+        df[c] = df[c].map(lambda v: conocidas.get(_numero(v), v) if pd.notna(v) else v)
+    return df
+
+
 def onehot(ds, filas):
     """filas: DataFrame con las columnas crudas de la fuente. Devuelve X one-hot en el orden de entrenamiento."""
     d = cargar(ds)
@@ -103,6 +126,7 @@ def onehot(ds, filas):
     df["Etiqueta"] = "X"
     df = P.limpiar_texto(df, excluir=[cfg["id"], "Etiqueta"])
     df = cfg["derivar"](df).reset_index(drop=True)
+    df = canonizar_categorias_numericas(df, pre.categorias_)
     Xc = pre.transform_categorico(df)
     Xg = pre.transform_gaussiano(df)[pre.columnas_gaussiano_]
     partes = {c: Xg[c].to_numpy() for c in pre.columnas_gaussiano_}
