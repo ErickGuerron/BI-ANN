@@ -9,6 +9,7 @@ Estado al cierre de la sesión. Rama de trabajo: `ds7-ensamble-incertidumbre`.
 | `modelo-base` | Versión actual del front (ds7 con Valor_Entregado como proxy). |
 | `ds7-garantia-capturada` | Modelo puro con garantía capturada. Limitación documentada en `docs/ds7_ml_puro.md`. |
 | `ds7-ensamble-incertidumbre` | Ensamble de 5 redes, soporte y rechazo. Documentado en `docs/ds7_ensamble_incertidumbre.md`. |
+| `ann-ds5-mora-leve` | Trabajo de ds5 (MORA_LEVE y proxies de puntualidad) y cambios de la app (decimales, modelo GB guardado). Local, sin subir. Documentado en `docs/ds5_mora_leve.md`. |
 
 ## Acciones pendientes
 
@@ -35,6 +36,28 @@ Detalle en `docs/ds5_mora_leve.md`. Rama: `ann-ds5-mora-leve`.
   3b. Ablación hecha (`t19`, `t20`): bastan 2 proxies, `dia_desv` y `dia_ult_menos_med`, para igualar a los 9 (MORA_LEVE 0,548 contra 0,544). Si se lleva a producción, calcular solo esos dos.
   3c. Confusión MORA_31_90 → MORA_LEVE (16 % a 25 % de los casos reales de 31_90). Los proxies no la tocan. Falta una señal sobre cuántos días de atraso hay, no solo cuándo paga.
   4. Verificar con el equipo de origen cómo se calcula `Info_Dias_Morosidad_Objetivo`.
+
+### Dónde nos quedamos (2026-11-21, cierre de la sesión de ds5)
+
+Estado: rama local `ann-ds5-mora-leve` (desde `ann-app-garantia-obligatoria`), 19 commits, el último `02bbf4e`. No está subida a origin. Trae también dos cambios de la app: los campos monetarios aceptan decimales, y el modelo de árboles se guarda en `auxiliares/gb_<ds>.joblib` en vez de reentrenarse al arrancar (arranque de 12 s a 5 s). `inferencia.py` normaliza las categorías numéricas (`15`, `'15'` y `15.0` son la misma).
+
+Resultados (3 pliegues temporales, 5 semillas, `GB_*` reajustado por pliegue; detalle en `docs/ds5_mora_leve.md`):
+
+- Peso por clase y sesgo por clase: sin mejora en MORA_LEVE.
+- Proxies de puntualidad: +0,013 de macro F1 y +0,04 en MORA_LEVE. Bastan dos: `dia_desv` y `dia_ult_menos_med`.
+- Referencias con el par de proxies (`t24`): red 0,692, regresión logística 0,690, HGB 0,682 de macro F1. La red no supera a un modelo lineal; el techo parece de información, no de modelo.
+- Generalización: macro F1 de prueba entre 0,65 y 0,72 según el pliegue. Una cooperativa y un solo periodo (2022).
+- Los archivos externos (`ANN_morosidad_100`, `UCI_100` híbrido, Kiva `loans_samp_0`) no sirven para medir exactitud: etiquetas condicionales o sintéticas, 67 de 100 perfiles UCI parten de filas de entrenamiento, y Kiva no tiene días de atraso ni los 32 campos.
+- La app sigue con los pesos viejos de ds5 y no puede calcular los proxies.
+
+Próximos pasos, en orden de prioridad:
+
+1. Decidir de dónde saldrían `dia_desv` y `dia_ult_menos_med` en producción: precálculo por lotes (con la misma ventana de 6 meses) o cálculo en la API.
+2. Verificar con el equipo de origen cómo se calcula `Info_Dias_Morosidad_Objetivo`.
+3. Señal de magnitud del atraso (cuotas esperadas por fecha menos cuotas pagadas), la única ruta vista contra la confusión de MORA_31_90 y AL_DIA con MORA_LEVE. Necesita la fecha de desembolso.
+4. Opcional: barrido pequeño de regularización (unas 12 configuraciones, regla de una desviación estándar, prueba leída una sola vez). Se espera una ganancia de décimas, no de puntos.
+5. Una prueba externa real solo con cortes de la cooperativa posteriores a octubre de 2022.
+6. Subir la rama y borrar `ann-app-montos-decimales` (ya fusionada), si se decide.
 
 ## Decisión tomada
 
