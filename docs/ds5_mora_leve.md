@@ -104,6 +104,22 @@ Soporte en prueba: 99, 94 y 88 casos por semilla en F1, F2 y F3. Fracción de lo
 - El recall de MORA_MAYOR_90 no baja con los proxies (es igual en F1 y F2, y sube de 0,775 a 0,816 en F3). Lo que cambia es la **precisión**: en F3 pasa de 0,763 a 0,731, porque más casos reales de MORA_31_90 se predicen como MORA_MAYOR_90 (55 a 85 de 5 semillas). La caída de F1 de esa clase viene de ahí, no de perder casos graves.
 - El soporte es de unos 90 casos por pliegue, así que estas fracciones tienen un margen amplio. No se calcularon intervalos.
 
+## Modelos de referencia (`t24`)
+
+Mismos 3 pliegues temporales, mismo `GB_*` reajustado, mismas variables, con y sin el par de proxies (`dia_desv` + `dia_ult_menos_med`). Regresión logística sobre las entradas de la red (peso por clase con raíz cuadrada; `C` elegido en validación entre 0,01, 0,1 y 1; salió 0,01 en la mayoría de los pliegues). HGB sobre las 101 columnas one-hot, con los hiperparámetros de v3 y sin ajuste. La red es el promedio de 5 semillas (`t20`). Prueba leída una vez por modelo.
+
+| Modelo | Macro F1 medio sin proxies | Macro F1 medio con par | F1 MORA_LEVE con par | Macro F1 por pliegue con par (F1, F2, F3) |
+|---|---|---|---|---|
+| Red (Keras, variante B) | 0,679 | **0,692** | 0,548 | 0,661, 0,695, 0,722 |
+| Regresión logística | 0,681 | 0,690 | 0,538 | 0,653, 0,690, 0,725 |
+| HGB | 0,659 | 0,682 | **0,562** | 0,670, 0,676, 0,700 |
+
+- **Los tres modelos quedan a menos de un punto de macro F1 entre sí** (0,682 a 0,692). La diferencia entre la red y la regresión logística (0,003) no se distingue del ruido entre semillas. La red no aporta una ventaja medible sobre un modelo lineal.
+- **Los proxies ayudan a los tres:** macro F1 +0,013 (red), +0,009 (logística) y +0,022 (HGB). En MORA_LEVE: +0,043, +0,026 y +0,075. El efecto no depende de la arquitectura.
+- **El techo parece de información, no de modelo.** Tres familias distintas llegan al mismo nivel con las mismas entradas.
+- El HGB sin `GB_*` parte más abajo (0,659), y con proxies es el mejor en MORA_LEVE (0,562) pero no en macro F1.
+- Una sola ejecución de logística y HGB por pliegue (son deterministas), así que sus cifras no traen dispersión entre semillas.
+
 ## Veredicto de cierre
 
 **No está demostrado que la generalización y la exactitud actuales sean el máximo alcanzable.** Lo que sí está demostrado:
