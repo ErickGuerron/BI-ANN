@@ -26,3 +26,16 @@ Estado al cierre de la sesión. Rama de trabajo: `ds7-ensamble-incertidumbre`.
 
 - Temperature scaling solo en ds7 y ds1. ds5 y ds6 quedaron sin calibración porque empeoraron en prueba (ver `docs/calibracion.md`).
 - ds5-A queda como limitación documentada (ver `docs/limitaciones.md`).
+
+## Actualización 2026-11-20 (ds7 con Valor_Garantiza)
+
+Estado y limitaciones en `docs/ds7_garantia_cascada_monitoreo.md`. Rama publicada: `ann-app-garantia-obligatoria`.
+
+- Punto 7 (decisión de modelo para la app): ds7 usa el ensamble con `Valor_Garantiza`, con cascada y campo obligatorio. Macro F1 de prueba 0,872.
+- Punto 6 (garantía en 0 con etiqueta BAJA): sigue abierto; 377 de 769 BAJA de entrenamiento.
+- Nuevos pendientes:
+  1. Pestaña "Monitoreo" por CSV en la app (sugerida; el monitoreo continuo espera a tener tráfico real).
+  2. Más datos reales de `COBERTURA_BAJA` con cobertura menor a 1 o cercana a 2; el aumento sintético se probó y se descartó.
+  3. Probar el asistente del formulario de punta a punta (`st.dialog` no se ejercitó).
+  4. Repetir la comparación con más particiones y semillas.
+  5. Consolidar y limpiar las ramas locales sin fusionar (`ann-keras-macro-f1`, `ann-app-cascada-ds7`, `ann-ds7-valor-garantiza`, `ann-monitoreo-drift`, `ann-monitoreo-garantia`, `ann-consolidada`).
