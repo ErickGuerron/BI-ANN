@@ -4,7 +4,7 @@ y devuelve la clase predicha con sus probabilidades.
 Cadena (idéntica a la de entrenamiento):
   1. preparacion.py + preprocesador.joblib (limpieza, derivadas, log1p, one-hot)   -> X one-hot
   2. HistGradientBoosting completo (variables GB_*, solo si el conjunto las usa)   -> X + GB_*
-     (se reajusta al cargar, con los datos de train y los hiperparametros guardados)
+     (se ajusta con los datos de train y los hiperparametros guardados; el modelo se guarda y se reutiliza)
   3. Estandarizacion con media y escala de train (guardadas en auxiliares/*.npz)  -> estandarizado
   4. NCA de 10 componentes (solo conjuntos N): S @ componentes.T                  -> entrada de la red
   5. Red MLP entrenada (pesos_<dataset>.json): ReLU en ocultas, softmax en salida
@@ -26,6 +26,8 @@ BI = PROGRAMA.parents[1]
 PREP = BI / "para_companero_cadena_datasets"
 V2_SALIDA = BI / "datasets_multiclase_v2" / "salida"
 AUX = PROGRAMA / "auxiliares"
+PESOS = PROGRAMA / "resultados_convergencia"
+SEMILLA = 42
 
 # Money fields accept cents even when every training value was a round number.
 PREFIJOS_MONETARIOS = ("Valor_", "Monto_", "Saldo_", "Total_", "Provision_")
@@ -33,8 +35,6 @@ PREFIJOS_MONETARIOS = ("Valor_", "Monto_", "Saldo_", "Total_", "Provision_")
 
 def es_monetario(nombre):
     return nombre.startswith(PREFIJOS_MONETARIOS)
-PESOS = PROGRAMA / "resultados_convergencia"
-SEMILLA = 42
 
 
 @lru_cache(maxsize=1)
@@ -50,12 +50,32 @@ def motor():
 
 
 def _ajustar_gb(ds, meta):
-    """Reajusta el HistGradientBoosting completo con train (mismos hiperparametros y semilla que el entrenamiento)."""
+    """HistGradientBoosting completo con train (mismos hiperparametros y semilla que el entrenamiento).
+
+    El modelo ajustado se guarda en auxiliares/gb_<ds>.joblib y se reutiliza mientras coincidan la version de
+    scikit-learn y los hiperparametros; si no coinciden, se reajusta y se vuelve a guardar."""
+    import sklearn
     from sklearn.ensemble import HistGradientBoostingClassifier
+    huella = {"sklearn": sklearn.__version__, "iter": meta["gb_iter"], "params": meta["gb_params"], "semilla": SEMILLA}
+    ruta = AUX / f"gb_{ds}.joblib"
+    if ruta.exists():
+        try:
+            guardado = joblib.load(ruta)
+            if guardado.get("huella") == huella:
+                return guardado["modelo"]
+        except Exception:
+            pass
     Xtr = pd.read_csv(V2_SALIDA / ds / "X_train_onehot.csv", float_precision="round_trip").fillna(0)
     ytr = pd.read_csv(V2_SALIDA / ds / "y_train.csv")["Y"].to_numpy()
-    return HistGradientBoostingClassifier(class_weight="balanced", random_state=SEMILLA, max_iter=meta["gb_iter"],
-                                          early_stopping=False, **meta["gb_params"]).fit(Xtr, ytr)
+    modelo = HistGradientBoostingClassifier(class_weight="balanced", random_state=SEMILLA, max_iter=meta["gb_iter"],
+                                            early_stopping=False, **meta["gb_params"]).fit(Xtr, ytr)
+    try:
+        temporal = ruta.with_suffix(f".{os.getpid()}.tmp")
+        joblib.dump({"huella": huella, "modelo": modelo}, temporal)
+        os.replace(temporal, ruta)
+    except OSError:
+        pass  # a read-only folder only costs the refit on the next start
+    return modelo
 
 
 @lru_cache(maxsize=None)
