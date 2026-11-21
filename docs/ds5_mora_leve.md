@@ -140,3 +140,12 @@ Lo que **no** se probó y puede mover los números:
 - Los pliegues no son independientes: se solapan en entrenamiento y las mismas operaciones aparecen en varios cortes.
 - **La app no puede usar los proxies.** No recibe la tabla de pagos. Hace falta decidir si se precalculan en el sistema de la cooperativa o si la API los calcula al vuelo desde el historial de pagos. Hasta decidirlo, la app sigue con el modelo sin proxies.
 - Los pesos de la app (`resultados_convergencia/pesos_ds5_*.json`) no se tocaron.
+
+## Señal de cuotas atrasadas (t25, t26)
+
+Se derivó, con `Fecha_Desembolso` de `FACT_Desembolsos` (cobertura 99,9 % de las filas), cuántas cuotas debían estar pagadas al corte (calendario mensual, tope `Numero_Cuotas`) y se restó la última cuota pagada con pagos anteriores al corte (`cuotas_atrasadas_max`).
+
+- Por clase, la mediana de `cuotas_atrasadas_max` es 0 (AL_DIA), 0 (MORA_LEVE), 1 (MORA_31_90) y 3 (MORA_MAYOR_90). AUC MORA_31_90 contra MORA_LEVE: 0,756 (train y validación). Contar cuotas distintas pagadas en vez de la última da una señal peor (0,668).
+- HGB en los 3 pliegues temporales, una semilla, prueba leída una vez (`t26`), macro F1 medio / F1 MORA_LEVE medio / % de 31_90 predicho como LEVE: sin proxies 0,659 / 0,487 / 16,6 %; con el par 0,682 / 0,562 / 17,5 %; par + `cuotas_atrasadas_max` 0,701 / 0,568 / 15,7 %; además `meses_desde_desemb` 0,710 / 0,574 / 15,1 %.
+- La ganancia nueva viene sobre todo de MORA_MAYOR_90 (en un pliegue su F1 pasa de 0,72 a 0,81). MORA_LEVE casi no se mueve (+0,006) y la confusión 31_90 a LEVE baja solo 1 a 2 puntos. El techo de MORA_LEVE sigue siendo de información.
+- `meses_desde_desemb` aporta por sí sola un punto más: puede ser edad del crédito y no atraso. Una semilla, un modelo; falta confirmar con la red y con más semillas.

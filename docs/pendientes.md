@@ -76,3 +76,9 @@ Estado y limitaciones en `docs/ds7_garantia_cascada_monitoreo.md`. Rama publicad
   3. Probar el asistente del formulario de punta a punta (`st.dialog` no se ejercitó).
   4. Repetir la comparación con más particiones y semillas.
   5. Consolidar y limpiar las ramas locales sin fusionar (`ann-keras-macro-f1`, `ann-app-cascada-ds7`, `ann-ds7-valor-garantiza`, `ann-monitoreo-drift`, `ann-monitoreo-garantia`, `ann-consolidada`).
+
+### Actualización 2026-11-21 (decisiones y paso 3)
+
+- Descartado: decidir de dónde saldrían los proxies en producción. El proyecto no saldrá a producción.
+- Pendiente externo: cómo calcula el origen `Info_Dias_Morosidad_Objetivo` (preguntas: desde qué cuota se cuenta el atraso, si es el valor al corte o el siguiente mes, tratamiento del pago parcial, días de gracia).
+- Hecho (`t25`, `t26`): señal de cuotas atrasadas con fecha de desembolso. Macro F1 de HGB 0,682 a 0,701 sobre el par de proxies (0,710 con la edad del crédito); MORA_LEVE casi igual (+0,006); gana sobre todo MORA_MAYOR_90. Detalle en `docs/ds5_mora_leve.md`.
