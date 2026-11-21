@@ -32,6 +32,8 @@ Detalle en `docs/ds5_mora_leve.md`. Rama: `ann-ds5-mora-leve`.
   1. Decidir de dónde saldrían los proxies en producción (precálculo o API). La app sigue sin ellos.
   2. ~~Reajustar `GB_*` por pliegue~~ Hecho (`t18`): la ganancia se mantiene (+0,013 macro F1, +0,039 MORA_LEVE) y la base de F1 y F2 estaba inflada unos 4 puntos. Queda por resolver por qué el reajuste no reproduce exactamente las columnas `GB_*` guardadas (concordancia del argmax: 95,7 %).
   3. ~~Revisar MORA_MAYOR_90~~ Hecho: el recall no baja; baja la precisión porque más casos de MORA_31_90 se predicen como MORA_MAYOR_90. Falta un intervalo de confianza (soporte de unos 90 casos por pliegue).
+  3b. Ablación hecha (`t19`, `t20`): bastan 2 proxies, `dia_desv` y `dia_ult_menos_med`, para igualar a los 9 (MORA_LEVE 0,548 contra 0,544). Si se lleva a producción, calcular solo esos dos.
+  3c. Confusión MORA_31_90 → MORA_LEVE (16 % a 25 % de los casos reales de 31_90). Los proxies no la tocan. Falta una señal sobre cuántos días de atraso hay, no solo cuándo paga.
   4. Verificar con el equipo de origen cómo se calcula `Info_Dias_Morosidad_Objetivo`.
 
 ## Decisión tomada

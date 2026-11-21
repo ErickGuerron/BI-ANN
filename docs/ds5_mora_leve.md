@@ -51,6 +51,25 @@ Los pliegues de arriba usaban las columnas `GB_*` guardadas, que se generaron co
 - **Desviación de la receta:** F1 tiene solo 4 cortes de entrenamiento, así que su `GroupKFold` usa 4 pliegues en vez de 5. No se reajustaron los hiperparámetros por pliegue.
 - Las probabilidades fuera de muestra de entrenamiento siguen usando cortes posteriores dentro del propio entrenamiento del pliegue (`GroupKFold` no respeta el orden temporal). No fuga prueba, pero el entrenamiento ve parte del futuro de sí mismo.
 
+## Qué proxies hacen falta (`t19`, `t20`)
+
+Mismo esquema que `t18` con `GB_*` reajustado: 3 pliegues temporales, 5 semillas, 15 pares. Base: macro F1 0,679, MORA_LEVE 0,505.
+
+Quitar un proxy a la vez (`t19`) mostró que solo dos pesan: `dia_ult_menos_med` (día del último pago menos su día habitual) y `dia_desv` (variación del día de pago). Quitar cualquiera de los otros siete no se distingue del ruido. `dia_desv` solo, con un AUC individual de 0,80, aporta apenas +0,009 de los +0,039 en MORA_LEVE: el AUC por separado no predijo el aporte en la red.
+
+| Variante (`t20`) | Macro F1 | F1 MORA_LEVE | Δ MORA_LEVE vs base | Pares donde supera a "todos" (MORA_LEVE) |
+|---|---|---|---|---|
+| Base (sin proxies) | 0,679 | 0,505 | — | — |
+| Todos (9 proxies) | 0,692 | 0,544 | +0,039 | — |
+| **Par: `dia_desv` + `dia_ult_menos_med`** | 0,692 | **0,548** | +0,043 | 10 de 15 |
+| Trío: par + `dia_ult` | 0,693 | 0,545 | +0,040 | 10 de 15 |
+| Cuatro: trío + `frac_cuotas_parciales` | 0,693 | 0,542 | +0,037 | 6 de 15 |
+
+- **Dos proxies bastan.** El par iguala a los nueve (0,548 contra 0,544 en MORA_LEVE; 0,692 contra 0,692 en macro F1) y supera a la base en los 15 pares. Que supere a "todos" en 10 de 15 no es una diferencia demostrada: es compatible con un empate.
+- **Agregar `dia_ult` o `frac_cuotas_parciales` no mejora el par.** El macro F1 sube a 0,693, por debajo de lo que distinguiría el ruido.
+- **Consecuencia para producción:** bastan dos variables calculadas con las fechas de pago de los últimos 6 meses, en lugar de nueve.
+- Ninguna variante cambia la confusión entre MORA_31_90 y MORA_LEVE: de los casos reales de MORA_31_90, entre el 19 % y el 21 % se predicen MORA_LEVE con cualquiera, y el recall de MORA_31_90 queda entre 0,749 y 0,763. Los proxies miden la irregularidad del día de pago, no cuántos días de atraso hay.
+
 ## MORA_MAYOR_90: matriz de confusión por pliegue
 
 Soporte en prueba: 99, 94 y 88 casos por semilla en F1, F2 y F3. Fracción de los casos reales de MORA_MAYOR_90 que se predicen en cada clase (suma sobre 5 semillas, `GB_*` reajustado):
