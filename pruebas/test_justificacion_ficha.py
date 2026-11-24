@@ -86,10 +86,17 @@ class MetricasExtraTest(unittest.TestCase):
 
 
 class PreguntaCartaTest(unittest.TestCase):
-    def test_cada_red_tiene_una_pregunta(self):
+    def test_cada_red_tiene_pregunta_origen_y_explicacion(self):
         for ds in DATASETS:
-            self.assertIn(ds, ficha_red.PREGUNTA_CARTA)
-            self.assertTrue(ficha_red.PREGUNTA_CARTA[ds].strip())
+            p = ficha_red.PREGUNTA_CARTA[ds]
+            self.assertTrue(p["pregunta"].startswith("¿") and p["pregunta"].endswith("?"), ds)
+            self.assertTrue(p["origen"].strip(), ds)
+            self.assertGreater(len(p["como_responde"]), 80, ds)
+
+    def test_ds7_no_dice_que_la_red_base_ve_la_garantia(self):
+        # la ficha aclara que la red base no recibe Valor_Garantiza como entrada
+        texto = ficha_red.PREGUNTA_CARTA["ds7_historico_garantias"]["como_responde"]
+        self.assertIn("no recibe el valor de la garantía", texto)
 
     def test_ficha_incluye_justificacion_para_ds5(self):
         j = ficha_red.cargar_ficha("ds5_pagos_multimes")["justificacion"]
@@ -100,7 +107,8 @@ class PreguntaCartaTest(unittest.TestCase):
         self.assertAlmostEqual(j["hoeffding"]["margen_error"], 0.0159, places=3)
         self.assertGreater(j["extra"]["brier"], 0)
         self.assertGreaterEqual(j["extra"]["ece"], 0)
-        self.assertIn("Pregunta 1", j["pregunta"])
+        self.assertEqual(j["pregunta"]["pregunta"], "¿Qué clientes son los que cumplen con el plazo de su crédito?")
+        self.assertIn("Carta de diseño, pregunta 1", j["pregunta"]["origen"])
 
 
 class ValidacionCruzadaTest(unittest.TestCase):

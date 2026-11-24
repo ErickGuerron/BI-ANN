@@ -460,9 +460,21 @@ def _pestana_metricas(f):
                 unsafe_allow_html=True)
 
 
+def _bloque_pregunta(p):
+    """Question the network answers (as a question), its source in the design letter, and how the network answers it."""
+    if not p or not p.get("pregunta"):
+        return
+    st.markdown(f'<div class="tarjeta" style="margin:4px 0 14px">'
+                f'<div class="mut" style="font-size:12px">{p["origen"]}</div>'
+                f'<div class="disp" style="font-size:20px;margin:4px 0 8px">{p["pregunta"]}</div>'
+                f'<div class="mut" style="font-size:12px">Cómo responde la red</div>'
+                f'<div style="font-size:14px;margin-top:2px">{p["como_responde"]}</div></div>',
+                unsafe_allow_html=True)
+
+
 def _pestana_justificacion(f):
     j = f["justificacion"]
-    st.markdown(f'<div class="aviso">{j["pregunta"]}</div>', unsafe_allow_html=True)
+    _bloque_pregunta(j["pregunta"])
     h, d, x = j["hoeffding"], j["dimension"], j["extra"]
     st.markdown('<div class="disp" style="font-size:22px;margin:14px 0 4px">Tamaño de la prueba y margen de error</div>',
                 unsafe_allow_html=True)
@@ -553,9 +565,7 @@ def seccion_dashboard(ds):
     st.markdown(f'<div class="mut" style="font-size:13px;margin:10px 0 14px">Arquitectura elegida: {capas} neuronas, '
                 f'α (L2) {fmt(cfg["alpha"], 1)}, lote {cfg["tamano_lote"]}, tasa {fmt(cfg["tasa_aprendizaje"], 4)}, '
                 f'sobremuestreo {"sí" if cfg["sobremuestreo"] else "no"}.</div>', unsafe_allow_html=True)
-    st.markdown(f'<div class="tarjeta" style="margin:4px 0 14px"><div class="mut">Pregunta de la carta de diseño que responde</div>'
-                f'<div style="font-size:14px;margin-top:4px">{ficha_red.PREGUNTA_CARTA.get(ds, "")}</div></div>',
-                unsafe_allow_html=True)
+    _bloque_pregunta(ficha_red.PREGUNTA_CARTA.get(ds, {}))
     if st.button("Ver red neuronal", key=f"ver_red_{ds}"):
         ficha_dialogo(ds)
     filas = []

@@ -132,21 +132,66 @@ def recall_precision(cm):
 
 
 PREGUNTA_CARTA = {
-    "ds1_ingreso_solicitudes": ("Pregunta 4 (qué clientes tienen un perfil adecuado para un nuevo crédito con riesgo aceptable) "
-                                "y, en parte, pregunta 2 (características crediticias): clasifica la cuota frente a la capacidad de pago "
-                                "en cuatro tramos."),
-    "ds2_ciclo_solicitud": ("Pregunta 4 y objetivo de precisión en la aprobación: si una solicitud se rechaza, se aprueba con "
-                            "desembolso rápido o se aprueba con desembolso lento."),
-    "ds3_desembolsos": ("Pregunta 1 (qué clientes cumplen con el plazo): estado de los préstamos desembolsados, cancelado, al día o en mora."),
-    "ds4_cierre_cartera_mensual": ("Preguntas 1 y 3: mora de la operación en el cierre siguiente (0 días, de 1 a 30, más de 30)."),
-    "ds5_pagos_multimes": ("Pregunta 1 (qué clientes cumplen con el plazo) y objetivo de severidad del atraso: días de mora "
-                           "en el cierre en cuatro tramos."),
-    "ds6_gasto_provisiones": ("Pregunta 3 (qué factores influyen en que un cliente incumpla): si la calificación de riesgo del "
-                              "crédito mejora, se mantiene o empeora en el mes siguiente."),
-    "ds7_historico_garantias": ("Pregunta 4 (perfil adecuado con riesgo aceptable): cobertura de la garantía frente al monto "
-                                "entregado (sin garantía, cobertura baja o alta)."),
-    "ds8_notificaciones_cobranza": ("Gestión preventiva de cobranza (cobranza temprana): nivel de escalamiento de notificaciones "
-                                    "que recibe cada operación."),
+    "ds1_ingreso_solicitudes": {
+        "pregunta": "¿Qué clientes presentan un perfil adecuado para recibir un nuevo crédito con un nivel de riesgo aceptable?",
+        "origen": "Carta de diseño, pregunta 4",
+        "como_responde": ("La red recibe los datos de la solicitud y estima qué tan alta es la cuota frente a la capacidad de pago: "
+                          "una probabilidad para cada tramo (holgada, moderada, ajustada, supera). Un perfil en holgada o moderada "
+                          "es el que se ajusta a un riesgo aceptable; ajustada o supera indican que la cuota compromete demasiado "
+                          "la capacidad de pago. Responde con la clase de mayor probabilidad."),
+    },
+    "ds2_ciclo_solicitud": {
+        "pregunta": "¿Qué solicitudes conviene aprobar, y con qué rapidez, para reducir el riesgo de incumplimiento?",
+        "origen": "Derivada de la carta de diseño, preguntas 4 y objetivo de precisión en la aprobación",
+        "como_responde": ("La red recibe los datos de la solicitud y estima la probabilidad de que sea rechazada, aprobada con "
+                          "desembolso en 7 días o menos, o aprobada con desembolso en más de 7 días. La clase de mayor probabilidad "
+                          "es la respuesta."),
+    },
+    "ds3_desembolsos": {
+        "pregunta": "¿Qué clientes son los que cumplen con el plazo de su crédito?",
+        "origen": "Carta de diseño, pregunta 1",
+        "como_responde": ("La red recibe las características del préstamo desembolsado y estima la probabilidad de que esté "
+                          "cancelado, al día o en mora. Cancelado y al día son cumplimiento; en mora es incumplimiento."),
+    },
+    "ds4_cierre_cartera_mensual": {
+        "pregunta": "¿Qué clientes son los que cumplen con el plazo de su crédito?",
+        "origen": "Carta de diseño, pregunta 1",
+        "como_responde": ("La red recibe el estado de la operación al cierre y las variables de pago, y estima en qué tramo de mora "
+                          "estará en el cierre siguiente: al día, de 1 a 30 días o más de 30. Al día cumple el plazo; los otros dos "
+                          "tramos no lo cumplen."),
+    },
+    "ds5_pagos_multimes": {
+        "pregunta": "¿Qué clientes son los que cumplen con el plazo de su crédito?",
+        "origen": "Carta de diseño, pregunta 1; objetivo de severidad del atraso",
+        "como_responde": ("La red recibe el historial de pagos hasta el corte (cuotas pagadas, montos cobrados, días desde el último "
+                          "pago, saldo) y estima la probabilidad de cada tramo de mora al cierre: al día, de 1 a 30 días, de 31 a 90 "
+                          "o más de 90. Al día cumple el plazo; los otros tres tramos no lo cumplen, con severidad creciente. "
+                          "La frontera entre al día y de 1 a 30 días es la que la red separa peor."),
+    },
+    "ds6_gasto_provisiones": {
+        "pregunta": ("¿Qué factores influyen en que un cliente cumpla o incumpla con el plazo de pago de su crédito?"),
+        "origen": "Carta de diseño, pregunta 3",
+        "como_responde": ("La red recibe las variables de la operación (saldo, vencido, provisiones, morosidad, perfil del socio) "
+                          "y estima si la calificación de riesgo del crédito mejorará, se mantendrá o empeorará en el mes siguiente. "
+                          "Empeorar es la señal de incumplimiento. La red dice qué operaciones se deterioran, no cuánto pesa cada "
+                          "factor; esa parte de la pregunta no la responde esta red."),
+    },
+    "ds7_historico_garantias": {
+        "pregunta": ("¿Qué clientes presentan un perfil adecuado para recibir un nuevo crédito con un nivel de riesgo aceptable?"),
+        "origen": "Carta de diseño, pregunta 4",
+        "como_responde": ("La red base que se muestra recibe el monto entregado y las características del socio y del crédito, "
+                          "y estima si el crédito tiene sin garantía, cobertura baja o cobertura alta. Como no recibe el valor de la "
+                          "garantía, solo puede adivinar la cobertura a partir del monto: por eso su respuesta es limitada. La "
+                          "clasificación de la app usa un ensamble que sí recibe el valor de la garantía "
+                          "(docs/ds7_garantia_cascada_monitoreo.md)."),
+    },
+    "ds8_notificaciones_cobranza": {
+        "pregunta": "¿Qué operaciones requieren un escalamiento de cobranza temprana?",
+        "origen": "Derivada del proceso de gestión preventiva de cobranza de la carta de diseño; no es una pregunta literal de la carta",
+        "como_responde": ("La red recibe las características del crédito (valor, número de cuotas, tasa), el mes y año de la "
+                          "notificación y el perfil del socio, y estima el nivel de escalamiento: bajo, medio o alto. Escalamiento "
+                          "alto indica operaciones que necesitan una gestión de cobranza más intensa. No usa el historial de pagos."),
+    },
 }
 
 ALFA_HOEFFDING = 0.05       # nivel de confianza de los márgenes: 95 %
@@ -230,7 +275,7 @@ def _justificacion(ds, pesos, clases, cm):
     n_train = _filas_entrenamiento(ds)
     n_fold = n_train / CV_K if n_train else None
     return {
-        "pregunta": PREGUNTA_CARTA.get(ds, ""),
+        "pregunta": PREGUNTA_CARTA.get(ds, {"pregunta": "", "origen": "", "como_responde": ""}),
         "n_prueba": n,
         "hoeffding": {"alfa": ALFA_HOEFFDING, "margen_error": margen_hoeffding(n),
                       "n_para_2_pp": n_hoeffding(0.02), "n_para_1_pp": n_hoeffding(0.01),
