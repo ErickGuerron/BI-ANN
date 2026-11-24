@@ -382,6 +382,13 @@ def _estado_limite(cumple, limite):
     return f'<span class="chip" style="border-color:#B0443F;color:#B0443F">No cumple el límite de {limite} %</span>'
 
 
+def _estado_limite_margen(cumple):
+    if cumple:
+        return ('<span class="chip" style="border-color:#2F6B4F;color:#2F6B4F">La prueba alcanza el margen de ± 2 pp</span>')
+    return ('<span class="chip" style="border-color:#B0443F;color:#B0443F">La prueba no alcanza el margen de ± 2 pp; '
+            'el margen real es el que se muestra arriba</span>')
+
+
 def _seccion_entrenamiento(f):
     e = f["entrenamiento"]
     st.markdown('<div class="disp" style="font-size:22px;margin:4px 0 6px">Entrenamiento y generalización</div>', unsafe_allow_html=True)
@@ -453,16 +460,118 @@ def _pestana_metricas(f):
                 unsafe_allow_html=True)
 
 
+def _bloque_pregunta(p):
+    """Question the network answers (as a question), its source in the design letter, and how the network answers it."""
+    if not p or not p.get("pregunta"):
+        return
+    st.markdown(f'<div class="tarjeta" style="margin:4px 0 14px">'
+                f'<div class="mut" style="font-size:12px">{p["origen"]}</div>'
+                f'<div class="disp" style="font-size:20px;margin:4px 0 8px">{p["pregunta"]}</div>'
+                f'<div class="mut" style="font-size:12px">Cómo responde la red</div>'
+                f'<div style="font-size:14px;margin-top:2px">{p["como_responde"]}</div></div>',
+                unsafe_allow_html=True)
+
+
+def _pestana_justificacion(f):
+    j = f["justificacion"]
+    _bloque_pregunta(j["pregunta"])
+    h, d, x = j["hoeffding"], j["dimension"], j["extra"]
+    st.markdown('<div class="disp" style="font-size:22px;margin:14px 0 4px">Tamaño de la prueba y margen de error</div>',
+                unsafe_allow_html=True)
+    c1, c2, c3 = st.columns(3)
+    c1.markdown(f'<div class="tarjeta oscura"><div class="mut">Filas de prueba</div><div class="valor">{j["n_prueba"]:,}</div>'
+                f'<div class="nota">Conjunto con el que se mide el error</div></div>', unsafe_allow_html=True)
+    c2.markdown(f'<div class="tarjeta"><div class="mut">Margen de error (Hoeffding, 95 %)</div>'
+                f'<div class="valor">± {pct(h["margen_error"], 2)}</div>'
+                f'<div class="nota">El error real está en el error medido ± este margen</div></div>', unsafe_allow_html=True)
+    c3.markdown(f'<div class="tarjeta"><div class="mut">Filas de prueba necesarias (± 2 pp / ± 1 pp)</div>'
+                f'<div class="valor">{h["n_para_2_pp"]:,} / {h["n_para_1_pp"]:,}</div>'
+                f'<div class="nota">Son las filas de <b>prueba</b>, no de entrenamiento. Son iguales en todas las redes porque '
+                f'dependen solo del margen y del 95 %, no de la red ni de sus datos. Esta prueba tiene {j["n_prueba"]:,}.</div></div>',
+                unsafe_allow_html=True)
+    st.markdown('<div class="mut" style="font-size:12px;margin-top:6px">Desigualdad de Hoeffding: para n filas independientes, '
+                'la probabilidad de que el error medido se aleje del real en más de ε es como mucho 2·exp(−2·n·ε²). '
+                'Con confianza de 95 %, ε = √(ln(2/0,05) / (2n)). Supone filas independientes; los cortes temporales '
+                'solo lo aproximan.</div>', unsafe_allow_html=True)
+    st.markdown(f'<div style="margin:8px 0 2px">{_estado_limite_margen(h["cumple_2_pp"])}</div>', unsafe_allow_html=True)
+    vc = j["validacion_cruzada"]
+    st.markdown('<div class="disp" style="font-size:22px;margin:14px 0 4px">Validación cruzada de la búsqueda</div>', unsafe_allow_html=True)
+    c_k, c_f = st.columns(2)
+    c_k.markdown(f'<div class="tarjeta"><div class="mut">Pliegues (k)</div><div class="valor">{vc["k"]}</div>'
+                 f'<div class="nota">Validación cruzada {vc["tipo"]}</div></div>', unsafe_allow_html=True)
+    c_f.markdown(f'<div class="tarjeta"><div class="mut">Filas de validación por pliegue</div>'
+                 f'<div class="valor">{vc["filas_por_pliegue"]:,.0f}</div>'
+                 f'<div class="nota">Margen de error por pliegue: ± {pct(vc["margen_por_pliegue"], 2)}</div></div>',
+                 unsafe_allow_html=True)
+    st.markdown('<div class="mut" style="font-size:12px;margin-top:6px">Cada pliegue se usa una vez para validar y el resto para '
+                'entrenar. Las cifras de la búsqueda son el promedio de los cinco pliegues: cada uno tiene menos filas que la prueba, '
+                'y el promedio se apoya en todo el conjunto de entrenamiento, pero los pliegues se solapan, así que el margen de Hoeffding '
+                'no se aplica directamente al promedio.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="disp" style="font-size:22px;margin:14px 0 4px">Dimensión de la red</div>', unsafe_allow_html=True)
+    capas = " → ".join(str(n) for n in d["capas"])
+    por_capa = " + ".join(f"{n:,}" for n in d["parametros_por_capa"])
+    c4, c5, c6 = st.columns(3)
+    c4.markdown(f'<div class="tarjeta"><div class="mut">Parámetros entrenables</div><div class="valor">{d["parametros"]:,}</div>'
+                f'<div class="nota">Pesos y sesgos: {por_capa}</div></div>', unsafe_allow_html=True)
+    c5.markdown(f'<div class="tarjeta"><div class="mut">Filas de entrenamiento por parámetro</div>'
+                f'<div class="valor">{fmt(d["muestras_por_parametro"], 1) if d["muestras_por_parametro"] else "—"}</div>'
+                f'<div class="nota">Entrenamiento: {d["muestras_train"]:,} filas con {d["entradas"]} entradas</div></div>',
+                unsafe_allow_html=True)
+    c6.markdown(f'<div class="tarjeta"><div class="mut">Filas que pediría la regla 10 por parámetro</div>'
+                f'<div class="valor">{d["regla_10_por_parametro"]:,}</div>'
+                f'<div class="nota">Heurística, no un límite: arquitectura {capas}</div></div>', unsafe_allow_html=True)
+    st.markdown('<div class="mut" style="font-size:12px;margin-top:6px">La red tiene más parámetros que filas por parámetro '
+                'recomendadas. Parte del entrenamiento usa filas duplicadas por el sobremuestreo, así que las filas únicas son '
+                'menos que las mostradas.</div>', unsafe_allow_html=True)
+    ct = j["contraste"]
+    def _si(ok):
+        if ok is None:
+            return "—"
+        return '<span style="color:#2F6B4F">Sí</span>' if ok else '<span style="color:#B0443F">No</span>'
+    st.markdown('<div class="disp" style="font-size:22px;margin:14px 0 4px">Contraste con los mínimos</div>', unsafe_allow_html=True)
+    st.markdown('<table class="tabla"><thead><tr><th style="text-align:left">Comparación</th><th>Valor</th><th>Resultado</th></tr></thead><tbody>'
+                f'<tr><td style="text-align:left">Parámetros reales de la red</td><td>{ct["parametros"]:,}</td><td></td></tr>'
+                f'<tr><td style="text-align:left">Regla de 10 por parámetro (10 × parámetros)</td><td>{ct["regla_10"]:,}</td><td></td></tr>'
+                f'<tr><td style="text-align:left">Filas de entrenamiento reales</td><td>{ct["train"]:,}</td>'
+                f'<td>Cumple la regla de 10: {_si(ct["train_cumple_regla_10"])}</td></tr>'
+                f'<tr><td style="text-align:left">Regla de 10 frente a Hoeffding ± 2 pp (4.612 filas)</td><td>{ct["regla_10"]:,}</td>'
+                f'<td>Supera o iguala: {_si(ct["regla_10_supera_hoeffding_2_pp"])}</td></tr>'
+                f'<tr><td style="text-align:left">Regla de 10 frente a Hoeffding ± 1 pp (18.445 filas)</td><td>{ct["regla_10"]:,}</td>'
+                f'<td>Supera o iguala: {_si(ct["regla_10_supera_hoeffding_1_pp"])}</td></tr>'
+                f'<tr><td style="text-align:left">Filas de prueba frente a Hoeffding ± 2 pp</td><td>{ct["prueba"]:,}</td>'
+                f'<td>Alcanza: {_si(ct["prueba_cumple_2_pp"])}</td></tr>'
+                f'<tr><td style="text-align:left">Filas de prueba frente a Hoeffding ± 1 pp</td><td>{ct["prueba"]:,}</td>'
+                f'<td>Alcanza: {_si(ct["prueba_cumple_1_pp"])}</td></tr>'
+                '</tbody></table>'
+                '<div class="mut" style="font-size:12px;margin-top:6px">Hoeffding mide el error de prueba, así que sus umbrales se '
+                'comparan con las filas de prueba. La regla de 10 es una heurística de entrenamiento, y la desigualdad no la fija; '
+                'por eso se compara la regla con los umbrales de Hoeffding, no se toma como su consecuencia.</div>',
+                unsafe_allow_html=True)
+    st.markdown('<div class="disp" style="font-size:22px;margin:14px 0 4px">Otras medidas de calidad en prueba</div>',
+                unsafe_allow_html=True)
+    filas = [
+        ("MCC (coeficiente de Matthews)", fmt(x["mcc"]), "1 es perfecto, 0 es azar. No premia predecir la clase mayoritaria."),
+        ("Brier (error cuadrático de probabilidades)", fmt(x["brier"]), "0 es perfecto. Mide acierto y confianza juntos."),
+        ("ECE (error de calibración)", fmt(x["ece"]), "Diferencia media entre la confianza y el acierto real. 0 es perfecto."),
+    ]
+    st.markdown('<table class="tabla"><thead><tr><th style="text-align:left">Medida</th><th>Valor</th>'
+                '<th style="text-align:left">Cómo leerla</th></tr></thead><tbody>'
+                + "".join(f'<tr><td style="text-align:left">{a}</td><td>{b}</td><td style="text-align:left">{c}</td></tr>'
+                          for a, b, c in filas) + "</tbody></table>", unsafe_allow_html=True)
+
+
 @st.dialog("Red neuronal", width="large")
 def ficha_dialogo(ds):
     f = cargar_ficha(ds)
     nombre = next((n for d, n in TOP4 if d == ds), ds)
     st.markdown(f'<div class="disp" style="font-size:24px;margin-bottom:4px">{nombre}</div>', unsafe_allow_html=True)
-    diagrama, metricas = st.tabs(["Diagrama", "Métricas"])
+    diagrama, metricas, justificacion = st.tabs(["Diagrama", "Métricas", "Justificación"])
     with diagrama:
         _pestana_diagrama(f)
     with metricas:
         _pestana_metricas(f)
+    with justificacion:
+        _pestana_justificacion(f)
 
 
 def seccion_dashboard(ds):
@@ -482,6 +591,7 @@ def seccion_dashboard(ds):
     st.markdown(f'<div class="mut" style="font-size:13px;margin:10px 0 14px">Arquitectura elegida: {capas} neuronas, '
                 f'α (L2) {fmt(cfg["alpha"], 1)}, lote {cfg["tamano_lote"]}, tasa {fmt(cfg["tasa_aprendizaje"], 4)}, '
                 f'sobremuestreo {"sí" if cfg["sobremuestreo"] else "no"}.</div>', unsafe_allow_html=True)
+    _bloque_pregunta(ficha_red.PREGUNTA_CARTA.get(ds, {}))
     if st.button("Ver red neuronal", key=f"ver_red_{ds}"):
         ficha_dialogo(ds)
     filas = []
