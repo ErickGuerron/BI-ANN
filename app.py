@@ -484,9 +484,11 @@ def _pestana_justificacion(f):
     c2.markdown(f'<div class="tarjeta"><div class="mut">Margen de error (Hoeffding, 95 %)</div>'
                 f'<div class="valor">± {pct(h["margen_error"], 2)}</div>'
                 f'<div class="nota">El error real está en el error medido ± este margen</div></div>', unsafe_allow_html=True)
-    c3.markdown(f'<div class="tarjeta"><div class="mut">Filas para ± 2 pp / ± 1 pp</div>'
+    c3.markdown(f'<div class="tarjeta"><div class="mut">Filas de prueba necesarias (± 2 pp / ± 1 pp)</div>'
                 f'<div class="valor">{h["n_para_2_pp"]:,} / {h["n_para_1_pp"]:,}</div>'
-                f'<div class="nota">Mínimo de filas de prueba con ese margen</div></div>', unsafe_allow_html=True)
+                f'<div class="nota">Son las filas de <b>prueba</b>, no de entrenamiento. Son iguales en todas las redes porque '
+                f'dependen solo del margen y del 95 %, no de la red ni de sus datos. Esta prueba tiene {j["n_prueba"]:,}.</div></div>',
+                unsafe_allow_html=True)
     st.markdown('<div class="mut" style="font-size:12px;margin-top:6px">Desigualdad de Hoeffding: para n filas independientes, '
                 'la probabilidad de que el error medido se aleje del real en más de ε es como mucho 2·exp(−2·n·ε²). '
                 'Con confianza de 95 %, ε = √(ln(2/0,05) / (2n)). Supone filas independientes; los cortes temporales '
