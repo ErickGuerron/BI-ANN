@@ -7,6 +7,7 @@ Everything is read from files the pipeline already writes (no training, no extra
   auxiliares/calibracion_<ds>.json                      temperature, only for the networks where it is applied
 """
 import json
+import math
 from pathlib import Path
 
 import numpy as np
@@ -130,6 +131,110 @@ def recall_precision(cm):
         return diag / cm.sum(axis=1), diag / cm.sum(axis=0)
 
 
+PREGUNTA_CARTA = {
+    "ds1_ingreso_solicitudes": ("Pregunta 4 (qué clientes tienen un perfil adecuado para un nuevo crédito con riesgo aceptable) "
+                                "y, en parte, pregunta 2 (características crediticias): clasifica la cuota frente a la capacidad de pago "
+                                "en cuatro tramos."),
+    "ds2_ciclo_solicitud": ("Pregunta 4 y objetivo de precisión en la aprobación: si una solicitud se rechaza, se aprueba con "
+                            "desembolso rápido o se aprueba con desembolso lento."),
+    "ds3_desembolsos": ("Pregunta 1 (qué clientes cumplen con el plazo): estado de los préstamos desembolsados, cancelado, al día o en mora."),
+    "ds4_cierre_cartera_mensual": ("Preguntas 1 y 3: mora de la operación en el cierre siguiente (0 días, de 1 a 30, más de 30)."),
+    "ds5_pagos_multimes": ("Pregunta 1 (qué clientes cumplen con el plazo) y objetivo de severidad del atraso: días de mora "
+                           "en el cierre en cuatro tramos."),
+    "ds6_gasto_provisiones": ("Pregunta 3 (qué factores influyen en que un cliente incumpla): si la calificación de riesgo del "
+                              "crédito mejora, se mantiene o empeora en el mes siguiente."),
+    "ds7_historico_garantias": ("Pregunta 4 (perfil adecuado con riesgo aceptable): cobertura de la garantía frente al monto "
+                                "entregado (sin garantía, cobertura baja o alta)."),
+    "ds8_notificaciones_cobranza": ("Gestión preventiva de cobranza (cobranza temprana): nivel de escalamiento de notificaciones "
+                                    "que recibe cada operación."),
+}
+
+ALFA_HOEFFDING = 0.05       # nivel de confianza de los márgenes: 95 %
+
+
+def margen_hoeffding(n, alfa=ALFA_HOEFFDING):
+    """Half-width of the error interval that holds with probability 1 − alfa for a test set of n rows.
+
+    Hoeffding: P(|error_medido − error_real| ≥ ε) ≤ 2·exp(−2·n·ε²), so ε = sqrt(ln(2/α) / (2n)). It assumes
+    the rows are independent of each other and of the training, which temporal splits only approximate."""
+    return math.sqrt(math.log(2.0 / alfa) / (2.0 * n))
+
+
+def n_hoeffding(margen, alfa=ALFA_HOEFFDING):
+    """Smallest test-set size whose Hoeffding half-width is at most `margen`."""
+    return math.ceil(math.log(2.0 / alfa) / (2.0 * margen ** 2))
+
+
+def dimension_red(pesos, n_train):
+    """Number of trainable parameters of the saved network and how many training rows it has per parameter.
+
+    Weights and intercepts of every layer. The rule of thumb of 10 rows per parameter is a heuristic, not a
+    bound; it is shown so the gap between the network's size and the data is visible."""
+    por_capa = []
+    for w, b in zip(pesos["coefs"], pesos["intercepts"]):
+        por_capa.append(int(np.asarray(w).size + np.asarray(b).size))
+    total = sum(por_capa)
+    return {"entradas": len(pesos["entradas"]), "capas": list(pesos["capas"]), "parametros_por_capa": por_capa,
+            "parametros": total, "muestras_train": n_train,
+            "muestras_por_parametro": (n_train / total) if n_train else None,
+            "regla_10_por_parametro": 10 * total}
+
+
+def mcc_multiclase(cm):
+    """Matthews correlation coefficient for several classes (Gorodkin's generalisation), from a confusion matrix
+    with real classes in rows. 1 is perfect, 0 is chance, and it does not reward predicting the majority class."""
+    C = np.asarray(cm, dtype=float)
+    s = C.sum()
+    c = np.trace(C)
+    p = C.sum(axis=0)           # predicted totals
+    t = C.sum(axis=1)           # real totals
+    numerador = c * s - p @ t
+    denominador = math.sqrt((s * s - p @ p) * (s * s - t @ t))
+    return float(numerador / denominador) if denominador else 0.0
+
+
+def brier_multiclase(P, y):
+    """Mean squared error between the probability vector and the one-hot real class (0 is perfect)."""
+    oh = np.zeros_like(P)
+    oh[np.arange(len(y)), y] = 1.0
+    return float(((P - oh) ** 2).sum(axis=1).mean())
+
+
+def ece_top_label(P, y, bins=10):
+    """Expected calibration error on the top probability: average |accuracy − confidence| per bin, weighted by size."""
+    conf = P.max(axis=1)
+    acierto = (P.argmax(axis=1) == y).astype(float)
+    bordes = np.linspace(0.0, 1.0, bins + 1)
+    total = 0.0
+    for lo, hi in zip(bordes[:-1], bordes[1:]):
+        m = (conf > lo) & (conf <= hi) if lo > 0 else (conf >= lo) & (conf <= hi)
+        if m.any():
+            total += m.sum() / len(y) * abs(acierto[m].mean() - conf[m].mean())
+    return float(total)
+
+
+def _filas_entrenamiento(ds):
+    ruta = DATOS / ds / "ids_train.csv"
+    return len(pd.read_csv(ruta)) if ruta.exists() else None
+
+
+def _justificacion(ds, pesos, clases, cm):
+    """Test-set margins, network size and extra measures for the justification tab. Reads the saved test
+    predictions (probabilities and real class) and the number of training rows; no training."""
+    d = pd.read_csv(PESOS / f"predicciones_prueba_{ds}.csv")
+    P = d[[f"prob_{c}" for c in clases]].to_numpy(dtype=float)
+    y = d["clase_real"].map({c: k for k, c in enumerate(clases)}).to_numpy(dtype=int)
+    n = len(d)
+    return {
+        "pregunta": PREGUNTA_CARTA.get(ds, ""),
+        "n_prueba": n,
+        "hoeffding": {"alfa": ALFA_HOEFFDING, "margen_error": margen_hoeffding(n),
+                      "n_para_2_pp": n_hoeffding(0.02), "n_para_1_pp": n_hoeffding(0.01)},
+        "dimension": dimension_red(pesos, _filas_entrenamiento(ds)),
+        "extra": {"mcc": mcc_multiclase(cm), "brier": brier_multiclase(P, y), "ece": ece_top_label(P, y)},
+    }
+
+
 def cargar_ficha(ds):
     pesos = _leer(PESOS / f"pesos_{ds}.json")
     ajuste = _leer(PESOS / f"ajuste_{ds}.json")
@@ -138,6 +243,7 @@ def cargar_ficha(ds):
     recall, precision = recall_precision(cm)
     ruta_cal = AUX / f"calibracion_{ds}.json"
     return {
+        "justificacion": _justificacion(ds, pesos, clases, cm),
         "ds": ds,
         "capas": list(pesos["capas"]),
         "coefs": pesos["coefs"],
