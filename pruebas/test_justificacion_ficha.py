@@ -103,5 +103,24 @@ class PreguntaCartaTest(unittest.TestCase):
         self.assertIn("Pregunta 1", j["pregunta"])
 
 
+class ValidacionCruzadaTest(unittest.TestCase):
+    def test_k_es_el_de_la_busqueda(self):
+        # pipeline/ajuste_convergencia.py: --folds por defecto 5, sin sobrescribirlo en ningún script
+        self.assertEqual(ficha_red.CV_K, 5)
+
+    def test_filas_por_pliegue_son_el_entrenamiento_dividido_entre_k(self):
+        vc = ficha_red.cargar_ficha("ds5_pagos_multimes")["justificacion"]["validacion_cruzada"]
+        self.assertEqual(vc["k"], 5)
+        self.assertAlmostEqual(vc["filas_por_pliegue"], 21601 / 5, places=6)
+        self.assertGreater(vc["margen_por_pliegue"], ficha_red.margen_hoeffding(7271))
+
+    def test_indicador_de_margen_2pp(self):
+        # ds5 y ds6 tienen prueba mayor que 4 612 filas; ds1 y ds7 no
+        self.assertTrue(ficha_red.cargar_ficha("ds5_pagos_multimes")["justificacion"]["hoeffding"]["cumple_2_pp"])
+        self.assertTrue(ficha_red.cargar_ficha("ds6_gasto_provisiones")["justificacion"]["hoeffding"]["cumple_2_pp"])
+        self.assertFalse(ficha_red.cargar_ficha("ds7_historico_garantias")["justificacion"]["hoeffding"]["cumple_2_pp"])
+        self.assertFalse(ficha_red.cargar_ficha("ds1_ingreso_solicitudes")["justificacion"]["hoeffding"]["cumple_2_pp"])
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -150,6 +150,8 @@ PREGUNTA_CARTA = {
 }
 
 ALFA_HOEFFDING = 0.05       # nivel de confianza de los márgenes: 95 %
+CV_K = 5                    # pliegues de la validación cruzada estratificada de la búsqueda (pipeline/ajuste_convergencia.py, --folds por defecto)
+MARGEN_OBJETIVO = 0.02      # ±2 pp: margen de error que se exige a la prueba para la justificación
 
 
 def margen_hoeffding(n, alfa=ALFA_HOEFFDING):
@@ -225,12 +227,18 @@ def _justificacion(ds, pesos, clases, cm):
     P = d[[f"prob_{c}" for c in clases]].to_numpy(dtype=float)
     y = d["clase_real"].map({c: k for k, c in enumerate(clases)}).to_numpy(dtype=int)
     n = len(d)
+    n_train = _filas_entrenamiento(ds)
+    n_fold = n_train / CV_K if n_train else None
     return {
         "pregunta": PREGUNTA_CARTA.get(ds, ""),
         "n_prueba": n,
         "hoeffding": {"alfa": ALFA_HOEFFDING, "margen_error": margen_hoeffding(n),
-                      "n_para_2_pp": n_hoeffding(0.02), "n_para_1_pp": n_hoeffding(0.01)},
-        "dimension": dimension_red(pesos, _filas_entrenamiento(ds)),
+                      "n_para_2_pp": n_hoeffding(0.02), "n_para_1_pp": n_hoeffding(0.01),
+                      "cumple_2_pp": n >= n_hoeffding(MARGEN_OBJETIVO)},
+        "validacion_cruzada": {"k": CV_K, "tipo": "estratificada, aleatoria, sobre train",
+                               "filas_por_pliegue": n_fold,
+                               "margen_por_pliegue": margen_hoeffding(n_fold) if n_fold else None},
+        "dimension": dimension_red(pesos, n_train),
         "extra": {"mcc": mcc_multiclase(cm), "brier": brier_multiclase(P, y), "ece": ece_top_label(P, y)},
     }
 

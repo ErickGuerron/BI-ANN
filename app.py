@@ -382,6 +382,13 @@ def _estado_limite(cumple, limite):
     return f'<span class="chip" style="border-color:#B0443F;color:#B0443F">No cumple el límite de {limite} %</span>'
 
 
+def _estado_limite_margen(cumple):
+    if cumple:
+        return ('<span class="chip" style="border-color:#2F6B4F;color:#2F6B4F">La prueba alcanza el margen de ± 2 pp</span>')
+    return ('<span class="chip" style="border-color:#B0443F;color:#B0443F">La prueba no alcanza el margen de ± 2 pp; '
+            'el margen real es el que se muestra arriba</span>')
+
+
 def _seccion_entrenamiento(f):
     e = f["entrenamiento"]
     st.markdown('<div class="disp" style="font-size:22px;margin:4px 0 6px">Entrenamiento y generalización</div>', unsafe_allow_html=True)
@@ -472,6 +479,20 @@ def _pestana_justificacion(f):
                 'la probabilidad de que el error medido se aleje del real en más de ε es como mucho 2·exp(−2·n·ε²). '
                 'Con confianza de 95 %, ε = √(ln(2/0,05) / (2n)). Supone filas independientes; los cortes temporales '
                 'solo lo aproximan.</div>', unsafe_allow_html=True)
+    st.markdown(f'<div style="margin:8px 0 2px">{_estado_limite_margen(h["cumple_2_pp"])}</div>', unsafe_allow_html=True)
+    vc = j["validacion_cruzada"]
+    st.markdown('<div class="disp" style="font-size:22px;margin:14px 0 4px">Validación cruzada de la búsqueda</div>', unsafe_allow_html=True)
+    c_k, c_f = st.columns(2)
+    c_k.markdown(f'<div class="tarjeta"><div class="mut">Pliegues (k)</div><div class="valor">{vc["k"]}</div>'
+                 f'<div class="nota">Validación cruzada {vc["tipo"]}</div></div>', unsafe_allow_html=True)
+    c_f.markdown(f'<div class="tarjeta"><div class="mut">Filas de validación por pliegue</div>'
+                 f'<div class="valor">{vc["filas_por_pliegue"]:,.0f}</div>'
+                 f'<div class="nota">Margen de error por pliegue: ± {pct(vc["margen_por_pliegue"], 2)}</div></div>',
+                 unsafe_allow_html=True)
+    st.markdown('<div class="mut" style="font-size:12px;margin-top:6px">Cada pliegue se usa una vez para validar y el resto para '
+                'entrenar. Las cifras de la búsqueda son el promedio de los cinco pliegues: cada uno tiene menos filas que la prueba, '
+                'y el promedio se apoya en todo el conjunto de entrenamiento, pero los pliegues se solapan, así que el margen de Hoeffding '
+                'no se aplica directamente al promedio.</div>', unsafe_allow_html=True)
     st.markdown('<div class="disp" style="font-size:22px;margin:14px 0 4px">Dimensión de la red</div>', unsafe_allow_html=True)
     capas = " → ".join(str(n) for n in d["capas"])
     por_capa = " + ".join(f"{n:,}" for n in d["parametros_por_capa"])
