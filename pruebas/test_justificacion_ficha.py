@@ -111,6 +111,24 @@ class PreguntaCartaTest(unittest.TestCase):
         self.assertIn("Carta de diseño, pregunta 1", j["pregunta"]["origen"])
 
 
+class ContrasteDimensionTest(unittest.TestCase):
+    def test_regla_10_y_umbrales_con_valores_conocidos(self):
+        dim = {"parametros": 3748, "muestras_train": 21601}
+        c = ficha_red.contraste_dimension(dim, 7271, 4612, 18445)
+        self.assertEqual(c["regla_10"], 37480)
+        self.assertFalse(c["train_cumple_regla_10"])            # 21 601 < 37 480
+        self.assertTrue(c["regla_10_supera_hoeffding_2_pp"])    # 37 480 >= 4 612
+        self.assertTrue(c["regla_10_supera_hoeffding_1_pp"])    # 37 480 >= 18 445
+        self.assertTrue(c["prueba_cumple_2_pp"])                # 7 271 >= 4 612
+        self.assertFalse(c["prueba_cumple_1_pp"])               # 7 271 < 18 445
+
+    def test_ds1_y_ds7_no_alcanzan_2_pp_en_prueba(self):
+        for ds in ("ds1_ingreso_solicitudes", "ds7_historico_garantias"):
+            c = ficha_red.cargar_ficha(ds)["justificacion"]["contraste"]
+            self.assertFalse(c["prueba_cumple_2_pp"], ds)
+            self.assertTrue(c["regla_10_supera_hoeffding_2_pp"], ds)
+
+
 class ValidacionCruzadaTest(unittest.TestCase):
     def test_k_es_el_de_la_busqueda(self):
         # pipeline/ajuste_convergencia.py: --folds por defecto 5, sin sobrescribirlo en ningún script

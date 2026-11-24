@@ -523,6 +523,30 @@ def _pestana_justificacion(f):
     st.markdown('<div class="mut" style="font-size:12px;margin-top:6px">La red tiene más parámetros que filas por parámetro '
                 'recomendadas. Parte del entrenamiento usa filas duplicadas por el sobremuestreo, así que las filas únicas son '
                 'menos que las mostradas.</div>', unsafe_allow_html=True)
+    ct = j["contraste"]
+    def _si(ok):
+        if ok is None:
+            return "—"
+        return '<span style="color:#2F6B4F">Sí</span>' if ok else '<span style="color:#B0443F">No</span>'
+    st.markdown('<div class="disp" style="font-size:22px;margin:14px 0 4px">Contraste con los mínimos</div>', unsafe_allow_html=True)
+    st.markdown('<table class="tabla"><thead><tr><th style="text-align:left">Comparación</th><th>Valor</th><th>Resultado</th></tr></thead><tbody>'
+                f'<tr><td style="text-align:left">Parámetros reales de la red</td><td>{ct["parametros"]:,}</td><td></td></tr>'
+                f'<tr><td style="text-align:left">Regla de 10 por parámetro (10 × parámetros)</td><td>{ct["regla_10"]:,}</td><td></td></tr>'
+                f'<tr><td style="text-align:left">Filas de entrenamiento reales</td><td>{ct["train"]:,}</td>'
+                f'<td>Cumple la regla de 10: {_si(ct["train_cumple_regla_10"])}</td></tr>'
+                f'<tr><td style="text-align:left">Regla de 10 frente a Hoeffding ± 2 pp (4.612 filas)</td><td>{ct["regla_10"]:,}</td>'
+                f'<td>Supera o iguala: {_si(ct["regla_10_supera_hoeffding_2_pp"])}</td></tr>'
+                f'<tr><td style="text-align:left">Regla de 10 frente a Hoeffding ± 1 pp (18.445 filas)</td><td>{ct["regla_10"]:,}</td>'
+                f'<td>Supera o iguala: {_si(ct["regla_10_supera_hoeffding_1_pp"])}</td></tr>'
+                f'<tr><td style="text-align:left">Filas de prueba frente a Hoeffding ± 2 pp</td><td>{ct["prueba"]:,}</td>'
+                f'<td>Alcanza: {_si(ct["prueba_cumple_2_pp"])}</td></tr>'
+                f'<tr><td style="text-align:left">Filas de prueba frente a Hoeffding ± 1 pp</td><td>{ct["prueba"]:,}</td>'
+                f'<td>Alcanza: {_si(ct["prueba_cumple_1_pp"])}</td></tr>'
+                '</tbody></table>'
+                '<div class="mut" style="font-size:12px;margin-top:6px">Hoeffding mide el error de prueba, así que sus umbrales se '
+                'comparan con las filas de prueba. La regla de 10 es una heurística de entrenamiento, y la desigualdad no la fija; '
+                'por eso se compara la regla con los umbrales de Hoeffding, no se toma como su consecuencia.</div>',
+                unsafe_allow_html=True)
     st.markdown('<div class="disp" style="font-size:22px;margin:14px 0 4px">Otras medidas de calidad en prueba</div>',
                 unsafe_allow_html=True)
     filas = [

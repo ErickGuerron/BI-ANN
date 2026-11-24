@@ -227,6 +227,28 @@ def dimension_red(pesos, n_train):
             "regla_10_por_parametro": 10 * total}
 
 
+def contraste_dimension(dimension, n_prueba, n_para_2_pp, n_para_1_pp):
+    """Compares the network's real size with the thresholds.
+
+    Rule of 10: 10 training rows per parameter, using the parameters the network really has.
+    Hoeffding: test rows needed for ±2 pp and ±1 pp (the same for every network, by construction).
+    Both thresholds are checked against the rule-of-10 value, which is the only one the network's size defines."""
+    P = dimension["parametros"]
+    regla = 10 * P
+    ntr = dimension["muestras_train"]
+    return {
+        "parametros": P,
+        "regla_10": regla,
+        "train": ntr,
+        "train_cumple_regla_10": (ntr >= regla) if ntr is not None else None,
+        "regla_10_supera_hoeffding_2_pp": regla >= n_para_2_pp,
+        "regla_10_supera_hoeffding_1_pp": regla >= n_para_1_pp,
+        "prueba": n_prueba,
+        "prueba_cumple_2_pp": n_prueba >= n_para_2_pp,
+        "prueba_cumple_1_pp": n_prueba >= n_para_1_pp,
+    }
+
+
 def mcc_multiclase(cm):
     """Matthews correlation coefficient for several classes (Gorodkin's generalisation), from a confusion matrix
     with real classes in rows. 1 is perfect, 0 is chance, and it does not reward predicting the majority class."""
@@ -284,6 +306,7 @@ def _justificacion(ds, pesos, clases, cm):
                                "filas_por_pliegue": n_fold,
                                "margen_por_pliegue": margen_hoeffding(n_fold) if n_fold else None},
         "dimension": dimension_red(pesos, n_train),
+        "contraste": contraste_dimension(dimension_red(pesos, n_train), n, n_hoeffding(0.02), n_hoeffding(0.01)),
         "extra": {"mcc": mcc_multiclase(cm), "brier": brier_multiclase(P, y), "ece": ece_top_label(P, y)},
     }
 
